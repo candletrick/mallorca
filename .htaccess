@@ -1,0 +1,8 @@
+RewriteEngine on
+
+# don't rewrite existing files
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# rewrite paths to q
+RewriteCond	%{QUERY_STRING}	(.*)
+RewriteRule (.*)	index.php?q=$1&%1	[L]
