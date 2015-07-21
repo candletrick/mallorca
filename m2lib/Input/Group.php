@@ -138,7 +138,7 @@ class Group
 		{
 		$cs = array();
 		foreach ($this->inputs as $input) {
-			$cs[] = div('control',
+			$cs[] = div('control ' . $input->type,
 				div('label', $input->label)
 				. div('input', $input->my_display())
 				);

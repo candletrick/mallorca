@@ -9,7 +9,7 @@ function autoload_lib($name)
 	$end = $a[count($a) - 1];
 	$name = str_replace("\\", "/", $name);
 
-	$folders = array('mallorca', 'lib');
+	$folders = array('m2lib', 'lib');
 
 	foreach ($folders as $folder) {
 		$path = __DIR__ . "/../$folder/$name";

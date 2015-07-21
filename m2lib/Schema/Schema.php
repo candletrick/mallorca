@@ -140,6 +140,8 @@ abstract class Schema extends \View {
 		else if (strpos($name, '_at')) return array('datetime', '');
 		else if (strpos($name, '_name')) return array('str', 140);
 		else if (strpos($name, '_per_')) return array('int', 1000000);
+		else if (strpos($name, '_qty')) return array('int', 1000000);
+		else if (strpos($name, '_count')) return array('int', 1000000);
 		else if (strpos($name, '_blob')) return array('blob', '');
 		else if (is(self::$data_defs, $name)) return self::$data_defs[$name];
 		else return array('str', 250);

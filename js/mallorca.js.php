@@ -82,6 +82,21 @@ function request(data) {
 
 var clicker;
 
+function run_request() {
+	// var fm = $(this).closest('form');
+	var fm = $(this).hasClass('all-data') ? $(':input') : $(this).closest('.control-group').find(':input');
+
+	clicker = $(this);
+
+	// request($(this).attr('data-fn') + (fm ? '&' + fm.serialize() : ""));
+	request({
+		'stack' : {
+			'data-fn' : $(this).attr('data-fn'),
+			'data' : fm.serialize()
+			}
+		});
+	}
+
 function done_loading() {
 
 	if (clicker) {
@@ -90,20 +105,15 @@ function done_loading() {
 		}
 
 	// re-bind action buttons
-	$(".action, .data-fn").unbind('click').click(function (e) {
-		// var fm = $(this).closest('form');
-		var fm = $(this).closest('.control-group').find(':input');
-
-		clicker = $(this);
-
-		// request($(this).attr('data-fn') + (fm ? '&' + fm.serialize() : ""));
-		request({
-			'stack' : {
-				'data-fn' : $(this).attr('data-fn'),
-				'data' : fm.serialize()
-				}
-			});
+	$(".action, .data-fn").unbind('click').click(run_request)
+	/*
+	$('.input-text').keyup(function (e) {
+		var k = e.which;
+		if (k == 13) {
+			$(this).closest('.control-group').find('.submit').first().click();
+			}
 		});
+		*/
 
 	hold = false;
 	if (loading_icon) {
@@ -130,7 +140,9 @@ function load_next(index, pages) {
 	// var iv = $(k).hasClass('no-fade') ? 0 : fade_interval;
 	var iv = $(k).hasClass('fade') ? fade_interval : 0;
 
-	$(k).fadeOut(iv, function() {
+	var sel = k == 'this' ? this : k;
+
+	$(sel).fadeOut(iv, function() {
 		if (meth == 'append') $(this).append(v);
 		else if (meth == 'prepend') $(this).prepend(v);
 		else $(this).html(v);
@@ -149,7 +161,7 @@ function set_enters(e) {
 	var k = e.which || e.keyCode; // ff || ie		
 
 	if (k == 13) {
-		$(this).closest('form').find('.data-enter').click();
+		$(this).closest('.control-group').find('.data-enter').click();
 		}
 	}
 

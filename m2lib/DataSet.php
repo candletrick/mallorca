@@ -9,10 +9,24 @@ class DataSet
 	public $filter = array();
 	public $name;
 	public $results = array();
+	public $row_fn;
 
-	public function __construct($name)
+	public function __construct($name, $columns = array('*'))
 		{
 		$this->name = $name;
+		$this->columns = $columns;
+
+		$this->query = select($name, $columns);
+		}
+	
+	/**
+		Allow assignment of callbacks.
+		*/
+	public function __call($name, $args)
+		{
+		if (isset($this->$name) && is_callable($this->$name)) {
+			return call_user_func_array($this->$name, $args);
+			}
 		}
 
 	public function results()
@@ -25,7 +39,8 @@ class DataSet
 
 	public function my_display($class = '')
 		{
-		$res = select($this->name, array('*'))->results();
+		// $res = select($this->name, array('*'))->results();
+		$res = $this->query->results();
 
 		$rows = array();
 		foreach ($res as $row) {
@@ -47,10 +62,9 @@ class DataSet
 		{
 		$cells = array();
 
-		foreach ($row as $cell) {
-			$cells[] = "<td>$cell</td>";
-			}
-		foreach ($this->add as $cell) {
+		$show = isset($this->row_fn) ? $this->row_fn($row) : $row;
+
+		foreach ($show as $cell) {
 			$cells[] = "<td>$cell</td>";
 			}
 
@@ -60,9 +74,9 @@ class DataSet
 		. "</tr>";
 		}
 
-	public function add_col($col)
+	public function row($row_fn)
 		{
-		$this->add[] = $col;
+		$this->row_fn = $row_fn;
 		return $this;
 		}
 	}

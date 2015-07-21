@@ -1,18 +1,21 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <?php
 echo jquery_tag();
+echo style_tag('css/style.css');
+echo script_tag('js/kit.js');
+echo script_tag('js/effects.js');
 ?>
-<script type="text/javascript" src="js/kit.js"></script>
-<script type="text/javascript" src="js/effects.js"></script>
 </head>
 <body>
-<div class='main'>
+<div class='wrapper'>
+	<div class='main'>
+	</div>
+	<div class='push'></div>
 </div>
-<?php
-include 'js/mallorca.js.php';
-?>
+<div class='foot'></div>
+<?php include 'js/mallorca.js.php'; ?>
 </body>
 </html>

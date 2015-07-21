@@ -1,12 +1,12 @@
 <?php
 // tool kit
-require 'mallorca/Kit.php';
+require 'm2lib/Kit.php';
 
 // autoload
-require 'mallorca/Autoload.php';
+require 'm2lib/Autoload.php';
 
 // db, configuration
-require '../protected/mallorca_local.php';
+require '../protected/mallorca2_local.php';
 
 // session
 session_start();
