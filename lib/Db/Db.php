@@ -20,9 +20,20 @@ class Db {
 		\param	string	$password	Password.
 		\param	string	$database	Database.
 		*/
-	static public function connect($db, $host, $username, $password, $database, $port = '3306', $socket = '/var/run/mysqld/mysqld.sock') {
-		$class = '\\Db\\' . _to_camel($db);
-		self::$db = new $class($host, $username, $password, $database, $port, $socket);
+	static public function connect($type, $host, $user, $password, $database, $port, $socket) {
+		$class = '\\Db\\' . _to_camel($type);
+		self::$db = new $class($host, $user, $password, $database, $port, $socket);
+		}
+
+	/**
+		Connect from Config vars set in protected/_local.php
+		*/
+	static public function connect_from_config() {
+		extract(Config::$db);
+		if (! isset($port)) $port = '3306';
+		if (! isset($socket)) $socket = '/var/run/mysqld/mysqld.sock';
+
+		self::connect($type, $host, $user, $password, $database, $port, $socket);
 		}
 
 	/**

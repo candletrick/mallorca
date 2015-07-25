@@ -1,0 +1,680 @@
+/* font import examples */
+
+@import url('http://fonts.googleapis.com/css?family=Quicksand|Questrial|Josefin+Slab|Didact+Gothic|Ruluko|Convergence')
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:400,300,600')
+
+/* variables */
+
+teal_border = #42ddfc
+pwidth = 900px;
+hfont = Questrial;
+
+/* swatch colors */
+
+pink = #ff28b1
+navy = #456
+blue = #77c
+teal = #12addc
+yellow = #ffe55a
+gray = #555
+green = #090
+algae = #2A8D7B
+mint = #7CD572
+lavendar = #994ECA
+steel = #4343C7
+moss = #87992E
+magenta = #C0396F
+lipstick = #A53139
+
+for n in ('pink' 'navy' 'blue' 'teal' 'yellow' 'gray' 'green' 'algae' 'mint' 'lavendar' 'steel' 'moss' 'magenta' 'lipstick')
+  .swatch.{n}
+    color lookup(n)
+    background lookup(n)
+
+/* functions */
+
+panel() 
+  background: #fff;
+  padding: 14px;
+
+/* mixins */
+
+.clearfix 
+  &:after 
+    content: "";
+    display: table;
+    clear: both;
+
+/* main */
+
+html, body 
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+
+h1, h2, .group-label, .hd 
+  font-family: Arial;
+
+h1, h2 
+  font-weight: normal;
+  font-size: 29px;
+  font-family: Quicksand;
+  border-bottom: 1px solid #ccc;
+  margin: 0 0 10px 0;
+
+h2 
+  border: none;
+  text-align: left;
+  font-size: 22px;
+
+p 
+  line-height: 26px;
+
+ul 
+  margin: 0;
+
+a, a:visited 
+  color: blue;
+
+table 
+  border-collapse: collapse;
+
+/* utility */
+
+.hide 
+  display: none;
+
+.rug 
+  clear: both;
+
+/* layout */
+
+.bg 
+  position: fixed;
+  background-position: 0 -300px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+  height: 100%;
+  padding: 100px 0 0 0 ;
+
+.wrapper 
+  min-height: 100%;
+  position: relative;
+  z-index: 1;
+
+.bd 
+  background: none;
+  width: pwidth;
+  margin: 0 auto;
+  text-align: left;
+  padding: 0 0 15px 0;
+
+.push 
+  padding-bottom: 90px;
+
+.ft 
+  position: relative;
+  z-index: 1;
+  height: 90px;
+  margin-top: -90px;
+  background: #eee;
+  .nav 
+    background: none;
+  .action_nav 
+    margin: 6px 0 0 0;
+    background: none;
+    a 
+      font-family: hfont;
+      font-size: 12px;
+      color: #ddd;
+
+.banner
+  text-align: left;
+  width: 100%;
+  background: #252525;
+
+.expander
+  display: none;
+
+.logo 
+  width: pwidth - 14px;
+  margin: 0 auto;
+  padding: 0 0 0 14px;
+  height: 75px;
+  background-repeat: no-repeat;
+  background-position: 10px 11px;
+  .text, .text-new
+    text-decoration: none;
+    font-family: hfont;
+    font-size: 46px;
+    padding: 15px 0 15px 0;
+    float: left
+  .text
+    color: rgb(155,244,255);
+    color: #f07;
+  .text-new
+    color: #4de5e5;
+  .pink 
+    color: navy;
+
+.fade
+  float: left
+.fade-7
+  color: #12adbc
+.fade-6
+  color: #12adcc
+.fade-5
+  color: #12addc
+.fade-4
+  color: #12adec
+.fade-3
+  color: #12adff
+.fade-2
+  color: #12bdff
+.fade-1
+  color: #12cdff
+.current-task
+  font-size: 16px
+  margin-left: 24px
+  position: relative
+  top: 21px
+  color: #4de5e5;
+  .task
+    color: #f5f5f5
+
+/* navs */
+
+.nav 
+  background: #fff
+  a 
+    cursor: pointer;
+    color: #999;
+    transition-property: color;
+    transition-duration: .5s;
+  li:hover a, .selected a
+    transition-property: color;
+    transition-duration: .5s;
+
+.vertical_nav 
+  text-align: left;
+  li a 
+    color: blue;
+
+.action_nav 
+  width: pwidth - 14px;
+  list-style-type: none;
+  margin: 0 auto;
+  padding: 0 0 0 14px;
+  li 
+    display: inline;
+    margin: 0 10px 0 0;
+    a 
+      text-transform: uppercase
+      font-size: 12px;
+      text-decoration: none;
+      padding: 11px 0 11px 0;
+      display: inline-block;
+
+.left_nav 
+  list-style-type:none;
+  padding:0;
+  margin:0 0 14px 0;
+  li.selected a 
+    color: teal;
+  li.selected a span 
+    color: #fff !important;
+  li a 
+    font-size: 18px;
+    text-decoration:none;
+    color:#000;
+    background:none;
+    display:block;
+  li:hover a 
+    text-decoration:underline;
+  .label 
+    color: #aaa;
+    font-style: italic;
+
+/* modules */
+
+.module, .module_header
+  text-align: left;
+  color:#fff;
+  font-size:27px;
+  padding:0 6px 0 6px;
+  margin:0 -6px 16px -6px;
+  clear:both; 
+.module
+  color:#000;
+  border-bottom:2px solid #000;
+  a
+    color:#000;
+    text-decoration:none;
+.module_header
+  color:#000;
+  width:100%;
+  border-bottom:2px solid #000;
+  p 
+    margin: 0;
+    padding: 0;
+    width: 30%;
+    float: left;
+  select 
+    position: relative;
+    bottom: 6px;
+  a
+    text-decoration: none;
+    color: #006977;
+    &.selected
+      color: $teal;
+
+/* forms */
+
+.group-label 
+  margin: 0 0 14px 0;
+  padding: 0 0 14px 0;
+  border-bottom: 1px solid #eee;
+
+.control-group 
+  font-size: 14px;
+  display: table;
+  width: 100%;
+  select 
+    font-size: 14px;
+  img 
+    max-width: 200px;
+  .note 
+    font-size: 13px;
+    font-style: italic;
+    display: block;
+    margin: 5px;
+    color: #555;
+  .control 
+    display: table-row;
+    clear: both;
+    margin: 0 0 9px 0;
+    &.left 
+      clear: none;
+      float: left;
+  .label 
+    font-size: 14px;
+    font-weight: bold;
+    margin: 6px 0 16px 0;
+    display: inline-block;
+    &.refocus 
+      color: #911;
+  .input, .label 
+    display: table-cell;
+    padding: 4px 10px 4px 0;
+  .checklist, .radio 
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    li 
+      font-size: 14px;
+    .b
+      margin-right: 6px
+    &.horiz 
+      li 
+        display: inline-block;
+    &.checks-below 
+      .l, .b 
+        display: block;
+        text-align: center;
+  .toggle 
+    margin: 0 auto;
+    width: 114px;  
+    .box 
+      float: left;
+      height: 45px;
+      width: 45px;
+      border-radius: 45px;
+      margin: 0 10px 0 0;
+      color: #555;
+      font-size: 19px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      &.selected 
+        background: #7bf; /* #ffc511; */
+        color: #fff;
+        border: 1px solid #fff;
+      .text 
+        display: block;
+        margin: 10px 0 0 1px;
+  .triple 
+    float: left;
+    display: block;
+    margin: 0 10px 0 0;
+    &.colon 
+      font-size: 20px; 
+      margin: 0 7px 0 -4px;
+  .input-text 
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    font-size: 14px;
+    width: 500px;
+    &.date-calendar
+      width: 100px;
+    &.money
+      margin-left: 14px;
+      width: 100px;
+    &.refocus 
+      box-shadow: 0 0 6px -2px #b00; 
+      border: 1px solid #d00;
+
+  .money_sym_holder
+    position: absolute;
+    z-index: 1;
+  .money_sym
+    color:#bbb;
+    padding:0 0 0 2px;
+    width: 16px;
+    text-align: center;
+    position: relative;
+    font-size: 16px;
+    top: 11px;
+    left: 1px;
+  textarea 
+    padding: 4px;
+    margin: 10px 0 0 0;
+    width: 500px;
+
+.swatch-group 
+  @extend .clearfix;
+  .swatch 
+    height: 26px;
+    width: 26px;
+    float: left;
+    margin: 0 10px 0 0;
+    border: 2px solid #fff;
+    &.selected 
+      border: 2px solid #222;
+
+/* lookups */
+
+
+
+.lookup-wrapper 
+  panel();
+  padding-top: 0;
+  margin: 0 auto;
+  text-align: left;
+  .banner 
+    padding: 10px 0 10px 0;
+    text-align: left;
+    font-size: 20px;
+    background: #fff
+    a 
+      color: blue;
+
+    .title 
+      float: left;
+
+    .delete 
+      float: right;
+      margin: 6px 10px;
+      a 
+        font-size: 14px;
+        color: #888;
+  .left 
+    width: 200px;
+    float: left;
+    .table 
+      td, th 
+        font-size: 15px;
+
+      tr:hover td 
+        color #000
+
+  .right 
+    margin: 0 0 0 14px;
+    width: 657px;
+    float: left;
+    .table, .banner
+      margin: 0 14px;
+      width: 100%;
+
+  td, th 
+    text-align: left;
+    cursor: pointer;
+
+  .inactive td 
+    color: #bbb;
+
+.search-table 
+  margin: 0 0 20px 0;
+  .hd 
+    text-align: left;
+    font-size: 20px;
+    margin: 6px 0 6px 0;
+    color: pink;
+  .table
+    margin-top: 14px
+
+  .control-group 
+    .control 
+      margin: 0;
+
+    .label 
+      margin: 6px 0 6px 0;
+
+    .input-text 
+      width: 100%;
+
+.table 
+  tr:hover td 
+    color: blue;
+  tr.grey td
+    color:#999;
+  tr.blue
+    color:#1464F4;
+  th 
+    padding: 0 8px 4px 2px;
+    font-style: italic;
+    font-size: 16px;
+  td 
+    cursor: pointer;
+    padding: 8px;
+    border: 1px solid #bbb;
+    img 
+      width: 60px;
+      border-radius: 60px;
+
+.banner .button
+  font-size: 27px;
+  color: #2ae;
+  cursor: pointer;
+  background: none;
+  padding: 0
+  border: none
+
+.button
+  border: none
+  background: none
+  font-size: 24px
+  padding: 10px 0 10px 0
+  cursor: pointer
+  border-bottom: 4px solid #7bf
+  &.remove
+    color: #666
+    font-size: 13px
+    border: none
+    text-decoration: underline
+
+
+/* ******* */
+/* MOBILE */
+/* ****** */
+
+@media only screen and (max-width:480px), only screen and (max-device-width:480px) 
+
+  /* main mobile */
+
+  h1 
+    padding: 0 0 6px 0;
+
+  a, a:visited
+    color: rgb(138, 238, 255)
+
+  /* layout mobile */
+
+  .bd, .action_nav, .logo, .journal-scroll .entry 
+    width: 100%;
+    text-align: center;
+    padding: 0;
+
+  .current-task
+    float: none
+    margin: 0 0 24px 0
+    position: static
+
+  .hd.top 
+    position: static;
+
+  .bd 
+    margin: 0;
+    padding: 0;
+
+  /* header mobile */
+
+  .logo
+    text-align: center
+    height: auto
+    .text-new, .text
+      float: none
+      display: inline-block
+
+  .right-hd
+    margin: 0
+    text-align: center
+    background: #000
+    border: none
+    font-size: 22px
+    .arrow
+      display: block
+      height: 0
+      color: transparent
+
+  /* navs mobile */
+
+  .action_nav 
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+    padding: 0;
+    li 
+      display: block;
+      text-align: center;
+      a 
+        display: block;
+        padding: 12px 0 12px 0;
+
+  .ft .action_nav 
+    border:none;
+
+  /* lookups mobile */
+
+  .lookup-wrapper 
+    padding: 0;
+    margin: 6px;
+    .left, .right
+      width: 100%;
+      float: none;
+      margin: 0;
+    .right .table
+      margin: 0;
+      width: auto;
+    .right .banner
+      margin: 0
+    .left 
+      margin-bottom: 20px;
+
+  /* forms mobile */
+
+  .control-group 
+    float: none;
+    width: auto;
+    text-align: left;
+    .control 
+      margin: 0 0 20px 0;
+
+    .label 
+      font-family: "Arial";
+      font-size: 18px;
+      margin: 12px 0 12px 0;
+      display: block;
+
+    .input 
+      display: block;
+      padding: 0 14px 0 0;
+
+    input[type="text"], input[type="password"] 
+      display: block;
+      width: 100%;
+
+    input[type="text"]:focus 
+      border: 1px solid pink;
+
+  /* lookup */
+
+  .search_hide
+    display: none;
+    padding: 6px;
+    margin: -6px;
+    .hd
+      display: none;
+  .nav_hide
+    display: none;
+    background: #000;
+    color: #fff;
+  .search-table .expander
+    margin: -6px;
+  .expander
+    display: block;
+    font-size:20px;
+    text-align:center;
+    padding:7px 0 14px 0;
+    cursor:pointer;
+    color: teal;
+    background:#000;
+    z-index:8;
+
+
+  .stream-input
+    display: none
+
+  /* login */
+
+  .login-wrapper
+    text-align: center
+    width: auto;
+    .coral
+      font-size: 27px
+    .control
+      margin: 0 0 20px 0
+      padding: 0 3px 0 0
+    .control-group
+      padding: 0
+      margin: 0
+    .label
+      padding: 0
+      margin: 0
+      text-align: left
+      display: block
+      width: auto
+    .input
+      padding: 0
+      text-align: center
+      width: 100%
+      display: block
+    .control, .control-group
+      display: block
+      .input-text
+        width: 100%
+        text-align: center
+

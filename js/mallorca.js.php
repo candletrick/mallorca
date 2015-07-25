@@ -1,3 +1,6 @@
+<?php
+$path = \Config::$local_path;
+?>
 <script type='text/javascript'>
 // Pages index
 var page_k;
@@ -39,7 +42,7 @@ function request(data) {
 			}, spinner_interval);
 		}
 
-	$.post("<?php echo \Request::$local_path . '/index.php'; ?>", data, function (html) {
+	$.post("<?php echo $path . '/index.php'; ?>", data, function (html) {
 		try {
 			var page = $.parseJSON(html);
 			}
@@ -53,6 +56,7 @@ function request(data) {
 		// iterate incrementally
 		page_k = 0;
 		var pages = [];
+		// console.log(pages);
 		for (k in page) {
 			pages.push({
 				'k' : k,
@@ -60,10 +64,10 @@ function request(data) {
 				'method' : page[k]['method']
 				});
 			if (k == 'clear_url' && page[k] == true) {
-				history.replaceState('', '', '<?php echo \Request::$local_path; ?>' + '' + location.hash);
+				history.replaceState('', '', '<?php echo $path; ?>' + '' + location.hash);
 				}
 			else if (k == 'set_url') {
-				history.replaceState('', '', '<?php echo \Request::$local_path; ?>/' + page[k] + '' + location.hash);
+				history.replaceState('', '', '<?php echo $path; ?>' + page[k] + '' + location.hash);
 				}
 			else if (k == 'set_title') {
 				document.title = page[k];
@@ -72,7 +76,7 @@ function request(data) {
 		load_next(page_k, pages);
 
 		for (k in page) {
-			if (k == 'POST') {
+			if (k == 'request') {
 				console.log(page[k]);
 				continue;
 				}
@@ -142,7 +146,9 @@ function load_next(index, pages) {
 
 	var sel = k == 'this' ? this : k;
 
-	$(sel).fadeOut(iv, function() {
+	$(sel).animate({
+		opacity : 0,
+		}, iv, 'linear', function() {
 		if (meth == 'append') $(this).append(v);
 		else if (meth == 'prepend') $(this).prepend(v);
 		else $(this).html(v);

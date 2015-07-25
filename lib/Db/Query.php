@@ -102,30 +102,13 @@ class Query {
 		$this->table = $table;
 
 		$map = array();
-		$i = 0;
 		foreach ($columns as $column) {
 			$name = is_object($column) ? (
 				isset($column->as) ? $column->as : $column->name
 				) : $column;
-			if (is_array($name)) $name = 'array_' . $i++;
 			$map[$name] = $column;
 			}
 		$this->columns = $map;
-		}
-
-	/* DELETE, reference */
-	public function unpack_columns($columns) {
-		$map = array();
-		$next = array();
-		foreach ($columns as $column) {
-			$name = is_object($column) ? (isset($column->as) ? $column->as : $column->name) : $column;
-			if (is_array($name)) $next[] = $name;
-			else $map[$name] = $column;
-			}
-		foreach ($next as $n) {
-			$map = array_merge($map, $this->unpack_columns($n));
-			}
-		return $map;
 		}
 
 	public function __toString() {
@@ -175,44 +158,43 @@ class Query {
 			// Set name
 			$this->belongs[$column->name] = $key;
 			$name = is_string($column->name) ? $key . "." . $column->name : $column->name;
+			$original = $name;
 
 			// Apply functions
-			if (isset($column->substr)) $name = "substring($name, $column->start, $column->end)";
-			else if (isset($column->max)) $name = "max($name)";
-			else if (isset($column->count)) $name = "count(*)";
-			else if (isset($column->cast)) $name = "cast($name as $column->cast)";
-			else if (isset($column->format)) $name = db()->format($column->format, $name);
-			else if (isset($column->iff)) {
-				list($cond, $true, $false) = $column->iff;
-				$name = "if($name=" . db()->esc($cond) . ", $true, $false)";
-				}
-			else if (isset($column->concat)) {
-				$add = array();
-				foreach ($column->concat as $concat) {
-					$add[] = strpos($concat, "'") !== false ? $concat : $key . '.' . $concat;
-					}
-				$name = "concat($name, " . implode(',', $add) . ")";
-				}
+			if (isset($column->cast)) $name = "cast($name as $column->cast)";
 
-			if (isset($column->times)) $name = "$name * " . is($this->belongs, $column->times, 'a') . '.' . $column->times;
+			if (isset($column->times)) $name = "$name * " . (is_string($column->times) ? is($this->belongs, $column->times, 'a') . '.' . $column->times : $column->times);
 			if (isset($column->sum)) $name = "sum($name)";
 			if (isset($column->round)) $name = "round($name, $column->round)";
+			if (isset($column->substr)) $name = "substring($name, $column->start, $column->end)";
+			if (isset($column->max)) $name = "max($name)";
+			if (isset($column->count)) $name = "count(*)";
+			if (isset($column->hours)) $name = "round(((60 * hour($name)) + minute($name)) / 60, 2)";
+			if (isset($column->timediff)) {
+				$diff = "timediff($name, $column->timediff)";
+				$name = "round((60 * hour($diff)) + minute($diff), 2)";
+				}
+			if (isset($column->format)) $name = db()->format($column->format, $name);
+
+			// null
+			if (isset($column->ifnull)) $name = "ifnull($name, $column->ifnull)";
+
 
 			// Add to clauses
 			if (isset($column->group)) $this->groups[] = $name;
 			if (isset($column->order)) $this->orders[] = $name;
-
 			if (isset($column->desc)) $this->orders[] = "$name desc";
-			else if (isset($column->asc)) $this->orders[] = "$name asc";
+			if (isset($column->asc)) $this->orders[] = "$name asc";
 
+			// where
 			if (isset($column->where)) $this->wheres[] = "$name=" . db()->esc($column->where);
-			else if ($column->where === NULL) $this->wheres[] = "$name is NULL";
 			else if (isset($column->where_like)) $this->wheres[] = "$name like " . db()->esc('%' . $column->where_like . '%');
-			else if (isset($column->where_lt)) $this->wheres[] = "$name<" . db()->esc($column->where_lt);
+			else if (isset($column->where_gte)) $this->wheres[] = "$name >= " . db()->esc($column->where_gte);
+			else if (isset($column->where_not)) $this->wheres[] = "$name is null or ($name <> " . db()->esc($column->where_not) . ")";
+			else if (isset($column->blank)) $this->wheres[] = "($name is null or $name='')";
 
 			// Alias
-			// $name = $name . ($column->name == $column->as ? '' : " as $column->as");
-			$name = $name . " as " . db()->ent($column->as);
+			$name = $name . ($column->name == $column->as ? '' : " as $column->as");
 			$this->names[] = $name;
 			}
 		// Repeat over array
@@ -262,8 +244,8 @@ class Query {
 
 	/**
 		*/
-	public function value() { // $name) {
-		// $this->names = array($name);
+	public function value($name) {
+		$this->names = array($name);
 		return \Db::value($this->text());
 		}
 
@@ -275,49 +257,36 @@ class Query {
 
 	/**
 		*/
-	public function one_column_array() {
-		return \Db::one_column_array($this->text());
+	public function two_column_array() {
+		return \Db::two_column_array($this->text());
 		}
 
 	/**
 		Add columns.
 		*/
 	public function combine($combine) {
+		// matches by "as" property
+		
 		foreach ($combine as $meta) {
-			$found = $this->passover($this->columns, $meta);
-			// add if not found
-			if (! $found) {
-				$this->columns[$meta->name] = $meta;
+			$name = is_object($meta) ? (
+				isset($meta->as) ? $meta->as : $meta->name
+				) : $meta;
+			if (! isset($this->columns[$name])) {
+				$this->columns[$name] = $meta;
 				}
-			}
-		return $this;
-		}
-
-	/**
-		Helper for combine().
-		Recursively walk down columns to match name and replace any properties.
-		Due to the possibility of m(array()) structures.
-		*/
-	function passover($columns, $meta) {
-		$found = false;
-		foreach ($columns as $column) {
-			$name = is_object($column) ? $column->name : $column;
-			// walk down
-			if (is_array($name)) {
-				$this->passover($name, $meta);
-				continue;
+			else if (! is_object($meta) || ! is_object($this->columns[$name])) {
+				$this->columns[$name] = $meta;
 				}
-			// reset the properties
-			else if ($name == $meta->name) {
-				$found = true;
+			else {
 				unset($meta->name);
-				if (! is_object($column)) $column = m($column);
 				foreach ($meta as $k=>$v) {
-					$column->$k = $v;
+					$this->columns[$name]->$k = $v;
 					}
 				}
 			}
-		return $found;
+				
+		// $this->columns = array_merge($this->columns, $combine);
+		return $this;
 		}
 
 	/**

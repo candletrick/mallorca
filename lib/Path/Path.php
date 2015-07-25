@@ -8,27 +8,35 @@
 
 class Path
 	{
+	/** The path, passed in as a GET parameter from .htaccess */
 	static public $q;
 	
-	/** Local URL prefix. */
+	/** Local URL prefix. Define in ../protected/<app>_local.php' */
 	static public $local_path;
 
-	/** Home URL path. */
+	/** Default path to render if none provided. Define in ../protected/<app>_local.php' */
 	static public $home_path;
+
+	/** Is local. */
+	static public $is_local = true;
+
+	/** Admin email. */
+	static public $admin_email = 'fewkeep@gmail.com';
 
 	/**
 		The main function of the application.  Grab the route and hand it off to the index system.
 		*/
-	static public function interpret($wraps = array('Path', 'Wrapper'))
+	static public function interpret($path = '')
 		{
-		self::$q = get('q', 'home/flip');
-		if (! self::$q) self::$q = 'home/flip';
+		if (! $path) {
+			$path = self::$q = get('q');
+			if (! self::$q) $path = self::$q = self::$home_path;
+			}
 
-		$paths = explode('/', self::$q);
+		$paths = explode('/', $path);
 		$name = array_shift($paths);
-
-		$wrap_class = "\\" . implode("\\", $wraps);
-		$index = $wrapper = new $wrap_class($name, $paths);
+		
+		$index = $wrapper = new \Path\Wrapper($name, $paths);
 
 		// walk down the children,
 		while (isset($index->child)) $index = $index->child;
@@ -46,9 +54,11 @@ class Path
 				}
 			}
 
-		echo $wrapper->my_display();
+		return $wrapper; // ->my_display();
 		}
 
+	/**
+		*/
 	static public function index($path, $params = array()) {
 
 		$paths = explode('/', $path);
@@ -74,8 +84,6 @@ class Path
 			}
 		return $wrapper;
 		}
-
-		
 
 	/**
 		The $_GET array minus any class variables (q).
@@ -112,15 +120,15 @@ class Path
 		*/
 	static public function base_to($path, $params = array())
 		{
-		return self::$local_path . $path . (! empty($params) ? '&' . http_build_query($params) : '');
+		return \Config::$local_path . $path . (! empty($params) ? '&' . http_build_query($params) : '');
 		}
 
 	/**
 		\return Link.
 		*/
-	static public function link_to($text, $path, $params = array(), $class = '')
+	static public function link_to($text, $path, $params = array())
 		{
-		return "<a class='$class' href='" . self::base_to($path, $params) . "'>$text</a>";
+		return "<a href='" . self::base_to($path, $params) . "'>$text</a>";
 		}
 
 	/**

@@ -63,7 +63,7 @@ class Nav
 		\param	string	$class		CSS Class.
 		\return This.
 		*/
-	public function add($name = 'Link', $path = 'event/list', $params = array(), $class = '')
+	public function add($name = 'Link', $path = 'event/list', $params = array(), $class = 'big')
 		{
 		if (! $params) $params = array();
 		$params = array_merge($this->keypair, $params);

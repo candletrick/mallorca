@@ -1,6 +1,7 @@
 <?php
-date_default_timezone_set('America/Los Angeles');
+/* TIMEZONE, INI */
 
+date_default_timezone_set('America/Los Angeles');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('mysql.datetimeconvert', 'Off');
@@ -38,15 +39,7 @@ function iff($bool, $then, $else = '') {
 /* INPUTS */
 
 function input_group($inputs = array()) {
-	/*
-	$args = func_get_args();
-	$name = array_shift($args);
-
-	// allow passing of inputs as array or argument list
-	if (is_array(is($args, 0))) $args = $args[0];	
-	*/
 	$name = 'input-group';
-
 	return new \Input\Group($name, $inputs);
 	}
 
@@ -178,8 +171,14 @@ function _to_class($s) {
 
 /* IMAGES / TAGS */
 
-function meta_viewport() {
-	return '<meta name="viewport" content="width=device-width, user-scalable=0" />';
+function title_tag($title = 'My Page') {
+	return '<title>' . $title . '</title>';
+	}
+
+function meta_tags() {
+	return ''
+	. '<meta charset="UTF-8" />'
+	. '<meta name="viewport" content="width=device-width, user-scalable=0" />';
 	}
 
 function doctype() {
@@ -191,15 +190,14 @@ function jquery_tag() {
 	}
 
 function style_tag($path) {
-	return "<link rel='stylesheet' type='text/css' href='" . \Path::$local_path . $path . "' media='screen'></link>";
+	return "<link rel='stylesheet' type='text/css' href='" . \Config::$local_path . $path . "' media='screen'></link>";
 	}
 
 function script_tag($path) {
-	return 	"<script type='text/javascript' src='" . \Path::$local_path . $path . "'></script>";
+	return 	"<script type='text/javascript' src='" . \Config::$local_path . $path . "'></script>";
 	}
 
 function upload_tag($url) {
-	// return $url ? image_tag($url, 'uploads') : '';
 	return "<img src='" . \Path::$local_path . "image.php?h=$url'>";
 	}
 
@@ -209,6 +207,17 @@ function image_tag($url, $folder = 'public/images') {
 
 function image_url($url, $folder = 'public/images') {
 	return \Path::$local_path . "$folder/$url";
+	}
+
+/**
+	Standard mallorca HTML wrapper with a stick footer built in.
+	*/
+function mallorca_wrapper() {
+	return div('wrapper',
+		div('content')
+		. div('push')
+		)
+	. div('footer');
 	}
 
 /* MARKUP */
@@ -291,6 +300,7 @@ function how_long_ago($date, $base = 60, $before = '', $after = '') {
 	: ($neg ? "<span class='future'>" . str_repeat("&bullet;", $qty - 1) . " In $qty $ago</span>"
 	: "<span class='past'>$qty $ago Ago</span>");
 	}
+
 function day_diff($start, $end) {
 	return date_diff(date_create($start), date_create($end))->format('%r%a');
 	}
@@ -388,9 +398,24 @@ function call($class, $fn, $params = array(), $method = 'replace') {
 		);
 	}
 
+function call_path_fn($path = '', $fn = '', $params = []) {
+	return array(
+		'q'=>$path,
+		'function'=>$fn,
+		'params'=>$params
+		);
+	}
+
+function call_path($path = '', $params = []) {
+	return array(
+		'q'=>$path,
+		'params'=>$params
+		);
+	}
+
 function schema($table, $columns) {
 	// return \Schema::table($table, $cols);
-	return new Meta(array('table'=>$table, 'columns'=>$columns));
+	return new \Meta(array('table'=>$table, 'columns'=>$columns));
 	}
 
 function on($name) {
@@ -405,41 +430,18 @@ function ls() {
 	return new Ls(func_get_args());
 	}
 
-/* DataType Functions *
+/* CONFIG */
 
-function dt_pk($name = 'id', $type = 'hidden', $dtype = 'primary_key') {
-	return new \DataType(get_defined_vars());
-	}
-
-function dt_str($name, $opt = 10, $type = 'text', $dtype = 'str') {
-	return new \DataType(get_defined_vars());
-	}
-
-function dt_date($name, $type = 'date', $dtype = 'date') {
-	return new \DataType(get_defined_vars());
-	}
-
-function dt_dec($name, $opt = 7, $type = 'text', $dtype = 'dec') {
-	return new \DataType(get_defined_vars());
-	}
-
-function dt_lbs($name, $opt = 500, $type = 'text', $dtype = 'int') {
-	return new \DataType(get_defined_vars());
-	}
-
-function dt_ft($name, $type = 'text', $dtype = 'ft') {
-	return new \DataType(get_defined_vars());
-	}
-	
-function dt_int($name, $type = 'hidden', $dtype = 'int') {
-	return new \DataType(get_defined_vars());
-	}
-	
-function dt_bool($name, $type = 'checkbox', $dtype = 'bool') {
-	return new \DataType(get_defined_vars());
-	}
-
-function dt_when($name = 'created_on', $type = 'hidden', $dtype = 'when') {
-	return new \DataType(get_defined_vars());
-	}
+/**
+	Define these values in your protected/_local.php file.
 	*/
+class Config {
+	/** Array of keys: type, host, user, password, database. */
+	static public $db = array();
+
+	/** Directories to autoload from. */
+	static public $autoload_dirs = array();
+
+	/** The local url root prefix. */
+	static public $local_path = '/';
+	}

@@ -95,7 +95,7 @@ function onemask(evt, o, mask, chr, type)
 	// numbers only regex
 	var pattern;
 	if (type == 'money') pattern = /\d|\.|-/;
-	else pattern = /\d/;
+	else pattern = /[\d-]/;
 	
 	// non-letter chars
 	if (c < 32 ) return true;
@@ -107,7 +107,7 @@ function onemask(evt, o, mask, chr, type)
 		return pattern.test(o.value + s);
 		}
 		*/
-	else	if (pattern.test(s) == true)
+	else if (pattern.test(s) == true)
 		{
 		var len = o.value.length;
 		

@@ -27,6 +27,11 @@ class Lookup extends \Module\Lookup
 		parent::__construct($index);
 		}
 
+	public function my_name()
+		{
+		return _to_words($this->table);
+		}
+
 	public function my_query() {
 		return select($this->table, $this->columns);
 		}
