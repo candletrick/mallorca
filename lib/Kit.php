@@ -398,11 +398,12 @@ function call($class, $fn, $params = array(), $method = 'replace') {
 		);
 	}
 
-function call_path_fn($path = '', $fn = '', $params = []) {
+function call_path_fn($path = '', $fn = '', $params = [], $method = 'replace') {
 	return array(
 		'q'=>$path,
 		'function'=>$fn,
-		'params'=>$params
+		'params'=>$params,
+		'method'=>$method
 		);
 	}
 

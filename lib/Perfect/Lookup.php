@@ -23,8 +23,12 @@ class Lookup extends \Perfect
 				)
 			)
 		. div('right',
-			div('banner', $this->my_banner())
-			. div('table-wrapper', $this->my_table($data))
+			$this->schema->my_quick_add()
+			. div('banner', $this->my_banner())
+			. div('pre-table')
+			. div('table-wrapper', 
+				$this->my_table($data)
+				)
 			);
 		}
 
@@ -39,30 +43,45 @@ class Lookup extends \Perfect
 
 	public function my_table($data)
 		{
+		$keys = empty($data) ? $this->get_names()
+		: array_keys(current($data));
+
 		return "<table class='table'>" 
-		. $this->nest_two(array(array_map('_to_words', array_keys(current($data)))), 'tr', 'th')
-		. $this->nest_two($data)
+		. "<thead>" . $this->nest_two(array(array_map('_to_words', $keys)), 'tr', 'th') . "</thead>"
+		. "<tbody>" . $this->nest_two($data) . "</tbody>"
 		. "</table>";
+		}
+
+	public function my_rows()
+		{
+		$query = $this->my_query();
+		if ($this->schema->id) $query = $query->combine([m('id')->where($this->schema->id)]);
+
+		return $this->nest_two($query->results());
 		}
 
 	public function nest_two($data, $a = 'tr', $b = 'td')
 		{
 		$s = '';
 		foreach ($data as $one) {
-			$df = $b == 'td' ?
-				stack(['.content'=>$this->schema->path('form', ['id'=>$one['id']])])
-				: '';
-			$s .= "<$a class='data-fn' data-fn=\"$df\">";
+			$s .= "<$a>";
 			foreach ($one as $two) {
-				if ($b == 'th') {
-					$sort = stack(['.table-wrapper'=>$this->schema->path_fn('lookup', 'sorted', ['sort'=>$two])]);
-					$s .= "<$b class='data-fn' data-fn=\"$sort\">$two</$b>";
-					}
-				else $s .= "<$b>$two</$b>";
+				$s .= "<$b>$two</$b>";
 				}
 			$s .= "</$a>";
 			}
 		return $s;
+		}
+
+	public function searched($data = [])
+		{
+		$new = [];
+		foreach ($data as $k=>$v) {
+			$new[] = m($k)->where_like($v);
+			}
+
+		$data = $this->my_query()->combine($new)->results();
+		return $this->my_table($data);
 		}
 
 	public function sorted($data = [])
@@ -70,7 +89,6 @@ class Lookup extends \Perfect
 		$sort = strtolower(is($data, 'sort'));
 		$data = $this->my_query()->combine([m($sort)->asc()])->results();
 		
-		// return $sort . pv($data);
 		return $this->my_table($data);
 		}
 

@@ -88,16 +88,17 @@ class Request
 
 		foreach ($stack as $k=>$v) {
 			$s = '';
+			$params = array_merge(is($v, 'params', array()), $data);
+
 			if (self::$stop) continue;
 			if (! is_array($v)) {
 				$s = $v;
 				}
 			else if (array_key_exists('class', $v)) {
-				$params = array_merge(is($v, 'params', array()), $data);
 				$s = self::call_class($v['class'], $v['function'], $params);
 				}
 			else if (array_key_exists('q', $v)) {
-				$s = self::call_path($v['q'], is($v, 'params'), is($v, 'function', 'my_display'));
+				$s = self::call_path($v['q'], $params, is($v, 'function', 'my_display'));
 				$json['set_url'] = $v['q'];
 				}
 
@@ -121,12 +122,11 @@ class Request
 		$parts = explode('/', $path);
 		$method = array_pop($parts);
 
-		array_push($parts, 'schema');
-		$schema_class = "\\" . implode("\\", array_map('_to_camel', $parts));
-		$schema = new $schema_class();
+		$class = _to_class(implode('/', $parts) . '/schema');
+		$schema = new $class();
 		$schema->params($params);
 
-		if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
+		// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
 
 		$body = $schema->$method()->$fn($params);
 		if ($fn == 'my_display') $body = \Path\Wrapper::my_wrapper($body);
@@ -140,6 +140,17 @@ class Request
 	static private function call_class($class, $fn, $params = array())
 		{
 		$new = new $class();
-		return $new->$fn($params);
+
+		// piping
+		$fns = array_map('trim', explode('|', $fn));
+		$first = array_shift($fns);
+		$next = $new->$first($params);
+		// die(pv($fns));
+		foreach ($fns as $step) {
+			$next = $next->$step();
+			}
+
+		// return $new->$fn($params);
+		return $next;
 		}
 	}

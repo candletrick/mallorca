@@ -86,23 +86,39 @@ function request(data) {
 
 var clicker;
 
-function run_request() {
-	// var fm = $(this).closest('form');
-	var fm = $(this).hasClass('all-data') ? $(':input') : $(this).closest('.control-group').find(':input');
+function run_request(e) {
+	e.stopPropagation();
 
+
+	var data = $(this).hasClass('all-data') ? $(':input').serialize()
+	: ($(this).hasClass('no-data') ? ''
+	: $(this).closest('.data-group').find(':input').serialize());
 	clicker = $(this);
 
-	// request($(this).attr('data-fn') + (fm ? '&' + fm.serialize() : ""));
-	request({
+	// before-fn
+	var before = clicker.attr('before-fn');
+	if (typeof(effects[before]) !== 'undefined') {
+		if (! effects[before](clicker)) return false;
+		}
+
+	run_stack($(this).attr('data-fn'), data);
+
+	return false;
+	}
+
+function run_stack(data_fn, data) {
+	var req = {
 		'stack' : {
-			'data-fn' : $(this).attr('data-fn'),
-			'data' : fm.serialize()
+			'data-fn' : data_fn,
+			'data' : data
 			}
-		});
+		};
+	request(req);
 	}
 
 function done_loading() {
 
+	console.log(clicker);
 	if (clicker) {
 		var after = clicker.attr('after-fn');
 		if (typeof(effects[after]) !== 'undefined') effects[after](clicker);
@@ -146,11 +162,10 @@ function load_next(index, pages) {
 
 	var sel = k == 'this' ? this : k;
 
-	$(sel).animate({
-		opacity : 0,
-		}, iv, 'linear', function() {
+	$(sel).fadeOut(iv, function() {
 		if (meth == 'append') $(this).append(v);
 		else if (meth == 'prepend') $(this).prepend(v);
+		else if (meth == 'replaceWith') $(this).replaceWith(v);
 		else $(this).html(v);
 		
 		$(this).fadeIn(iv, function() {

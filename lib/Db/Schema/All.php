@@ -36,10 +36,15 @@ class All {
 					&& $class != "\\Schema\\Schema"
 					&& strpos($class, 'Schema') !== false
 					&& class_exists($class)
-					&& get_parent_class($class) == 'Schema') {
+					&& (get_parent_class($class) == 'Schema'
+					|| get_parent_class($class) == 'Schema\Meta')
+					) {
 						// $schema = new $class($this->index);
 						echo "\n\nFound $class.";
-						$class::create();
+						$inst = new $class();
+						$schema = $inst->my_schema();
+						\Schema::create($schema);
+						// $class::create();
 					}
 				}
 			}

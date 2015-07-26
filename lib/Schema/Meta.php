@@ -13,6 +13,16 @@ class Meta
 		$this->path = strtolower(str_replace("\\", "/", get_class($this)));
 		}
 
+	/**
+		Launchable call.
+		*/
+	function __call($fn, $params = [])
+		{
+		$class = _to_class($fn);
+		$new = new $class();
+		return $new->schema($this);
+		}
+
 	function params($params = [])
 		{
 		$this->params = $params;
@@ -25,8 +35,16 @@ class Meta
 
 	function my_save($data = [])
 		{
-		$id = \Db::match_upsert($this->table, $data, " where id=" . id_zero(is($data, 'id')));
-		return "Saved! New id: $id.";
+		$this->id = $id = \Db::match_upsert($this->table, $data, " where id=" . id_zero(is($data, 'id')));
+		alert("Saved! New id: $id.");
+		return $this;
+		}
+
+	function my_delete($data = [])
+		{
+		// die(pv($data));
+		$id = id_zero(is($data, 'id'));
+		if ($id) \Db::query("delete from $this->table where id=" . $id);
 		}
 
 	function call($fn)
@@ -40,10 +58,10 @@ class Meta
 		return call_path($class, $params);
 		}
 
-	function path_fn($path, $fn, $params = [])
+	function path_fn($path, $fn, $params = [], $method = 'replace')
 		{
 		$class = str_replace('schema', $path, $this->path);
-		return call_path_fn($class, $fn, $params);
+		return call_path_fn($class, $fn, $params, $method);
 		}
 
 	function lookup()

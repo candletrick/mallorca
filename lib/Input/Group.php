@@ -143,7 +143,7 @@ class Group
 				. div('input', $input->my_display())
 				);
 			}
-		return div('control-group', implode('', $cs));
+		return div('control-group data-group', implode('', $cs));
 		}
 	/*
 	public function label($label)

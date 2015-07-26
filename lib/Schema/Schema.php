@@ -137,6 +137,7 @@ abstract class Schema extends \View {
 		if ($name == 'id') return array('primary_key', '');
 		else if (strpos($name, 'is_') !== false) return array('bool', '');
 		else if (strpos($name, '_id')) return array('int', '');
+		else if (strpos($name, '_count')) return array('int', '');
 		else if (strpos($name, '_at')) return array('datetime', '');
 		else if (strpos($name, '_name')) return array('str', 140);
 		else if (strpos($name, '_per_')) return array('int', 1000000);
@@ -177,10 +178,10 @@ abstract class Schema extends \View {
 	/**
 		Evaluate the table for creation / alteration and display to screen.
 		*/
-	static public function create() {
+	static public function create($schema) {
 		$table = db()->table();
 
-		$schema = static::my_schema();
+		// $schema = static::my_schema();
 		$name = $schema->table;
 		$types = self::extract_data_types($schema->columns);
 		$columns = array();

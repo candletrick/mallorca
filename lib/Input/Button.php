@@ -5,6 +5,7 @@ class Button extends \Input
 	{
 	public $data_fn;
 	public $after_fn;
+	public $before_fn;
 
 	function my_construct()
 		{
@@ -19,6 +20,7 @@ class Button extends \Input
 		return "<input type='$this->type' name='$this->name' value='$label' class='$this->classes' "
 		. ($this->data_fn ? " data-fn=\"$this->data_fn\" " : '')
 		. ($this->after_fn ? " after-fn=\"$this->after_fn\" " : '')
+		. ($this->before_fn ? " before-fn=\"$this->before_fn\" " : '')
 		. " $this->attrs>";
 		}
 
@@ -28,6 +30,18 @@ class Button extends \Input
 		return $this->stack($stack);
 		}
 		
+	function before($before)
+		{
+		$this->before_fn = $before;
+		return $this;
+		}
+
+	function after($after)
+		{
+		$this->after_fn = $after;
+		return $this;
+		}
+
 	function stack($xs = array(), $after_fn = '')
 		{
 		$this->classes .= " action";

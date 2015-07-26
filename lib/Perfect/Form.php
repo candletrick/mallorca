@@ -24,8 +24,26 @@ class Form extends \Perfect
 	public function my_search_form()
 		{
 		return "<script type='text/javascript'>
+		var searching;
+
+		$(document).ready(function() {
+			$('.search-wrapper .input-text').keyup(function() {
+				var data = $(this).closest('.data-group').find(':input').serialize();
+				var data_fn = '" . stack([
+					'.table'=>$this->schema->path_fn('lookup', 'searched')
+					]) . "';
+				searching = setTimeout(function () {
+					run_stack(data_fn, data);
+					}, 444);
+				})
+			.keydown(function () {
+				clearTimeout(searching);
+				});
+			});
 		</script>"
-		. $this->control_group($this->my_search_inputs());
+		. div('search-wrapper',
+			$this->control_group($this->my_search_inputs())
+			);
 		}
 
 	public function my_search_inputs()
@@ -75,7 +93,7 @@ class Form extends \Perfect
 			$inps[] = $this->control($inp);
 			}
 
-		return div('control-group', implode('', $inps));
+		return div('control-group data-group', implode('', $inps));
 		}
 
 	public function control($input)
