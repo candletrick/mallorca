@@ -1,14 +1,17 @@
 <?php
-namespace Schema;
 
-class Meta
+/**
+	Model.
+	*/
+class Model
 	{
-	function __construct()
+	/**
+		*/
+	function __construct($id = 0)
 		{
-		$schema = $this->my_schema();
-		$this->table = $schema->table;
-		$this->columns = $schema->columns;
-		$this->id = 0;
+		$this->table = $this->my_table();
+		$this->columns = $this->my_attrs();
+		$this->id = $id;
 		$this->data = [];
 		$this->path = strtolower(str_replace("\\", "/", get_class($this)));
 		}
@@ -23,6 +26,8 @@ class Meta
 		return $new->schema($this);
 		}
 
+	/**
+		*/
 	function params($params = [])
 		{
 		$this->params = $params;
@@ -33,45 +38,61 @@ class Meta
 			}
 		}
 
-	function my_save($data = [])
+	/**
+		*/
+	function my_save()
 		{
+		$data = \Request::$data;
 		$this->id = $id = \Db::match_upsert($this->table, $data, " where id=" . id_zero(is($data, 'id')));
 		alert("Saved! New id: $id.");
 		return $this;
 		}
 
-	function my_delete($data = [])
+	/**
+		*/
+	function my_delete($id = 0)
 		{
-		// die(pv($data));
-		$id = id_zero(is($data, 'id'));
-		if ($id) \Db::query("delete from $this->table where id=" . $id);
+		// $id = id_zero(is($data, 'id'));
+		if ($id) \Db::query("delete from $this->table where id=" . id_zero($id));
 		}
 
+	/**
+		*/
 	function call($fn)
 		{
 		return call($this, $fn);
 		}
 
+	/**
+		*/
 	function path($path, $params = [])
 		{
 		$class = str_replace('schema', $path, $this->path);
 		return call_path($class, $params);
 		}
 
+	/**
+		*/
 	function path_fn($path, $fn, $params = [], $method = 'replace')
 		{
 		$class = str_replace('schema', $path, $this->path);
 		return call_path_fn($class, $fn, $params, $method);
 		}
 
+	/**
+		*/
 	function lookup()
 		{
 		$o = new \Perfect\Lookup();
 		return $o->schema($this);
 		}
 
-	function form()
+	/**
+		*/
+	function form($id = 0)
 		{
+		$this->id = id_zero($id);
+		if ($this->id) $this->data = select($this->table, ['*', m('id')->where($this->id)])->one_row();
 		$o = new \Perfect\Form($this);
 		return $o->schema($this);
 		}

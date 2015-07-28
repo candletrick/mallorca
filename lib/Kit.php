@@ -152,7 +152,7 @@ function db() {
 /* ESCAPING */
 
 function id_zero($x) {
-	return preg_match("/^\d+$/", $x) ? $x : 0;
+	return is_string($x) && preg_match("/^\d+$/", $x) ? $x : 0;
 	}
 
 function _to_camel($s) {
@@ -213,11 +213,14 @@ function image_url($url, $folder = 'public/images') {
 	Standard mallorca HTML wrapper with a stick footer built in.
 	*/
 function mallorca_wrapper() {
-	return div('wrapper',
-		div('content')
-		. div('push')
-		)
-	. div('footer');
+	return div('wrapper', div('content') . div('push')) . div('footer')
+	// initialize
+	. "<script type='text/javascript'>
+	var local_path = '" . \Config::$local_path . "';
+	var json_get = " . json_encode($_GET) . ";
+	</script>"
+	. script_tag('js/mallorca.js')
+	;
 	}
 
 /* MARKUP */
@@ -357,7 +360,15 @@ function alert($msg = '') {
 /* Mallorca Framework */
 
 function stack($xs = array()) {
-	return http_build_query(array('stack'=>$xs));
+	$ys = [];
+	foreach ($xs as $x) {
+		if (is_object($x) && get_class($x) == 'ServerCall') {
+			$ys[] = $x->props;
+			}
+		else $ys[] = $x;
+		}
+	// return http_build_query(array('stack'=>$ys));
+	return http_build_query($ys);
 	}
 
 function merge($fn, $param = array()) {
@@ -387,15 +398,19 @@ function fn($fn, $params = array()) {
 		);
 	}
 
-function call($class, $fn, $params = array(), $method = 'replace') {
+
+function call($class, $fn, $params = ['']) {
 	if (is_object($class)) $class = get_class($class);
 
-	return array(
+	// allow piping
+	$fns = explode(' | ', $fn);
+
+	return new\ServerCall([
 		'class'=>$class,
-		'function'=>$fn,
-		'params'=>$params,
-		'method'=>$method,
-		);
+		// 'constructor'=>$constructor,
+		'functions'=>$fns,
+		'params'=>[$params]
+		]);
 	}
 
 function call_path_fn($path = '', $fn = '', $params = [], $method = 'replace') {

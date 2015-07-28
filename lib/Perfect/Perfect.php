@@ -18,6 +18,7 @@ class Perfect
 	public function get_names()
 		{
 		$cols = array();
+		// echo pv($this->schema); die;
 		foreach ($this->schema->columns as $c) {
 			$cols[] = is_object($c) ? $c->get_name(): $c;
 			}

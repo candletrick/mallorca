@@ -9,6 +9,9 @@ class Request
 	{
 	/** Stop execution. */
 	static public $stop = false;
+
+	/** Form-submitted request data. */
+	static public $data;
 	
 	/**
 		New mallorca style rendering.
@@ -77,8 +80,11 @@ class Request
 			$m = array();
 			parse_str(is($stack, 'data-fn'), $m);
 			parse_str(is($stack, 'data'), $data);
-			$stack = $m['stack'];
+			$stack = $m;
+			// $stack = $m['stack'];
 			}
+
+		self::$data = $data;
 		
 		$json = array(
 			'request'=>pv($stack)// print_r($_POST, true),
@@ -88,14 +94,15 @@ class Request
 
 		foreach ($stack as $k=>$v) {
 			$s = '';
-			$params = array_merge(is($v, 'params', array()), $data);
+			// $params = array_merge(is($v, 'params', array()), $data);
+			$params = is($v, 'params', []);
 
 			if (self::$stop) continue;
 			if (! is_array($v)) {
 				$s = $v;
 				}
 			else if (array_key_exists('class', $v)) {
-				$s = self::call_class($v['class'], $v['function'], $params);
+				$s = self::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
 				}
 			else if (array_key_exists('q', $v)) {
 				$s = self::call_path($v['q'], $params, is($v, 'function', 'my_display'));
@@ -104,7 +111,9 @@ class Request
 
 			if (! isset($json[$k])) $json[$k] = array();
 
-			$json[$k] = array(
+			$key = is($v, 'selector', $k);
+
+			$json[$key] = array(
 				'content'=>$s,
 				'method'=>is($v, 'method', 'replace')
 				);
@@ -122,7 +131,7 @@ class Request
 		$parts = explode('/', $path);
 		$method = array_pop($parts);
 
-		$class = _to_class(implode('/', $parts) . '/schema');
+		$class = _to_class(implode('/', $parts) . '/model');
 		$schema = new $class();
 		$schema->params($params);
 
@@ -137,20 +146,20 @@ class Request
 	/**
 		Call simple instance function.
 		*/
-	static private function call_class($class, $fn, $params = array())
+	static private function call_class($class, $fns, $params = array())
 		{
 		$new = new $class();
 
 		// piping
-		$fns = array_map('trim', explode('|', $fn));
-		$first = array_shift($fns);
-		$next = $new->$first($params);
-		// die(pv($fns));
-		foreach ($fns as $step) {
-			$next = $next->$step();
+		// $fns = array_map('trim', explode('|', $fn));
+		// $first = array_shift($fns);
+		// $next = $new->$first($params);
+		// echo pv($params); die(pv($fns));
+		foreach ($fns as $index=>$step) {
+			$new = call_user_func_array([$new, $step], is($params, $index, []));
 			}
 
 		// return $new->$fn($params);
-		return $next;
+		return $new;
 		}
 	}

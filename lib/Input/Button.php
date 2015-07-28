@@ -42,6 +42,14 @@ class Button extends \Input
 		return $this;
 		}
 
+	function click($xs = array())
+		{
+		$this->classes .= " data-fn action";
+		$this->data_fn = stack($xs);
+		return $this;
+		}
+
+	// phase this out
 	function stack($xs = array(), $after_fn = '')
 		{
 		$this->classes .= " action";

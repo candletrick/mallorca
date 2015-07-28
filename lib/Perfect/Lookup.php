@@ -35,19 +35,25 @@ class Lookup extends \Perfect
 	public function my_banner()
 		{
 		return _to_words($this->schema->table)
-		. ' &bull; ' . input_button('New')->stack([
-			'.content'=>$this->schema->path('form')
-			])
-		;
+		. ' &bull; ' . input_button('New')->click([
+			call($this->schema, 'form | my_display')->html('.lookup-wrapper')
+			]);
 		}
 
 	public function my_table($data)
 		{
+		/*
 		$keys = empty($data) ? $this->get_names()
 		: array_keys(current($data));
+		*/
+		$keys = $this->filter();
+		$th = [];
+		foreach ($keys as $k=>$v) {
+			$th[$k] = _to_words($k);
+			}
 
 		return "<table class='table'>" 
-		. "<thead>" . $this->nest_two(array(array_map('_to_words', $keys)), 'tr', 'th') . "</thead>"
+		. "<thead>" . $this->nest_two(array($th), 'tr', 'th') . "</thead>"
 		. "<tbody>" . $this->nest_two($data) . "</tbody>"
 		. "</table>";
 		}
@@ -73,20 +79,23 @@ class Lookup extends \Perfect
 		return $s;
 		}
 
-	public function searched($data = [])
+	public function searched()
 		{
 		$new = [];
-		foreach ($data as $k=>$v) {
-			$new[] = m($k)->where_like($v);
+		foreach (\Request::$data as $k=>$v) {
+			if ($v) $new[] = m($k)->where_like($v);
 			}
 
+		// $q = $this->my_query()->combine($new);
+		// die(pv($q));
 		$data = $this->my_query()->combine($new)->results();
+		
 		return $this->my_table($data);
 		}
 
-	public function sorted($data = [])
+	public function sorted($sort = '')
 		{
-		$sort = strtolower(is($data, 'sort'));
+		$sort = strtolower($sort);
 		$data = $this->my_query()->combine([m($sort)->asc()])->results();
 		
 		return $this->my_table($data);

@@ -6,7 +6,9 @@ class Form extends \Perfect
 	public function my_display()
 		{
 		return div('banner', 
-			div('title', input_button('lookup')->stack(['.content'=>$this->schema->path('lookup')])
+			div('title', input_button('lookup')->stack([
+				call($this->schema, 'lookup | my_display')->html('.lookup-wrapper')
+				])
 				. ' &gt; '
 				. 'New ' . _to_words($this->schema->table)
 				)
@@ -30,10 +32,11 @@ class Form extends \Perfect
 			$('.search-wrapper .input-text').keyup(function() {
 				var data = $(this).closest('.data-group').find(':input').serialize();
 				var data_fn = '" . stack([
-					'.table'=>$this->schema->path_fn('lookup', 'searched')
+					call($this->schema, 'lookup | searched')->html('.table-wrapper')
+					// '.table'=>$this->schema->path_fn('lookup', 'searched')
 					]) . "';
 				searching = setTimeout(function () {
-					run_stack(data_fn, data);
+					Mallorca.run_stack(data_fn, data);
 					}, 444);
 				})
 			.keydown(function () {
@@ -81,8 +84,9 @@ class Form extends \Perfect
 			yield $input;
 			}
 		yield input_hidden('id', $this->schema->id);
-		yield input_button('Save')->stack([
-			'.save-status'=>$this->schema->call('my_save')
+		yield input_button('Save')->click([
+			call($this->schema, 'my_save')
+			// '.save-status'=>$this->schema->call('my_save')
 			]);
 		}
 
