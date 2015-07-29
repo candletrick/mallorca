@@ -194,7 +194,7 @@ class Query {
 			else if (isset($column->blank)) $this->wheres[] = "($name is null or $name='')";
 
 			// Alias
-			$name = $name . ($column->name == $column->as ? '' : " as $column->as");
+			$name = $name . ($name == $column->as ? '' : " as $column->as");
 			$this->names[] = $name;
 			}
 		// Repeat over array

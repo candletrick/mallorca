@@ -79,8 +79,12 @@ class Form extends \Perfect
 			if ($name == 'id') continue;
 			if (isset($col->data)) {
 				if (isset($col->data->type)) {
-					list($type, $opt) = $col->data->type;
-					if ($type == 'str' && $opt > 100) {
+					// list($type, $opt) = $col->data->type;
+					$types = $col->data->type;
+					$type = is($types, 0);
+					$opt = is($types, 1);
+					if ($type == 'blob'
+					|| ($type == 'str' && $opt > 100)) {
 						$input_fn = 'input_textarea';
 						}
 					}
