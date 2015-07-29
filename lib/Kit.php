@@ -437,6 +437,9 @@ class Config {
 	/** Directories to autoload from. */
 	static public $autoload_dirs = array();
 
+	/** Number of directories to escape up from Autoload.php location. */
+	static public $autoload_ups = "/../..";
+
 	/** The local url root prefix. */
 	static public $local_path = '/';
 	}

@@ -14,10 +14,10 @@ function autoload_lib($name)
 	$errors = array();
 	foreach ($folders as $folder) {
 
-		$steps = substr_count($folder, '/');
-		$up = $steps ? str_repeat('/..', $steps + 1) : '/../..';
+		// $steps = substr_count($folder, '/');
+		// $up = $steps ? str_repeat('/..', $steps + 1) : '/../..';
 		
-		$path = __DIR__ . $up . \Config::$local_path . "$folder/$name";
+		$path = __DIR__ . \Config::$autoload_ups . \Config::$local_path . "$folder/$name";
 
 		$dir = "$path/$end.php";
 		$file = "$path.php";
