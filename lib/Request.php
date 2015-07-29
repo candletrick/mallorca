@@ -87,29 +87,31 @@ class Request
 			'request'=>pv($stack)
 			);
 		 
-		// die(pv($stack));
+		 // die(pv($stack));
 
 		foreach ($stack as $k=>$v) {
 			$s = '';
 			// $params = array_merge(is($v, 'params', array()), $data);
 			$params = is($v, 'params', []);
+			$key = is($v, 'selector', $k);
+			$out = [];
 
 			if (self::$stop) continue;
 			if (! is_array($v)) {
 				$s = $v;
 				}
 			else if (array_key_exists('class', $v)) {
-				$s = self::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
+				$out = self::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
+				$s = $out['content'];
 				}
 			else if (array_key_exists('q', $v)) {
 				$s = self::call_path($v['q'], $params, is($v, 'function', 'my_display'));
-				// die(pv($params));
-				$json['set_url'] = $v['q'] . '&' . http_build_query($params);
+				$json['set_url'] = $v['q'] . (! empty($params) ? '&' . http_build_query($params) : '');
 				}
 
 			if (! isset($json[$k])) $json[$k] = array();
 
-			$key = is($v, 'selector', $k);
+			$key = is($v, 'selector', is($out, 'selector', $k));
 
 			$json[$key] = array(
 				'content'=>$s,
@@ -122,7 +124,7 @@ class Request
 		}
 
 	/**
-		Call a on() schema object as a path.
+		Call a on() model object as a path.
 		*/
 	static private function call_path($path, $params = [], $fn = 'my_display')
 		{
@@ -131,11 +133,13 @@ class Request
 
 		$class = _to_class(implode('/', $parts) . '/model');
 		$model = new $class();
-		$model->params($params);
+		// $model->params($params);
 
 		// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
+		$call = call_user_func_array([$model, $method], $params);
+		$body = $call->$fn();
 
-		$body = $model->$method()->$fn($params);
+		// $body = $model->$method($params)->$fn();
 		if ($fn == 'my_display') {
 			$body = \Path\Wrapper::my_wrapper($body);
 			}
@@ -149,11 +153,46 @@ class Request
 	static private function call_class($class, $fns, $params = array())
 		{
 		$new = new $class();
+ 		// echo pv(class_uses($new)); die(pv(class_implements($new)));
+ 		$out = [];
 
 		foreach ($fns as $index=>$step) {
-			$new = call_user_func_array([$new, $step], is($params, $index, []));
+			/*
+			// parameter matching
+			echo pv($new->my_allow());
+			$allow = [];
+			foreach ($new->my_allow() as $k=>$v) {
+				if (preg_match("/^\d+$/", $k)) $allow[$v] = [];
+				else $allow[$k] = $v;
+				}
+			 // echo $step; die(pv($allow));
+
+			if (! isset($allow[$step])) {
+				die("You must add $step to my_allow()");
+				}
+
+			$args = is($params, $index, []);
+			$call_args = [];
+			foreach ($allow[$step] as $k=>$v) {
+				$call_args[$k] = is($args, $k, $v);
+				}
+				*/
+			$call_args = is($params, $index, []);
+
+			// $ref = new ReflectionMethod($new, $step); echo pv($ref->getParameters());
+
+			// default wrappers
+			if (isset($new->wrapper) && isset($new->wrapper[$step])) {
+				$out['selector'] = $new->wrapper[$step];
+				}
+
+			$new = call_user_func_array([$new, $step], $call_args);
 			}
 
-		return $new;
+		$out['content'] = $new;
+
+		// echo pv($out);
+
+		return $out;
 		}
 	}

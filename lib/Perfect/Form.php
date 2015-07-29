@@ -5,6 +5,8 @@ class Form extends \Perfect
 	{
 	public function my_display()
 		{
+		// \Request::$data
+		 // die($this->model->id);
 		return div('banner', 
 			div('title', input_button('lookup')->stack([
 				// call($this->model, 'lookup | my_display')->html('.lookup-wrapper')
@@ -12,6 +14,11 @@ class Form extends \Perfect
 				])
 				. ' &gt; '
 				. 'New ' . _to_words($this->model->table)
+				)
+			. div('f-right', input_button('Delete')->click([
+				call($this->model, 'my_delete', ['id'=>$this->model->id]),
+				$this->model->path('lookup')
+				])->before('confirm_delete')->add_class('delete')
 				)
 			)
 			. $this->my_form()
@@ -33,7 +40,8 @@ class Form extends \Perfect
 			$('.search-wrapper .input-text').keyup(function() {
 				var data = $(this).closest('.data-group').find(':input').serialize();
 				var data_fn = '" . stack([
-					call($this->model, 'lookup | searched')->html('.table-wrapper')
+					call($this->model, 'lookup | searched')
+						// ->html('.table-wrapper')
 					// '.table'=>$this->model->path_fn('lookup', 'searched')
 					]) . "';
 				searching = setTimeout(function () {
@@ -86,7 +94,8 @@ class Form extends \Perfect
 			}
 		yield input_hidden('id', $this->model->id);
 		yield input_button('Save')->click([
-			call($this->model, 'my_save')
+			call($this->model, 'my_save'),
+			$this->model->path('lookup')
 			// '.save-status'=>$this->model->call('my_save')
 			]);
 		}

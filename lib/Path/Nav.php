@@ -67,8 +67,12 @@ class Nav
 		{
 		if (! $params) $params = array();
 		$params = array_merge($this->keypair, $params);
-		$this->links[$name] = "<li" . (\Path::$q == $path ? " class='selected'" : '') . ">
-		<a class='$class' href='" . \Path::base_to($path, $params) . "'>$name</a></li>";
+		$this->links[$name] = "<li" . (\Path::$q == $path ? " class='selected'" : '') . ">"
+		// <a class='$class' href='" . \Path::base_to($path, $params) . "'>$name</a>"
+		. input_button($name)->click([
+			call_path($path, $params)
+			])
+		. "</li>";
 		return $this;
 		}
 		

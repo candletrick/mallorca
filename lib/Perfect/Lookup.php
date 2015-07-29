@@ -3,6 +3,10 @@ namespace Perfect;
 
 class Lookup extends \Perfect
 	{
+	public $wrapper = [
+		'searched'=>'.table-wrapper',
+		];
+
 	public function my_display()
 		{
 		return $this->my_full($this->my_query()->results());

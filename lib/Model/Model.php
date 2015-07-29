@@ -26,6 +26,13 @@ class Model
 		return $new->model($this);
 		}
 
+	function my_allow()
+		{
+		return [
+			'my_save',
+			];
+		}
+
 	/**
 		*/
 	function params($params = [])
@@ -91,6 +98,7 @@ class Model
 		*/
 	function form($id = 0)
 		{
+		   // die('hey' . $id);
 		$this->id = id_zero($id);
 		if ($this->id) $this->data = select($this->table, ['*', m('id')->where($this->id)])->one_row();
 		$o = new \Perfect\Form($this);
