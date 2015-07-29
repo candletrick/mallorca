@@ -23,7 +23,7 @@ class Model
 		{
 		$class = _to_class($fn);
 		$new = new $class();
-		return $new->schema($this);
+		return $new->model($this);
 		}
 
 	/**
@@ -67,7 +67,7 @@ class Model
 		*/
 	function path($path, $params = [])
 		{
-		$class = str_replace('schema', $path, $this->path);
+		$class = str_replace('model', $path, $this->path);
 		return call_path($class, $params);
 		}
 
@@ -75,7 +75,7 @@ class Model
 		*/
 	function path_fn($path, $fn, $params = [], $method = 'replace')
 		{
-		$class = str_replace('schema', $path, $this->path);
+		$class = str_replace('model', $path, $this->path);
 		return call_path_fn($class, $fn, $params, $method);
 		}
 
@@ -84,7 +84,7 @@ class Model
 	function lookup()
 		{
 		$o = new \Perfect\Lookup();
-		return $o->schema($this);
+		return $o->model($this);
 		}
 
 	/**
@@ -94,6 +94,6 @@ class Model
 		$this->id = id_zero($id);
 		if ($this->id) $this->data = select($this->table, ['*', m('id')->where($this->id)])->one_row();
 		$o = new \Perfect\Form($this);
-		return $o->schema($this);
+		return $o->model($this);
 		}
 	}

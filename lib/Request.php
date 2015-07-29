@@ -58,9 +58,7 @@ class Request
 			*/
 			}
 		else {
-			$stack = isset($_POST['stack']) ? post('stack')
-				: (! post('stack_merge') ? website()
-				: array());
+			$stack = isset($_POST['stack']) ? $_POST['stack'] : ['data-fn'=>stack(website())];
 
 			self::respond_to($stack);
 			}
@@ -81,13 +79,12 @@ class Request
 			parse_str(is($stack, 'data-fn'), $m);
 			parse_str(is($stack, 'data'), $data);
 			$stack = $m;
-			// $stack = $m['stack'];
 			}
 
 		self::$data = $data;
 		
 		$json = array(
-			'request'=>pv($stack)// print_r($_POST, true),
+			'request'=>pv($stack)
 			);
 		 
 		// die(pv($stack));
@@ -106,7 +103,8 @@ class Request
 				}
 			else if (array_key_exists('q', $v)) {
 				$s = self::call_path($v['q'], $params, is($v, 'function', 'my_display'));
-				$json['set_url'] = $v['q'];
+				// die(pv($params));
+				$json['set_url'] = $v['q'] . '&' . http_build_query($params);
 				}
 
 			if (! isset($json[$k])) $json[$k] = array();
@@ -132,13 +130,15 @@ class Request
 		$method = array_pop($parts);
 
 		$class = _to_class(implode('/', $parts) . '/model');
-		$schema = new $class();
-		$schema->params($params);
+		$model = new $class();
+		$model->params($params);
 
 		// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
 
-		$body = $schema->$method()->$fn($params);
-		if ($fn == 'my_display') $body = \Path\Wrapper::my_wrapper($body);
+		$body = $model->$method()->$fn($params);
+		if ($fn == 'my_display') {
+			$body = \Path\Wrapper::my_wrapper($body);
+			}
 
 		return $body;
 		}
@@ -150,16 +150,10 @@ class Request
 		{
 		$new = new $class();
 
-		// piping
-		// $fns = array_map('trim', explode('|', $fn));
-		// $first = array_shift($fns);
-		// $next = $new->$first($params);
-		// echo pv($params); die(pv($fns));
 		foreach ($fns as $index=>$step) {
 			$new = call_user_func_array([$new, $step], is($params, $index, []));
 			}
 
-		// return $new->$fn($params);
 		return $new;
 		}
 	}

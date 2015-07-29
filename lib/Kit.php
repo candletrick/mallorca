@@ -172,13 +172,13 @@ function _to_class($s) {
 /* IMAGES / TAGS */
 
 function title_tag($title = 'My Page') {
-	return '<title>' . $title . '</title>';
+	return '<title>' . $title . '</title>' . "\n";
 	}
 
 function meta_tags() {
 	return ''
-	. '<meta charset="UTF-8" />'
-	. '<meta name="viewport" content="width=device-width, user-scalable=0" />';
+	. '<meta charset="UTF-8" />' . "\n"
+	. '<meta name="viewport" content="width=device-width, user-scalable=0" />' . "\n";
 	}
 
 function doctype() {
@@ -186,15 +186,15 @@ function doctype() {
 	}
 
 function jquery_tag() {
-	return '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>';
+	return '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>' . "\n";
 	}
 
 function style_tag($path) {
-	return "<link rel='stylesheet' type='text/css' href='" . \Config::$local_path . $path . "' media='screen'></link>";
+	return "<link rel='stylesheet' type='text/css' href='" . \Config::$local_path . $path . "' media='screen'></link>\n";
 	}
 
 function script_tag($path) {
-	return 	"<script type='text/javascript' src='" . \Config::$local_path . $path . "'></script>";
+	return 	"<script type='text/javascript' src='" . \Config::$local_path . $path . "'></script>\n";
 	}
 
 function upload_tag($url) {
@@ -216,9 +216,9 @@ function mallorca_wrapper() {
 	return div('wrapper', div('content') . div('push')) . div('footer')
 	// initialize
 	. "<script type='text/javascript'>
-	var local_path = '" . \Config::$local_path . "';
-	var json_get = " . json_encode($_GET) . ";
-	</script>"
+var local_path = '" . \Config::$local_path . "';
+var json_get = " . json_encode($_GET) . ";
+</script>"
 	. script_tag('js/mallorca.js')
 	;
 	}
@@ -367,19 +367,18 @@ function stack($xs = array()) {
 			}
 		else $ys[] = $x;
 		}
-	// return http_build_query(array('stack'=>$ys));
 	return http_build_query($ys);
 	}
 
+/*
 function merge($fn, $param = array()) {
 	$xs = array('stack_merge'=>$fn);
 	if (! empty($param)) $xs['stack_merge_param'] = $param;
 	return "&" . http_build_query($xs);
 	}
+	*/
 
-function div() {
-	$args = func_get_args();
-	$class = array_shift($args);
+function div($class, ...$args) {
 	return "<div class='$class'>" . implode($args) . "</div>";
 	}
 
@@ -387,44 +386,24 @@ function select($table, $columns = array('*')) {
 	return new \Db\Query($table, $columns);
 	}
 
-function dataset($name) {
-	return new DataSet($name);
-	}
-
-function fn($fn, $params = array()) {
-	return array(
-		'function'=>$fn,
-		'params'=>$params
-		);
-	}
-
-
 function call($class, $fn, $params = ['']) {
+	// allow $this to be passed for $class
 	if (is_object($class)) $class = get_class($class);
 
 	// allow piping
 	$fns = explode(' | ', $fn);
 
-	return new\ServerCall([
+	return new \ServerCall([
 		'class'=>$class,
-		// 'constructor'=>$constructor,
 		'functions'=>$fns,
 		'params'=>[$params]
 		]);
 	}
 
-function call_path_fn($path = '', $fn = '', $params = [], $method = 'replace') {
-	return array(
-		'q'=>$path,
-		'function'=>$fn,
-		'params'=>$params,
-		'method'=>$method
-		);
-	}
-
 function call_path($path = '', $params = []) {
 	return array(
 		'q'=>$path,
+		'selector'=>'.content',
 		'params'=>$params
 		);
 	}

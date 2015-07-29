@@ -10,7 +10,7 @@ class Lookup extends \Perfect
 
 	public function search_table()
 		{
-		return $this->schema->form()->my_search_form();
+		return $this->model->form()->my_search_form();
 		}
 
 	public function my_full($data)
@@ -23,7 +23,7 @@ class Lookup extends \Perfect
 				)
 			)
 		. div('right',
-			$this->schema->my_quick_add()
+			$this->model->my_quick_add()
 			. div('banner', $this->my_banner())
 			. div('pre-table')
 			. div('table-wrapper', 
@@ -34,9 +34,9 @@ class Lookup extends \Perfect
 
 	public function my_banner()
 		{
-		return _to_words($this->schema->table)
+		return _to_words($this->model->table)
 		. ' &bull; ' . input_button('New')->click([
-			call($this->schema, 'form | my_display')->html('.lookup-wrapper')
+			$this->model->path('form') // ->html('.lookup-wrapper')
 			]);
 		}
 
@@ -61,7 +61,7 @@ class Lookup extends \Perfect
 	public function my_rows()
 		{
 		$query = $this->my_query();
-		if ($this->schema->id) $query = $query->combine([m('id')->where($this->schema->id)]);
+		if ($this->model->id) $query = $query->combine([m('id')->where($this->model->id)]);
 
 		return $this->nest_two($query->results());
 		}
@@ -103,7 +103,7 @@ class Lookup extends \Perfect
 
 	public function my_query()
 		{
-		return select($this->schema->table, $this->get_names());
+		return select($this->model->table, $this->get_names());
 		}
 	}
 	

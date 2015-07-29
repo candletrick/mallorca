@@ -7,10 +7,11 @@ class Form extends \Perfect
 		{
 		return div('banner', 
 			div('title', input_button('lookup')->stack([
-				call($this->schema, 'lookup | my_display')->html('.lookup-wrapper')
+				// call($this->model, 'lookup | my_display')->html('.lookup-wrapper')
+				$this->model->path('lookup', ['id'=>0])
 				])
 				. ' &gt; '
-				. 'New ' . _to_words($this->schema->table)
+				. 'New ' . _to_words($this->model->table)
 				)
 			)
 			. $this->my_form()
@@ -32,8 +33,8 @@ class Form extends \Perfect
 			$('.search-wrapper .input-text').keyup(function() {
 				var data = $(this).closest('.data-group').find(':input').serialize();
 				var data_fn = '" . stack([
-					call($this->schema, 'lookup | searched')->html('.table-wrapper')
-					// '.table'=>$this->schema->path_fn('lookup', 'searched')
+					call($this->model, 'lookup | searched')->html('.table-wrapper')
+					// '.table'=>$this->model->path_fn('lookup', 'searched')
 					]) . "';
 				searching = setTimeout(function () {
 					Mallorca.run_stack(data_fn, data);
@@ -59,7 +60,7 @@ class Form extends \Perfect
 
 	public function my_inputs()
 		{
-		foreach ($this->schema->columns as $col) {
+		foreach ($this->model->columns as $col) {
 
 			$o = is_object($col);
 			$name = $o ? $col->get_name() : $col;
@@ -80,13 +81,13 @@ class Form extends \Perfect
 			$input =$input_fn($name);
 
 			// set data
-			$input->set_value(is($this->schema->data, $name));
+			$input->set_value(is($this->model->data, $name));
 			yield $input;
 			}
-		yield input_hidden('id', $this->schema->id);
+		yield input_hidden('id', $this->model->id);
 		yield input_button('Save')->click([
-			call($this->schema, 'my_save')
-			// '.save-status'=>$this->schema->call('my_save')
+			call($this->model, 'my_save')
+			// '.save-status'=>$this->model->call('my_save')
 			]);
 		}
 

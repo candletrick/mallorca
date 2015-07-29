@@ -2,11 +2,11 @@
 
 class Perfect
 	{
-	public $schema;
+	public $model;
 
-	public function schema($schema)
+	public function model($model)
 		{
-		$this->schema = $schema;
+		$this->model = $model;
 		return $this;
 		}
 
@@ -18,8 +18,8 @@ class Perfect
 	public function get_names()
 		{
 		$cols = array();
-		// echo pv($this->schema); die;
-		foreach ($this->schema->columns as $c) {
+		// echo pv($this->model); die;
+		foreach ($this->model->columns as $c) {
 			$cols[] = is_object($c) ? $c->get_name(): $c;
 			}
 
