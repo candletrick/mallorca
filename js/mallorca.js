@@ -43,7 +43,7 @@ var Mallorca = (function () {
 				}, spinner_interval);
 			}
 
-		$.post(local_path + '/index.php', data, function (html) {
+		$.post(local_path + 'index.php', data, function (html) {
 			try {
 				var page = $.parseJSON(html);
 				}
@@ -57,7 +57,7 @@ var Mallorca = (function () {
 			// iterate incrementally
 			page_k = 0;
 			var pages = [];
-			// console.log(pages);
+			 console.log(pages);
 			for (k in page) {
 				pages.push({
 					'k' : k,

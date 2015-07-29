@@ -216,7 +216,7 @@ function mallorca_wrapper() {
 	return div('wrapper', div('content') . div('push')) . div('footer')
 	// initialize
 	. "<script type='text/javascript'>
-var local_path = '" . \Config::$local_path . "';
+var local_path = '" . \Path::http() . \Config::$local_path . "';
 var json_get = " . json_encode($_GET) . ";
 </script>"
 	. script_tag('js/mallorca.js')
