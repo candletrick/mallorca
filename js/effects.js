@@ -5,6 +5,11 @@
 
 var effects = {
 
+	'select_me' : function (th) {
+		th.addClass('selected');
+		th.siblings().removeClass('selected');
+		},
+
 	'confirm_delete' :  function (th) {
 		return confirm("Are you sure you want to delete?");
 		},

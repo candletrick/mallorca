@@ -6,4 +6,8 @@ namespace Path;
 	*/
 class Wrapper extends \MyIndex
 	{
+	static public function my_wrapper($body)
+		{
+		return $body;
+		}
 	}

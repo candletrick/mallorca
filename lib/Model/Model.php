@@ -65,9 +65,13 @@ class Model
 
 	/**
 		*/
-	function call($fn)
+	function call($fn, $params = [])
 		{
-		return call($this, $fn);
+		$params = array_merge([
+			'id'=>$this->id,
+			], $params);
+
+		return call($this, $fn, $params);
 		}
 
 	/**

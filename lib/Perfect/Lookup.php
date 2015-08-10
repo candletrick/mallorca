@@ -27,8 +27,8 @@ class Lookup extends \Perfect
 				)
 			)
 		. div('right',
-			$this->model->my_quick_add()
-			. div('banner', $this->my_banner())
+			// $this->model->my_quick_add()
+			div('banner', $this->my_banner())
 			. div('pre-table')
 			. div('table-wrapper', 
 				$this->my_table($data)
@@ -42,6 +42,11 @@ class Lookup extends \Perfect
 		. ' &bull; ' . input_button('New')->click([
 			$this->model->path('form') // ->html('.lookup-wrapper')
 			]);
+		}
+
+	public function filter()
+		{
+		return $this->model->columns;	
 		}
 
 	public function my_table($data)

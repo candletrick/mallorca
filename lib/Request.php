@@ -18,7 +18,9 @@ class Request
 		*/
 	static public function unfold($q)
 		{
-		$content = self::call_path($q);
+		$get = $_POST;
+		unset($get['q']);
+		$content = self::call_path($q, $get);
 		
 		echo json_encode(array(
 			'POST'=>$_POST,
@@ -137,7 +139,7 @@ class Request
 
 		// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
 		$call = call_user_func_array([$model, $method], $params);
-		$body = $call->$fn();
+		$body = is_object($call) ? $call->$fn() : $call;
 
 		// $body = $model->$method($params)->$fn();
 		if ($fn == 'my_display') {
