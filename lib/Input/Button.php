@@ -9,14 +9,15 @@ class Button extends \Input
 
 	function my_construct()
 		{
-		$this->value = $this->label;
-		$this->label = '';
+		// $this->value = $this->label;
+		// $this->label = 
 		$this->classes = 'button';
 		}
 
 	function my_input()
 		{
-		$label = htmlspecialchars($this->value, ENT_QUOTES);
+		$label = htmlspecialchars($this->label, ENT_QUOTES);
+		$this->label = '';
 		return "<input type='$this->type' name='$this->name' value='$label' class='$this->classes' "
 		. ($this->data_fn ? " data-fn=\"$this->data_fn\" " : '')
 		. ($this->after_fn ? " after-fn=\"$this->after_fn\" " : '')

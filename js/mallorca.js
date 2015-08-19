@@ -43,7 +43,7 @@ var Mallorca = (function () {
 				}, spinner_interval);
 			}
 
-		$.post(local_path + 'index.php', data, function (html) {
+		$.post(local_path + 'request.php', data, function (html) {
 			try {
 				var page = $.parseJSON(html);
 				}
@@ -178,8 +178,13 @@ var Mallorca = (function () {
 
 	function init() {
 		$(document).ready(function () {
-			$(".content").hide();
-			request(json_get);
+			if (mallorca_init) {
+				$(".content").hide();
+				request(json_get);
+				}
+			else {
+				done_loading();
+				}
 
 			// location.hash = 'login';
 

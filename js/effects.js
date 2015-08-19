@@ -20,6 +20,22 @@ var effects = {
 
 	'clear_inputs' : function (th) {
 		$('.input-text').attr('value', '');
+		},
+
+	'advance_cat' : function (th) {
+		var cats = $('.cats');
+		var c = cats.attr('class');
+		c = c.replace(/cats\s*/g, "");
+		var m = c.match(/\d+/);
+		var x = parseInt(m[0]);
+		var y = x;
+		y++;
+		if (y > 5) y = 1;
+		cats.animate({"opacity" : "0"}, 500, function() {
+			$(this).removeClass('cat-' + x).addClass('cat-' + y);
+			$(this).animate({"opacity" : "1"}, 500);
+			});
+		$('.input-text').attr('value', '');
 		}
 
 	}

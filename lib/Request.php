@@ -20,7 +20,7 @@ class Request
 		{
 		$get = $_POST;
 		unset($get['q']);
-		$content = self::call_path($q, $get);
+		$content = static::call_path($q, $get);
 		
 		echo json_encode(array(
 			'POST'=>$_POST,
@@ -103,11 +103,11 @@ class Request
 				$s = $v;
 				}
 			else if (array_key_exists('class', $v)) {
-				$out = self::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
+				$out = static::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
 				$s = $out['content'];
 				}
 			else if (array_key_exists('q', $v)) {
-				$s = self::call_path($v['q'], $params, is($v, 'function', 'my_display'));
+				$s = static::call_path($v['q'], $params, is($v, 'function', 'my_display'));
 				$json['set_url'] = $v['q'] . (! empty($params) ? '&' . http_build_query($params) : '');
 				}
 
@@ -128,7 +128,7 @@ class Request
 	/**
 		Call a on() model object as a path.
 		*/
-	static private function call_path($path, $params = [], $fn = 'my_display')
+	static public function call_path($path, $params = [], $fn = 'my_display')
 		{
 		$parts = explode('/', $path);
 		$method = array_pop($parts);
@@ -152,7 +152,7 @@ class Request
 	/**
 		Call simple instance function.
 		*/
-	static private function call_class($class, $fns, $params = array())
+	static public function call_class($class, $fns, $params = array())
 		{
 		$new = new $class();
  		// echo pv(class_uses($new)); die(pv(class_implements($new)));

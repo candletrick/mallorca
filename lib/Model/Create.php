@@ -67,6 +67,8 @@ abstract class Create
 		else if (strpos($name, 'is_') !== false) return array('bool', '');
 		else if (strpos($name, '_id')) return array('int', '');
 		else if (strpos($name, '_at')) return array('datetime', '');
+		else if (strpos($name, '_on')) return array('date', '');
+		else if (strpos($name, '_by')) return array('int', 100000);
 		else if (strpos($name, '_name')) return array('str', 140);
 		else if (strpos($name, '_per_')) return array('int', 1000000);
 		else if (strpos($name, '_blob')) return array('blob', '');

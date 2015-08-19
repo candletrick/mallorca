@@ -64,7 +64,8 @@ class Path
 		$paths = explode('/', $path);
 		$name = array_shift($paths);
 
-		$wrap_class = "Path\\Wrapper"; // "\\" . implode("\\", $wraps);
+		// $wrap_class = "Path\\Wrapper"; // "\\" . implode("\\", $wraps);
+		$wrap_class = "MyIndex";
 		$index = $wrapper = new $wrap_class($name, $paths, null, null, $params);
 
 		// walk down the children,

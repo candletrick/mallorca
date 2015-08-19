@@ -38,6 +38,19 @@ function iff($bool, $then, $else = '') {
 
 /* INPUTS */
 
+/*
+function input_group() {
+	$args = func_get_args();
+	$name = array_shift($args);
+
+	// allow passing of inputs as array or argument list
+	if (is_array(is($args, 0))) $args = $args[0];	
+
+	return new \Input\Group($name, $args);
+	}
+	*/
+
+/* new style */
 function input_group($inputs = array()) {
 	$name = 'input-group';
 	return new \Input\Group($name, $inputs);
@@ -206,7 +219,19 @@ function image_tag($url, $folder = 'public/images') {
 	}
 
 function image_url($url, $folder = 'public/images') {
-	return \Path::$local_path . "$folder/$url";
+	return \Config::$local_path . "$folder/$url";
+	}
+
+/**
+	\param bool $init Whether to run the request on first page load.
+	*/
+function mallorca_init($init = true) {
+	// initialize
+	return "<script type='text/javascript'>
+var local_path = '" . \Path::http() . \Config::$local_path . "';
+var mallorca_init = " . ($init ? 'true' : 'false') . ";
+var json_get = " . json_encode($_GET) . ";
+</script>";
 	}
 
 /**
@@ -214,11 +239,7 @@ function image_url($url, $folder = 'public/images') {
 	*/
 function mallorca_wrapper() {
 	return div('wrapper', div('content') . div('push')) . div('footer')
-	// initialize
-	. "<script type='text/javascript'>
-var local_path = '" . \Path::http() . \Config::$local_path . "';
-var json_get = " . json_encode($_GET) . ";
-</script>"
+	. mallorca_init()
 	. script_tag('js/mallorca.js')
 	;
 	}
@@ -401,11 +422,11 @@ function call($class, $fn, $params = ['']) {
 	}
 
 function call_path($path = '', $params = []) {
-	return array(
+	return new \ServerCall([
 		'q'=>$path,
 		'selector'=>'.content',
 		'params'=>$params
-		);
+		]);
 	}
 
 function schema($table, $columns) {
@@ -442,4 +463,10 @@ class Config {
 
 	/** The local url root prefix. */
 	static public $local_path = '/';
+
+	/** Home route when none is specified. */
+	static public $home_path = '';
+
+	/** Admin email. */
+	static public $admin_email = 'yatsuha@fastmail.se';
 	}

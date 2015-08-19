@@ -12,6 +12,9 @@ class Text extends \Input
 	/** Locked, display only. */
 	public $lock = false;
 
+	/** */
+	public $placeholder = '';
+
 	public function my_construct($len = 40, $value = '')
 		{
 		$this->len = $len;
@@ -29,8 +32,14 @@ class Text extends \Input
 		// . " size='" . ($this->len + 2) . "' "
 		. " maxlength='$this->len' "
 		. ($this->mand ? " required='' " : '')
-		. " placeholder='$this->hint' value='" . $this->esc_value() . "'"
+		. " placeholder='$this->placeholder' value='" . $this->esc_value() . "'"
 		. "	onkeypress=\"return finalmask(event, this, '$mask', 0);\">";
+		}
+
+	public function placeholder($placeholder)
+		{
+		$this->placeholder = $placeholder;
+		return $this;
 		}
 
 	/**
