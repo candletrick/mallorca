@@ -60,7 +60,7 @@ class Form extends \Perfect
 
 	public function my_search_inputs()
 		{
-		foreach ($this->get_names() as $name) {
+		foreach ($this->get_lookup() as $name) {
 			if ($name == 'id') continue;
 			yield input_text($name);
 			}

@@ -55,10 +55,11 @@ class Lookup extends \Perfect
 		$keys = empty($data) ? $this->get_names()
 		: array_keys(current($data));
 		*/
-		$keys = $this->filter();
+		// $keys = $this->filter();
+		$keys = $this->get_lookup();
 		$th = [];
 		foreach ($keys as $k=>$v) {
-			$th[$k] = _to_words($k);
+			$th[$v->name] = _to_words($v->name);
 			}
 
 		return "<table class='table'>" 
@@ -112,7 +113,9 @@ class Lookup extends \Perfect
 
 	public function my_query()
 		{
-		return select($this->model->table, $this->get_names());
+		// return $this->model->my_lookup_query() ?: select($this->model->table, $this->get_names());
+		// return select($this->model->table, $this->get_names());
+		return select($this->model->table, $this->get_lookup());
 		}
 	}
 	

@@ -10,7 +10,7 @@ class Model
 	function __construct($id = 0)
 		{
 		$this->table = $this->my_table();
-		$this->columns = $this->my_attrs();
+		$this->columns = $this->my_columns();
 		$this->id = $id;
 		$this->data = [];
 		$this->path = strtolower(str_replace("\\", "/", get_class($this)));
@@ -96,6 +96,13 @@ class Model
 		{
 		$o = new \Perfect\Lookup();
 		return $o->model($this);
+		}
+
+	/**
+		*/
+	function my_lookup_query()
+		{
+		return;
 		}
 
 	/**

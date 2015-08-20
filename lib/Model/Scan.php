@@ -42,7 +42,7 @@ class Scan
 					) {
 					echo "\n\nFound $class.";
 					$model = new $class();
-					\Model\Create::create($model->my_table(), $model->my_attrs());
+					\Model\Create::create($model->my_table(), $model->my_columns());
 					}
 				}
 			}

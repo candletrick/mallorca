@@ -32,7 +32,7 @@ abstract class Create
 		);
 
 	/**
-		Extract data types from a model my_attrs function.
+		Extract data types from a model my_columns function.
 		*/
 	static public function extract_data_types($columns)
 		{
