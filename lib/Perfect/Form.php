@@ -111,7 +111,7 @@ class Form extends \Perfect
 			$inps[] = $this->control($inp);
 			}
 
-		return div('control-group data-group', implode('', $inps));
+		return div('perfect-form control-group data-group', implode('', $inps));
 		}
 
 	public function control($input)
