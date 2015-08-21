@@ -37,6 +37,13 @@ class Db {
 		}
 
 	/**
+		Escape a value.
+		*/
+	static public function esc($value) {
+		return self::$db->esc($value);
+		}
+
+	/**
 		*/
 	static public function query($query) {
 		return self::$db->query($query);

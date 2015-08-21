@@ -94,7 +94,8 @@ class Model
 		*/
 	function lookup()
 		{
-		$o = new \Perfect\Lookup();
+		// $o = new \Perfect\Lookup();
+		$o = new \CoralLookup();
 		return $o->model($this);
 		}
 

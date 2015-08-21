@@ -23,9 +23,15 @@ class Perfect
 			if (! isset($c->lookup)) continue;
 			
 			$m = m($c->get_name());
-			foreach ($c->lookup as $k=>$v) $m = $m->$k($v);
+			// $cols[] = $c->lookup;
+			foreach ($c->lookup as $k=>$v) {
+				if (! is_array($v)) $v = [$v];
+				$m = call_user_func_array([$m, $k], $v);
+				}
 			$cols[] = $m;
 			}
+
+		// die(pv($cols));
 
 		return $cols;
 		}
