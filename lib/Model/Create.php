@@ -43,8 +43,10 @@ abstract class Create
 			if ($class == 'Meta') $new[] = $column;
 			else {
 				$name = $class == 'On' ? $column->get_name() : $column;
-				list($data_type, $opt) = isset($column->data) && isset($column->data->type) ?
+				$dt =  isset($column->data) && isset($column->data->type) ?
 					$column->data->type : self::guess_data_type($name);
+				$data_type = is($dt, 0, 'str');
+				$opt = is($dt, 1, '');
 				$type = self::guess_input_type($name);
 				$new[] = m($name)
 					->dtype($data_type)

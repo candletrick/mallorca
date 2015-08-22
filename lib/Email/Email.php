@@ -2,10 +2,10 @@
 
 class Email
 	{
-	static public function send($to, $subject, $msg, $html = true)
+	static public function send($to, $subject, $msg, $html = true, $fromname = 'Socrates', $from = 'socrates@emailsock.com')
 		{
-		$headers = 'From: "SocratesFwds+Ideas" <abcdef@emailsock.com>'
-		. "\r\nReply-To: socrates@emailsock.com"
+		$headers = "From: \"$fromname\" <$from>"
+		. "\r\nReply-To: $from"
 		. "\r\nX-Mailer: PHP/' . phpversion()"
 		;
 
