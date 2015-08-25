@@ -136,15 +136,21 @@ class Group
 
 	public function display()
 		{
+		return $this->my_display();
+		}
+
+	public function my_display($class = '')
+		{
 		$cs = array();
 		foreach ($this->inputs as $input) {
 			$cs[] = div('control ' . $input->type,
-				div('label', $input->label)
+				div('label ' . $input->label_classes, $input->label)
 				. div('input', $input->my_display())
 				);
 			}
-		return div('control-group data-group', implode('', $cs));
+		return div('control-group data-group ' . $class, implode('', $cs));
 		}
+
 	/*
 	public function label($label)
 		{

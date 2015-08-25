@@ -25,10 +25,24 @@ class Model extends \Model
 			on('confirmation_link', 64)
 				->data->type(['str', 64])->end,
 			'confirmation_expires_at',
-			'is_confirmed',
 			'user_type_id',
+			'is_confirmed',
 			'is_deleted',
+			on('remember')
+				->data->type(['bool'])->end,
 			'created_on',
 			];
+		}
+
+	public function register()
+		{
+		$login = new \Perfect\Login();
+		return $login->my_register();
+		}
+
+	public function login()
+		{
+		$login = new \Perfect\Login();
+		return $login->my_display();
 		}
 	}

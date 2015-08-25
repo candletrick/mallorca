@@ -304,6 +304,10 @@ table
     font-weight: bold;
     margin: 6px 0 16px 0;
     display: inline-block;
+    &.small
+      font-weight: normal
+      font-style: italic
+      font-size: 12px
     &.refocus 
       color: #911;
   .input, .label 
@@ -513,6 +517,51 @@ table
       font-size: 13px
       border: none
       text-decoration: underline
+
+.login-wrapper 
+  border-collapse:collapse;
+  text-align:left;
+  margin:0 auto;
+  width:460px;
+  padding:10px;
+  font-family: "Open Sans"
+  .control-group 
+    display: table;
+
+  .control 
+    display: table-row;
+
+  .input, .label 
+    display: table-cell;
+    padding:10px;
+    font-weight:bold;
+
+  .label 
+    text-align:right;
+    width:100px;
+
+  .control-group .input-text 
+    box-shadow: none;
+    border-radius: 0;
+    padding:4px 0 4px 2px;
+    border:none;
+    border-bottom:1px solid #aaa;
+    width: 200px;
+    font-size:16px;
+
+  .control-group input[type="button"]
+    border: none;
+    padding:2px 11px 2px 11px;
+    background:#00cfff;
+    color:#fff;
+    border:none;
+    border:1px solid #00afdd;
+    font-size:16px;
+
+  .coral 
+    font-size:32px;
+    color:#000;
+
 
 
 /* ******* */
