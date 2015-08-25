@@ -21,10 +21,7 @@ class Request
 		$get = $_POST;
 		unset($get['q']);
 
-		$wrapper = 'my_display';
-		if ($q == 'document/show') $wrapper = '';
-
-		$content = static::call_path($q, $get, [], $wrapper);
+		$content = static::call_path($q, $get);
 		
 		echo json_encode(array(
 			'POST'=>$_POST,
