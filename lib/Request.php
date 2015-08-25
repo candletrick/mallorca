@@ -20,7 +20,11 @@ class Request
 		{
 		$get = $_POST;
 		unset($get['q']);
-		$content = static::call_path($q, $get);
+
+		$wrapper = 'my_display';
+		if ($q == 'document/show') $wrapper = '';
+
+		$content = static::call_path($q, $get, [], $wrapper);
 		
 		echo json_encode(array(
 			'POST'=>$_POST,
@@ -30,6 +34,14 @@ class Request
 				)
 			));
 		die;
+		}
+
+	/**
+		Stop the request chain.
+		*/
+	static public function kill()
+		{
+		self::$stop = true;
 		}
 
 	/**
