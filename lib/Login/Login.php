@@ -178,7 +178,7 @@ class Login
 		$subject = "Samsara Welcome";
 		$msg = "Welcome to samsara.";
 
-		\Email::send($email, $subject, $msg); 
+		// \Email::send($email, $subject, $msg); 
 		\Db::match_update('user', array(
 			'confirmation_link'=>$link,
 			'confirmation_expires_at'=>date('Y-m-d H:i:s', strtotime('+30 day')),
