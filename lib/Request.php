@@ -151,7 +151,7 @@ class Request
 		$body = is_object($call) ? $call->$fn() : $call;
 
 		// $body = $model->$method($params)->$fn();
-		if ($fn == 'my_display') {
+		if (is_object($call) && $fn == 'my_display') {
 			$body = \Path\Wrapper::my_wrapper($body);
 			}
 
