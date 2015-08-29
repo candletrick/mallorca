@@ -65,7 +65,12 @@ function select($table, $columns = array('*')) {
 
 function call($class, $fn, $params = array('')) {
 	// allow $this to be passed for $class
-	if (is_object($class)) $class = get_class($class);
+	if (is_object($class)) {
+		$class = get_class($class);
+	
+		// $parent = get_parent_class($class);
+		// if ($parent ==
+		}
 
 	// allow piping
 	$fns = explode(' | ', $fn);
@@ -79,7 +84,7 @@ function call($class, $fn, $params = array('')) {
 
 function call_path($path = '', $params = array()) {
 	return new \ServerCall(array(
-		'q'=>$path,
+		'path'=>$path,
 		'selector'=>'.content',
 		'params'=>$params
 		));

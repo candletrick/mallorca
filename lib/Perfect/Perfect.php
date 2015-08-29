@@ -17,6 +17,12 @@ class Perfect
 
 	public function get_lookup()
 		{
+
+		$query = $this->model->my_lookup_query();
+		if ($query) {
+			return $query->columns;
+			}
+		
 		$cols = [m('id')];
 		foreach ($this->model->columns as $c) {
 			if (! is_object($c)) continue;

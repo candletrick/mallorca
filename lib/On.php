@@ -31,5 +31,13 @@ class On {
 		$this->$fn = empty($params) ? 1 : array_shift($params);
 		return $this;
 		}
+
+	/**
+		Shorthand for ->data->type([])
+		*/
+	public function set_type($type, $opt = '')
+		{
+		return $this->data->type([$type, $opt])->end;
+		}
 	}
 

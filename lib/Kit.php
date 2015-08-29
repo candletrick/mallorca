@@ -38,7 +38,7 @@ function iff($bool, $then, $else = '') {
 
 /* INPUTS */
 
-/*
+/* */
 function input_group() {
 	$args = func_get_args();
 	$name = array_shift($args);
@@ -48,12 +48,11 @@ function input_group() {
 
 	return new \Input\Group($name, $args);
 	}
-	*/
 
 /* new style */
-function input_group($inputs = array()) {
+function action_group($inputs = array()) {
 	$name = 'input-group';
-	return new \Input\Group($name, $inputs);
+	return new \Action\Group($name, $inputs);
 	}
 
 function input_toggle($name, $options = array()) {

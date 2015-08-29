@@ -14,6 +14,10 @@ var effects = {
 		return confirm("Are you sure you want to delete?");
 		},
 
+	'remove_this' : function (th) {
+		th.remove();
+		},
+
 	'remove_row' : function (th) {
 		th.closest('tr').remove();
 		},

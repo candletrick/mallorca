@@ -12,6 +12,12 @@ class Request
 
 	/** Form-submitted request data. */
 	static public $data;
+
+	/** Returned data array. */
+	static public $return;
+
+	/** Current index of the return array. */
+	static public $count;
 	
 	/**
 		New mallorca style rendering.
@@ -53,8 +59,8 @@ class Request
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 			return;
 			}
-		else if (post('q')) {
-			$q = post('q');
+		else if (post('path')) {
+			$q = post('path');
 			self::unfold($q);
 			/* makes modules work
 			$content = \Path::interpret(post('q'));
@@ -94,46 +100,63 @@ class Request
 
 		self::$data = $data;
 		
-		$json = array(
-			'request'=>pv($stack)
+		self::$return = array(
+			'request'=>print_r($stack, true)
 			);
 		 
 		 // die(pv($stack));
 
-		foreach ($stack as $k=>$v) {
-			$s = '';
-			// $params = array_merge(is($v, 'params', array()), $data);
-			$params = is($v, 'params', array());
-			$key = is($v, 'selector', $k);
-			$out = array();
-
-			if (self::$stop) continue;
-			if (! is_array($v)) {
-				$s = $v;
-				}
-			else if (array_key_exists('class', $v)) {
-				$out = static::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
-				$s = $out['content'];
-				}
-			else if (array_key_exists('q', $v)) {
-				$s = static::call_path($v['q'], $params, is($v, 'function', 'my_display'));
-				$json['set_url'] = $v['q'] . (! empty($params) ? '&' . http_build_query($params) : '');
-				}
-
-			if (! isset($json[$k])) $json[$k] = array();
-
-			$key = is($v, 'selector', is($out, 'selector', $k));
-
-			// $json[$key] = array(
-			$json[] = array(
-				'selector'=>$key,
-				'content'=>$s,
-				'method'=>is($v, 'method', 'replace')
-				);
+		foreach ($stack as $v) {
+			self::respond_to_one($v);
 			}
 
-		echo json_encode($json);
+		echo json_encode(self::$return);
 		die;
+		}
+
+	/**
+		Loop over this function.
+		*/
+	static public function respond_to_one($v)
+		{
+		$s = '';
+		// $params = array_merge(is($v, 'params', array()), $data);
+		$params = is($v, 'params', array());
+		// $key = is($v, 'selector', $k);
+		$out = array();
+
+		if (self::$stop) return;
+		if (! is_array($v)) {
+			$s = $v;
+			}
+		else if (array_key_exists('class', $v)) {
+			$out = static::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
+			$s = $out['content'];
+			}
+		else if (array_key_exists('path', $v)) {
+			$s = static::call_path($v['path'], $params, is($v, 'function', 'my_display'));
+			self::$return['set_url'] = $v['path'] . (! empty($params) ? '&' . http_build_query($params) : '');
+			}
+
+		// if (! isset(self::$return[self::$count])) self::$return[self::$count] = array();
+
+		$key = is($v, 'selector', is($out, 'selector'));
+
+		// $json[$key] = array(
+		// self::$return[self::$count++] = array(
+		self::$return[] = array(
+			'selector'=>$key,
+			'content'=>$s,
+			'method'=>is($v, 'method', 'replace')
+			);
+		}
+
+	/**
+		Call in the middle of already back on the server side.
+		*/
+	static public function send($call)
+		{
+		self::respond_to_one($call->props);
 		}
 
 	/**
@@ -165,7 +188,17 @@ class Request
 		*/
 	static public function call_class($class, $fns, $params = array())
 		{
-		$new = new $class();
+		$parent = get_parent_class($class);
+
+		// modules must be constructed this way
+		if (in_array($parent, array('Module'))) {
+			$new = \Path::index(req('q'));
+			while (isset($new->child)) $new = $new->child;
+			}
+		else {
+			$new = new $class();
+			}
+
  		// echo pv(class_uses($new)); die(pv(class_implements($new)));
  		$out = array();
 

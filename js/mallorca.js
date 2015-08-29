@@ -57,7 +57,7 @@ var Mallorca = (function () {
 			// iterate incrementally
 			page_k = 0;
 			var pages = [];
-			if(typeof(console) !== 'undefined') console.log(pages);
+			// if(typeof(console) !== 'undefined') console.log(pages);
 			for (k in page) {
 				pages.push({
 					'k' : page[k]['selector'],
@@ -87,11 +87,10 @@ var Mallorca = (function () {
 
 
 	function run_stack(data_fn, data) {
-		var req = {
-			'stack' : {
-				'data-fn' : data_fn,
-				'data' : data
-				}
+		var req = json_get;
+		req['stack'] = {
+			'data-fn' : data_fn,
+			'data' : data
 			};
 		request(req);
 		}

@@ -1,7 +1,7 @@
 <?php
 namespace Input;
 
-class Action extends \Input
+class Button extends \Input
 	{
 	public $data_fn;
 	public $after_fn;
@@ -15,7 +15,7 @@ class Action extends \Input
 		$this->classes = 'button';
 		}
 
-	function label($label)
+	function label($label = '')
 		{
 		$this->my_label = $label;
 		return $this;

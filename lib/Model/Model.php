@@ -51,6 +51,7 @@ class Model
 		{
 		$data = \Request::$data;
 		$this->id = $id = \Db::match_upsert($this->table, $data, " where id=" . id_zero(is($data, 'id')));
+		$this->data = select($this->table, ['*', m('id')->where($id)])->one_row();
 		alert("Saved! New id: $id.");
 		return $this;
 		}
@@ -94,7 +95,19 @@ class Model
 		*/
 	function lookup()
 		{
+		/*
 		// $o = new \Perfect\Lookup();
+		$ex = explode("\\", get_class($this));
+		array_pop($ex);
+		array_push($ex, 'Lookup');
+		$lookup_class = implode("\\", $ex);
+		if (class_exists($lookup_class)) {
+			$mod = new $lookup_class();
+			return $mod->my_display();
+			}
+			*/
+		
+		
 		$o = new \CoralLookup();
 		return $o->model($this);
 		}

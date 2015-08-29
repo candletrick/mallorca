@@ -35,7 +35,7 @@ function autoload_lib($name)
 			$errors[] = $dir;
 			}
 		}
-	/* */
+	/* *
 	if (! empty($errors)) {
 		die('<pre>'
 			. "Can't find possible files to include:\n"
