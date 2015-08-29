@@ -89,7 +89,7 @@ function input_radio($name, $options = array()) {
 	return new \Input\Radio($name, $options);
 	}
 
-function input_text($name, $len = 30, $value = '') {
+function input_text($name, $len = '', $value = '') {
 	return new \Input\Text($name, $len, $value);
 	}
 

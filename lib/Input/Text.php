@@ -15,7 +15,7 @@ class Text extends \Input
 	/** */
 	public $placeholder = '';
 
-	public function my_construct($len = 40, $value = '')
+	public function my_construct($len = '', $value = '')
 		{
 		$this->len = $len;
 		$this->value = $value;
@@ -30,7 +30,7 @@ class Text extends \Input
 
 		return "<input class='input-text $this->classes' type='text' name='$this->name' id='$this->name'"
 		// . " size='" . ($this->len + 2) . "' "
-		. " maxlength='$this->len' "
+		. ($this->len ? " maxlength='$this->len'" : '')
 		. ($this->mand ? " required='' " : '')
 		. " placeholder='$this->placeholder' value='" . $this->esc_value() . "'"
 		. "	onkeypress=\"return finalmask(event, this, '$mask', 0);\">";
