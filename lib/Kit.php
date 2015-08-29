@@ -278,7 +278,7 @@ function now() {
 	\param string $date The date to convert.
 	*/
 function how_long_ago($date, $base = 60, $before = '', $after = '') {
-	$qty = round((strtotime(date('Y-m-d')) - strtotime(date_to('Y-m-d', $date))) / 60); $ago = "m"; //minutes
+	$qty = round((strtotime(date('Y-m-d H:i:s')) - strtotime(date_to('Y-m-d H:i:s', $date))) / 60); $ago = "m"; //minutes
 	$neg = $qty < 0;
 	$qty = abs($qty);
 	if ($qty >= 60) 
