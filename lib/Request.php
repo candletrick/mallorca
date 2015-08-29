@@ -60,7 +60,7 @@ class Request
 			*/
 			}
 		else {
-			$stack = isset($_POST['stack']) ? $_POST['stack'] : ['data-fn'=>stack(website())];
+			$stack = isset($_POST['stack']) ? $_POST['stack'] : array('data-fn'=>stack(website()));
 
 			self::respond_to($stack);
 			}
@@ -94,9 +94,9 @@ class Request
 		foreach ($stack as $k=>$v) {
 			$s = '';
 			// $params = array_merge(is($v, 'params', array()), $data);
-			$params = is($v, 'params', []);
+			$params = is($v, 'params', array());
 			$key = is($v, 'selector', $k);
-			$out = [];
+			$out = array();
 
 			if (self::$stop) continue;
 			if (! is_array($v)) {
@@ -115,7 +115,9 @@ class Request
 
 			$key = is($v, 'selector', is($out, 'selector', $k));
 
-			$json[$key] = array(
+			// $json[$key] = array(
+			$json[] = array(
+				'selector'=>$key,
 				'content'=>$s,
 				'method'=>is($v, 'method', 'replace')
 				);
@@ -128,7 +130,7 @@ class Request
 	/**
 		Call a on() model object as a path.
 		*/
-	static public function call_path($path, $params = [], $fn = 'my_display')
+	static public function call_path($path, $params = array(), $fn = 'my_display')
 		{
 		$parts = explode('/', $path);
 		$method = array_pop($parts);
@@ -138,7 +140,7 @@ class Request
 		// $model->params($params);
 
 		// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
-		$call = call_user_func_array([$model, $method], $params);
+		$call = call_user_func_array(array($model, $method), $params);
 		$body = is_object($call) ? $call->$fn() : $call;
 
 		// $body = $model->$method($params)->$fn();
@@ -156,7 +158,7 @@ class Request
 		{
 		$new = new $class();
  		// echo pv(class_uses($new)); die(pv(class_implements($new)));
- 		$out = [];
+ 		$out = array();
 
 		foreach ($fns as $index=>$step) {
 			/*
@@ -179,7 +181,7 @@ class Request
 				$call_args[$k] = is($args, $k, $v);
 				}
 				*/
-			$call_args = is($params, $index, []);
+			$call_args = is($params, $index, array());
 
 			// $ref = new ReflectionMethod($new, $step); echo pv($ref->getParameters());
 
@@ -188,7 +190,7 @@ class Request
 				$out['selector'] = $new->wrapper[$step];
 				}
 
-			$new = call_user_func_array([$new, $step], $call_args);
+			$new = call_user_func_array(array($new, $step), $call_args);
 			}
 
 		$out['content'] = $new;

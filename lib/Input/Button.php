@@ -1,7 +1,7 @@
 <?php
 namespace Input;
 
-class Button extends \Input
+class Action extends \Input
 	{
 	public $data_fn;
 	public $after_fn;

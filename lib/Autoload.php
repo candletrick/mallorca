@@ -35,7 +35,7 @@ function autoload_lib($name)
 			$errors[] = $dir;
 			}
 		}
-	/*
+	/* */
 	if (! empty($errors)) {
 		die('<pre>'
 			. "Can't find possible files to include:\n"
@@ -43,7 +43,7 @@ function autoload_lib($name)
 			. '</pre>'
 			);
 		}
-		*/
+		/* */
 	}
 spl_autoload_register('autoload_lib');
 

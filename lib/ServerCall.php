@@ -12,7 +12,7 @@ class ServerCall
 		$this->props = $props;
 		}
 
-	function pipe($fn, $params = [])
+	function pipe($fn, $params = array())
 		{
 		$this->props['functions'][] = $fn;
 		$this->props['params'][] = $params;
@@ -29,6 +29,13 @@ class ServerCall
 	function html($selector)
 		{
 		$this->props['method'] = 'replace';
+		$this->props['selector'] = $selector;
+		return $this;
+		}
+
+	function append($selector)
+		{
+		$this->props['method'] = 'append';
 		$this->props['selector'] = $selector;
 		return $this;
 		}

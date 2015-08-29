@@ -57,10 +57,10 @@ var Mallorca = (function () {
 			// iterate incrementally
 			page_k = 0;
 			var pages = [];
-			 console.log(pages);
+			if(typeof(console) !== 'undefined') console.log(pages);
 			for (k in page) {
 				pages.push({
-					'k' : k,
+					'k' : page[k]['selector'],
 					'v' : page[k]['content'],
 					'method' : page[k]['method']
 					});
@@ -78,7 +78,7 @@ var Mallorca = (function () {
 
 			for (k in page) {
 				if (k == 'request') {
-					console.log(page[k]);
+					if(typeof(console) !== 'undefined') console.log(page[k]);
 					continue;
 					}
 				}
