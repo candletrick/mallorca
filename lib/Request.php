@@ -61,7 +61,7 @@ class Request
 			return;
 			}
 		// else if (post('path')) {
-		else if (post('init')) {
+		else if (post('init') && post('q')) {
 			$q = post('q');
 			self::unfold($q);
 			}
