@@ -179,6 +179,8 @@ var Mallorca = (function () {
 		$(document).ready(function () {
 			if (mallorca_init) {
 				$(".content").hide();
+				// json_get['path'] = json_get['q'];
+				console.log(json_get);
 				request(json_get);
 				}
 			else {

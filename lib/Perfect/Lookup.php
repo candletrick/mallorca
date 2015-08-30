@@ -20,7 +20,7 @@ class Lookup extends \Perfect
 	public function my_full($data)
 		{
 		return 
-		div('lookup-wrapper',
+		// div('lookup-wrapper',
 		div('left', 
 			div('search-table',
 				div('hd', 'Search')
@@ -34,7 +34,7 @@ class Lookup extends \Perfect
 			. div('table-wrapper', 
 				$this->my_table($data)
 				)
-			));
+			);
 		}
 
 	public function my_banner()
@@ -114,7 +114,7 @@ class Lookup extends \Perfect
 
 	public function my_query()
 		{
-		return $this->model->my_lookup_query() ?: select($this->model->table, $this->get_names());
+		return $this->model->my_lookup_query() ?: select($this->model->table, $this->get_lookup());
 		// return select($this->model->table, $this->get_names());
 		// return select($this->model->table, $this->get_lookup());
 		}

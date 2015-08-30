@@ -32,6 +32,7 @@ class Request
 		echo json_encode(array(
 			'POST'=>$_POST,
 			'.content'=>array(
+				'selector'=>'.content',
 				'content'=>$content,
 				'method'=>'replace'
 				)
@@ -167,20 +168,33 @@ class Request
 		$parts = explode('/', $path);
 		$method = array_pop($parts);
 
-		$class = _to_class(implode('/', $parts) . '/model');
-		$model = new $class();
-		// $model->params($params);
+		$class = _to_class($path);
+		$parent = get_parent_class($class);
 
-		// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
-		$call = call_user_func_array(array($model, $method), $params);
-		$body = is_object($call) ? $call->$fn() : $call;
-
-		// $body = $model->$method($params)->$fn();
-		if (is_object($call) && $fn == 'my_display') {
-			$body = \Path\Wrapper::my_wrapper($body);
+		// module style
+		if (in_array($parent, array('Module'))) {
+			$new = \Path::index($path);
+			while (isset($new->child)) $new = $new->child;
+			return $new->my_display();
 			}
+		// model style
+		else {
+			// $new = new $class();
+			$class = _to_class(implode('/', $parts) . '/model');
+			$model = new $class();
+			$model->params($params);
 
-		return $body;
+			// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
+			$call = call_user_func_array(array($model, $method), $params);
+			$body = is_object($call) ? $call->$fn() : $call;
+
+			// $body = $model->$method($params)->$fn();
+			if (is_object($call) && $fn == 'my_display') {
+				$body = \Path\Wrapper::my_wrapper($body);
+				}
+
+			return $body;
+			}
 		}
 
 	/**
