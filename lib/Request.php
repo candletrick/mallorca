@@ -60,22 +60,13 @@ class Request
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 			return;
 			}
-		else if (post('path')) {
-			$q = post('path');
+		// else if (post('path')) {
+		else if (post('init')) {
+			$q = post('q');
 			self::unfold($q);
-			/* makes modules work
-			$content = \Path::interpret(post('q'));
-			echo json_encode(array(
-				'POST'=>$_POST,
-				'.content'=>array(
-					'content'=>$content->my_display(),
-					'method'=>'replace'
-					)
-				));
-			die;
-			*/
 			}
 		else {
+			// die(pv($_REQUEST));
 			$stack = isset($_POST['stack']) ? $_POST['stack'] : array('data-fn'=>stack(website()));
 
 			self::respond_to($stack);

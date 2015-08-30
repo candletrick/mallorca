@@ -5,6 +5,8 @@
 	*/
 function mallorca_init($init = true) {
 	// initialize
+	// $get = $_GET;
+
 	return "<script type='text/javascript'>
 var local_path = '" . http() . \Config::$local_path . "';
 var mallorca_init = " . ($init ? 'true' : 'false') . ";

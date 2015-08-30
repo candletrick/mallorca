@@ -180,8 +180,11 @@ var Mallorca = (function () {
 			if (mallorca_init) {
 				$(".content").hide();
 				// json_get['path'] = json_get['q'];
-				console.log(json_get);
-				request(json_get);
+				// var req = clone json_get;
+				var req = {};
+				for (k in json_get) req[k] = json_get[k];
+				req.init = true;
+				request(req);
 				}
 			else {
 				done_loading();
