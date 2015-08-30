@@ -97,6 +97,10 @@ function input_email($name) {
 	return new \Input\Email($name);
 	}
 
+function input_duration($name) {
+	return new \Input\Duration($name);
+	}
+
 function input_phone($name, $value = '') {
 	return new \Input\Phone($name, 12, $value);
 	}

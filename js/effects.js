@@ -14,6 +14,10 @@ var effects = {
 		return confirm("Are you sure you want to delete?");
 		},
 
+	'remove_group' : function (th) {
+		th.closest('.control-group, .data-group').remove();
+		},
+
 	'remove_this' : function (th) {
 		th.remove();
 		},
