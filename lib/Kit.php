@@ -67,6 +67,11 @@ function input_hidden($name, $value = '') {
 	return $inp;
 	}
 
+function input_money($name, $len = 30, $value = '')
+	{
+	return new \Input\Money($name, $len, $value);
+	}
+
 function input_check($name) {
 	return new \Input\Check($name);
 	}
