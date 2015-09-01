@@ -33,7 +33,7 @@ var Mallorca = (function () {
 		requests.push(data);
 		// only keep 10
 		if (requests.length > 10) requests.shift();
-		if (location.hash) location.hash = '';
+		// if (location.hash) location.hash = requests.length;
 
 		hold = true;
 
@@ -68,7 +68,10 @@ var Mallorca = (function () {
 					history.replaceState('', '', local_path + '' + location.hash);
 					}
 				else if (k == 'set_url') {
-					history.replaceState('', '', local_path + page[k] + '' + location.hash);
+					// if (location.hash) location.hash = requests.length;
+					// location.hash = page[k];
+					// history.replaceState('', '', local_path + page[k]); // + location.hash); // '#' + requests.length); // location.hash);
+					history.pushState('', '', local_path + page[k]); // + location.hash); // '#' + requests.length); // location.hash);
 					}
 				else if (k == 'set_title') {
 					document.title = page[k];
@@ -146,8 +149,8 @@ var Mallorca = (function () {
 		var meth = pages[index].method;
 		page_k++;
 		if (! $(k).length) load_next(page_k, pages);
-		// var iv = $(k).hasClass('no-fade') ? 0 : fade_interval;
-		var iv = $(k).hasClass('fade') ? fade_interval : 0;
+		var iv = $(k).hasClass('no-fade') ? 0 : fade_interval;
+		// var iv = $(k).hasClass('fade') ? fade_interval : 0;
 
 		var sel = k == 'this' ? this : k;
 
@@ -176,11 +179,20 @@ var Mallorca = (function () {
 		}
 
 	function init() {
+		// location.hash = '0';
+
+		window.onpopstate = function (e) {
+			e.preventDefault();
+			if (hold) return true;
+			requests.pop();
+			var last = requests.pop();
+			request(last);
+			return false;
+			};
+
 		$(document).ready(function () {
 			if (mallorca_init) {
 				$(".content").hide();
-				// json_get['path'] = json_get['q'];
-				// var req = clone json_get;
 				var req = {};
 				for (k in json_get) req[k] = json_get[k];
 				req.init = true;
@@ -190,18 +202,6 @@ var Mallorca = (function () {
 				done_loading();
 				}
 
-			// location.hash = 'login';
-
-			/*
-			window.onhashchange = function (e) {
-				if (hold) return true;
-				requests.pop();
-				var last = requests.pop();
-				request(last);
-				e.preventDefault();
-				return false;
-				};
-				*/
 			});
 		return this;
 		}

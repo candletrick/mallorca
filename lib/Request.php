@@ -13,6 +13,9 @@ class Request
 	/** Form-submitted request data. */
 	static public $data;
 
+	/** The initial url parameters. */
+	static public $json_get;
+
 	/** Returned data array. */
 	static public $return;
 
@@ -24,7 +27,7 @@ class Request
 		*/
 	static public function unfold($q)
 		{
-		$get = $_POST;
+		$get = self::$json_get;
 		unset($get['q']);
 
 		$content = static::call_path($q, $get);
@@ -56,13 +59,15 @@ class Request
 		*/
 	static public function respond()
 		{
+		self::$json_get = post('json_get');
+		$q = is(self::$json_get, 'q');
+
 		// only comes through from POST
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 			return;
 			}
 		// else if (post('path')) {
-		else if (post('init') && post('q')) {
-			$q = post('q');
+		else if (post('init') && $q) {
 			self::unfold($q);
 			}
 		else {
@@ -201,7 +206,9 @@ class Request
 			while (isset($new->child)) $new = $new->child;
 			}
 		else {
+			// die(pv(self::$json_get));
 			$new = new $class();
+			$new->params(self::$json_get);
 			}
 
  		// echo pv(class_uses($new)); die(pv(class_implements($new)));

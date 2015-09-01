@@ -68,12 +68,24 @@ class Form extends \Perfect
 
 	public function my_inputs()
 		{
-		foreach ($this->model->columns as $col) {
+		foreach ($this->get_edit() as $col) {
+		// foreach ($this->model->columns as $col) {
 
 			$o = is_object($col);
 			$name = $o ? $col->get_name() : $col;
 
 			$input_fn = 'input_text';
+			$opt = '';
+
+			// set input type
+			if (isset($col->edit)) {
+				if (isset($col->edit->type)) {
+					$types = $col->edit->type;
+					$type = is($types, 0);
+					$opt = is($types, 1);
+					$input_fn = 'input_' . $type;
+					}
+				}
 
 			// filters
 			if ($name == 'id') continue;
@@ -90,7 +102,7 @@ class Form extends \Perfect
 					}
 				}
 
-			$input =$input_fn($name);
+			$input =$input_fn($name, $opt);
 
 			// set data
 			$input->set_value(is($this->model->data, $name));

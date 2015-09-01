@@ -45,6 +45,19 @@ class Model
 			}
 		}
 
+	function get_data()
+		{
+		if (empty($this->data)) {
+			if ($this->id) $this->data = select($this->table, ['*', m('id')->where($this->id)])->one_row();
+			}
+		return $this->data;
+		}
+
+	function get($name)
+		{
+		return is($this->data, $name, "\$$name not set.");
+		}
+
 	/**
 		*/
 	function my_save()
@@ -123,7 +136,6 @@ class Model
 		*/
 	function form($id = 0)
 		{
-		   // die('hey' . $id);
 		$this->id = id_zero($id);
 		if ($this->id) $this->data = select($this->table, ['*', m('id')->where($this->id)])->one_row();
 		$o = new \Perfect\Form($this);

@@ -136,7 +136,7 @@ abstract class Input
 	/**
 		\param	string	$label	Label text.
 		*/
-	public function label($label)
+	public function label($label = '')
 		{
 		$this->label = $label;
 		return $this;

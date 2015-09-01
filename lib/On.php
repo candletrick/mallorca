@@ -28,7 +28,12 @@ class On {
 			return call_user_func_array($this->$fn, $params);
 			}
 		// default value of 1
-		$this->$fn = empty($params) ? 1 : array_shift($params);
+		if (empty($params)) $this->$fn = 1;
+		else {
+			// $shift = array_shift($params);
+			// echo pv($params);
+			$this->$fn = $params;
+			}
 		return $this;
 		}
 
