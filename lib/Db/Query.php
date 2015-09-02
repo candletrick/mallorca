@@ -209,6 +209,7 @@ class Query {
 			else if ($column->where === NULL) $this->wheres[] = "$name is NULL";
 			else if (isset($column->where_like)) $this->wheres[] = "$name like " . db()->esc('%' . $column->where_like . '%');
 			else if (isset($column->where_lt)) $this->wheres[] = "$name<" . db()->esc($column->where_lt);
+			else if (isset($column->where_gte)) $this->wheres[] = "$name >= " . db()->esc($column->where_gte);
 
 			// Alias
 			// $name = $name . ($column->name == $column->as ? '' : " as $column->as");

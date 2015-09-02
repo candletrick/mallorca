@@ -36,7 +36,7 @@ class Scan
 				$class = str_replace('/', '\\', $class);
 
 				if ($class != "\\Model\\Model"
-					// && strpos($class, 'Model') !== false
+					&& strpos($class, 'Model') !== false
 					&& class_exists($class)
 					&& get_parent_class($class) == 'Model'
 					) {

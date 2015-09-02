@@ -202,7 +202,9 @@ class Request
 
 		// modules must be constructed this way
 		if (in_array($parent, array('Module'))) {
-			$new = \Path::index(req('q'));
+			$q = is(self::$json_get, 'q');
+			$new = \Path::index($q);
+			// die(pv(self::$json_get) . pv($new));
 			while (isset($new->child)) $new = $new->child;
 			}
 		else {

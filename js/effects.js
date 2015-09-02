@@ -10,8 +10,9 @@ var effects = {
 		th.siblings().removeClass('selected');
 		},
 
-	'confirm_delete' :  function (th) {
-		return confirm("Are you sure you want to delete?");
+	'confirm_delete' :  function (th, msg) {
+		if (msg == '') msg = "Are you sure you want to delete?";
+		return confirm(msg);
 		},
 
 	'remove_group' : function (th) {
@@ -23,7 +24,7 @@ var effects = {
 		},
 
 	'remove_row' : function (th) {
-		th.closest('tr').remove();
+		th.closest('tr, .tr').remove();
 		},
 
 	'clear_inputs' : function (th) {

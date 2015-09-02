@@ -35,6 +35,7 @@ function autoload_lib($name)
 			$errors[] = $dir;
 			}
 		}
+
 	/* *
 	if (! empty($errors)) {
 		die('<pre>'

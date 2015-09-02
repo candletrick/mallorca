@@ -42,7 +42,7 @@ class On {
 		*/
 	public function set_type($type, $opt = '')
 		{
-		return $this->data->type([$type, $opt])->end;
+		return $this->data->type($type, $opt)->end;
 		}
 	}
 

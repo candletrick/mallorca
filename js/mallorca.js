@@ -57,11 +57,17 @@ var Mallorca = (function () {
 			// iterate incrementally
 			page_k = 0;
 			var pages = [];
+			// console.log(page);
 			// if(typeof(console) !== 'undefined') console.log(pages);
 			for (k in page) {
+				if (k == 'request') {
+					if(typeof(console) !== 'undefined') console.log(page[k]);
+					continue;
+					}
+
 				pages.push({
-					'k' : page[k]['selector'],
-					'v' : page[k]['content'],
+					'selector' : page[k]['selector'],
+					'content' : page[k]['content'],
 					'method' : page[k]['method']
 					});
 				if (k == 'clear_url' && page[k] == true) {
@@ -79,12 +85,14 @@ var Mallorca = (function () {
 				}
 			load_next(page_k, pages);
 
+			/*
 			for (k in page) {
 				if (k == 'request') {
 					if(typeof(console) !== 'undefined') console.log(page[k]);
 					continue;
 					}
 				}
+				*/
 			});
 		}
 
@@ -108,8 +116,9 @@ var Mallorca = (function () {
 
 		// before-fn
 		var before = clicker.attr('before-fn');
+		var before_param = clicker.attr('before-fn-param');
 		if (typeof(effects[before]) !== 'undefined') {
-			if (! effects[before](clicker)) return false;
+			if (! effects[before](clicker, before_param)) return false;
 			}
 
 		run_stack($(this).attr('data-fn'), data);
@@ -144,21 +153,30 @@ var Mallorca = (function () {
 			done_loading();
 			return;
 			}
-		var k = pages[index].k;
-		var v = pages[index].v;
+		var selector = pages[index].selector;
+		var content = pages[index].content;
 		var meth = pages[index].method;
 		page_k++;
-		if (! $(k).length) load_next(page_k, pages);
-		var iv = $(k).hasClass('no-fade') ? 0 : fade_interval;
-		// var iv = $(k).hasClass('fade') ? fade_interval : 0;
+		if (! $(selector).length) load_next(page_k, pages);
+		// var iv = $(selector).hasClass('no-fade') ? 0 : fade_interval;
+		var iv = $(selector).hasClass('fade') ? fade_interval : 0;
 
-		var sel = k == 'this' ? this : k;
+		/*
+		if (selector == '') {
+			if (clicker) sel = clicker;
+			else return false;
+			}
+		else sel = $(selector);
+		*/
+		var sel = selector;
 
+		// alert(sel + $(sel).html());
 		$(sel).fadeOut(iv, function() {
-			if (meth == 'append') $(this).append(v);
-			else if (meth == 'prepend') $(this).prepend(v);
-			else if (meth == 'replaceWith') $(this).replaceWith(v);
-			else $(this).html(v);
+			if (meth == 'append') $(this).append(content);
+			else if (meth == 'prepend') $(this).prepend(content);
+			else if (meth == 'replaceWith') $(this).replaceWith(content);
+			else if (meth == 'insertAfter') $(content).insertAfter(this);
+			else $(this).html(content);
 			
 			$(this).fadeIn(iv, function() {
 				load_next(page_k, pages);
