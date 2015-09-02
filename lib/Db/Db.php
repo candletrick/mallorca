@@ -136,7 +136,7 @@ class Db {
 
 			if (isset($data[$name])) {
 				$value = strpos($type, 'char') !== false ? self::$db->esc($data[$name])
-				: (strpos($type, 'dec') !== false ? (preg_replace("/[^\d\.]/", '', $data[$name]) ?: 'NULL')
+				: (strpos($type, 'dec') !== false ? (preg_replace("/[^\d\.-]/", '', $data[$name]) ?: 'NULL')
 				: (strpos($type, 'int') !== false ? id_zero($data[$name])
 				: ($type == 'date' ? self::$db->esc(date_to("Y-m-d", $data[$name]))
 				: ($type == 'datetime' ? self::$db->esc(date_to("Y-m-d H:i:s", $data[$name]))
