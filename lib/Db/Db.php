@@ -109,6 +109,13 @@ class Db {
 		array_pop($results);
 		return $results;
 		}
+
+	static public function results_by_key($key, $query) {
+		$q = self::$db->query($query);
+		$results = array();
+		while ($a = self::$db->row($q)) { $results[$a[$key]] = $a; }
+		return $results;
+		}
 	
 	/**
 		Helper function for match_query.
