@@ -172,6 +172,13 @@ function db() {
 
 /* ESCAPING */
 
+function safe_id($name, $default = 0)
+	{
+	$id = req($name, $default);
+	if (preg_match("/^[0-9]+$/", $id) && $id > 0) return $id;
+	return $default;
+	}
+
 function id_zero($x) {
 	return is_string($x) && preg_match("/^\d+$/", $x) ? $x : 0;
 	}
