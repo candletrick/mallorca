@@ -184,7 +184,7 @@ class Query {
 			else if (isset($column->format)) $name = db()->format($column->format, $name);
 			else if (isset($column->iff)) {
 				list($cond, $true, $false) = $column->iff;
-				$name = "if($name=" . db()->esc($cond) . ", $true, $false)";
+				$name = "if($name=" . \Db::esc($cond) . ", $true, $false)";
 				}
 			else if (isset($column->concat)) {
 				$add = array();
@@ -205,11 +205,12 @@ class Query {
 			if (isset($column->desc)) $this->orders[] = "$name desc";
 			else if (isset($column->asc)) $this->orders[] = "$name asc";
 
-			if (isset($column->where)) $this->wheres[] = "$name=" . db()->esc($column->where);
+			if (isset($column->where)) $this->wheres[] = "$name=" . \Db::esc($column->where);
 			else if ($column->where === NULL) $this->wheres[] = "$name is NULL";
-			else if (isset($column->where_like)) $this->wheres[] = "$name like " . db()->esc('%' . $column->where_like . '%');
-			else if (isset($column->where_lt)) $this->wheres[] = "$name<" . db()->esc($column->where_lt);
-			else if (isset($column->where_gte)) $this->wheres[] = "$name >= " . db()->esc($column->where_gte);
+			else if (isset($column->where_like)) $this->wheres[] = "$name like " . \Db::esc('%' . $column->where_like . '%');
+			else if (isset($column->where_lt)) $this->wheres[] = "$name<" . \Db::esc($column->where_lt);
+			else if (isset($column->where_gte)) $this->wheres[] = "$name >= " . \Db::esc($column->where_gte);
+			else if (isset($column->where_between)) $this->wheres[] = "$name >= " . \Db::esc($column->start) . " and $name <= " . \Db::esc($column->end);
 			else if (isset($column->blank)) $this->wheres[] = "($name is null or $name='')";
 
 			// Alias

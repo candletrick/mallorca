@@ -39,6 +39,13 @@ class Meta
 		return $this;
 		}
 
+	public function where_between($start, $end) {
+		$this->start = $start;
+		$this->end = $end;
+		$this->where_between = true;
+		return $this;
+		}
+
 	public function substr($start, $end) {
 		$this->start = $start;
 		$this->end = $end;
