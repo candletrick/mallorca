@@ -170,6 +170,12 @@ var Mallorca = (function () {
 		*/
 		var sel = selector;
 
+		if (sel == '') return false;
+		if ($(sel).length != 1) {
+			alert(sel + ' has multiple results. Please choose a unique selector.');
+			return false;
+			}
+
 		// alert(sel + $(sel).html());
 		$(sel).fadeOut(iv, function() {
 			if (meth == 'append') $(this).append(content);
