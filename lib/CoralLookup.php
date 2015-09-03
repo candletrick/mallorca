@@ -1,7 +1,13 @@
 <?php
 
+/**
+	Rough version of a class allowing more control over rows.
+	*/
 class CoralLookup extends \Perfect\Lookup
 	{
+	/**
+		Strip ->lookup properties from on() objects.
+		*/
 	public function filter()
 		{
 		$defs = [];
@@ -13,17 +19,9 @@ class CoralLookup extends \Perfect\Lookup
 		return $defs;
 		}
 
-	/*
-	public function my_query()
-		{
-		/
-		return parent::my_query()->combine([
-			m('content')->substr(1, 100)->as('content')
-			]);
-		// parent::my_query()->combine([m('parent_id')->blank()]);
-		}
+	/**
+		Create, for instance, table rows, or other double nested tag structures.
 		*/
-
 	public function nest_two($data, $a = 'tr', $b = 'td')
 		{
 		$s = '';

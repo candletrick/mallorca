@@ -8,14 +8,22 @@
 	*/
 class ServerCall
 	{
+	/** Properties. */
 	public $props;
 
+	/**
+		\param	array	$props	Array of properties.
+		*/
 	function __construct($props)
 		{
 		$this->props = $props;
 		}
 
 	/**
+		Send the results of a function call (returning $this),
+		into another method of the class with optional params.
+		\param	string	$fn	Function name.
+		\param	array	$params	Parameters.
 		*/
 	function pipe($fn, $params = array())
 		{
@@ -31,6 +39,7 @@ class ServerCall
 		@{ */
 
 	/**
+		jQuery replaceWith
 		*/
 	function replaceWith($selector = '')
 		{
@@ -40,6 +49,7 @@ class ServerCall
 		}
 		
 	/**
+		jQuery html
 		*/
 	function html($selector = '')
 		{
@@ -49,6 +59,7 @@ class ServerCall
 		}
 
 	/**
+		jQuery append
 		*/
 	function append($selector = '')
 		{
@@ -58,6 +69,7 @@ class ServerCall
 		}
 
 	/**
+		jQuery prepend
 		*/
 	function prepend($selector = '')
 		{
@@ -67,6 +79,7 @@ class ServerCall
 		}
 
 	/**
+		jQuery insertAfter
 		*/
 	function insertAfter($selector = '')
 		{

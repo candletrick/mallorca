@@ -1,9 +1,11 @@
 <?php
+/* Mallorca Framework */
 
 /**
 	\param bool $init Whether to run the request on first page load.
 	*/
-function mallorca_init($init = true) {
+function mallorca_init($init = true)
+	{
 	// initialize
 	// $get = $_GET;
 	$get = array(
@@ -20,14 +22,14 @@ var json_get = " . json_encode($get) . ";
 /**
 	Standard mallorca HTML wrapper with a stick footer built in.
 	*/
-function mallorca_wrapper() {
+function mallorca_wrapper()
+	{
 	return div('wrapper', div('content') . div('push')) . div('footer')
 	. mallorca_init()
 	. script_tag('js/mallorca.js')
 	;
 	}
 
-/* Mallorca Framework */
 
 /**
 	\return Full http atom for URLs including host, port, base folder.
@@ -51,30 +53,17 @@ function stack($xs = array()) {
 	return http_build_query($ys);
 	}
 
-function pv($var)
+
+function select($table, $columns = array('*'))
 	{
-	return print_var($var, true);
-	}
-
-// function div($class, ...$args) {
-function div() {
-	$args = func_get_args();
-	$class = array_shift($args);
-
-	return "<div class='$class'>" . implode($args) . "</div>";
-	}
-
-function select($table, $columns = array('*')) {
 	return new \Db\Query($table, $columns);
 	}
 
-function call($class, $fn, $params = array('')) {
+function call($class, $fn, $params = array(''))
+	{
 	// allow $this to be passed for $class
 	if (is_object($class)) {
 		$class = get_class($class);
-	
-		// $parent = get_parent_class($class);
-		// if ($parent ==
 		}
 
 	// allow piping
@@ -95,20 +84,26 @@ function call_path($path = '', $params = array()) {
 		));
 	}
 
-function schema($table, $columns) {
+/*
+function schema($table, $columns)
+	{
 	// return \Schema::table($table, $cols);
 	return new \Meta(array('table'=>$table, 'columns'=>$columns));
 	}
+	*/
 
-function on($name) {
+function on($name)
+	{
 	return new On($name);
 	}
 
-function m($name = 1) {
+function m($name = 1)
+	{
 	return new Meta(get_defined_vars());
 	}
 
-function ls() {
+function ls()
+	{
 	return new Ls(func_get_args());
 	}
 

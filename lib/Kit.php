@@ -9,7 +9,7 @@ ini_set('mysql.datetimeconvert', 'Off');
 /* SUPERGLOBALS */
 
 /**
-	\defgroup superglobs Superglobal safe access functions get(), post()...
+	\defgroup superglobals Superglobal shorthand functions get(), post()...
 
 	These are simple shorthand functions for accessing the superglobals and avoiding undefined indexes.
 	Try to always use them to the right hand side of an equal sign.
@@ -19,45 +19,72 @@ ini_set('mysql.datetimeconvert', 'Off');
 	\endcode
 
 	\return The superglobal array value if it is set, the provided alternative value if it is given, otherwise ''.
-	\param string $x Name of the index.
-	\param string $y Value to return if the index is not set.
+	\param string $a Name of the index.
+	\param string $b Value to return if the index is not set.
 
 	@{*/
+
+/**
+	$_GET
+	*/
 function get($a, $b = '')
 	{
 	return isset($_GET[$a]) ? $_GET[$a] : $b;
 	}
 
+/**
+	$_REQUEST
+	*/
 function req($a, $b = '')
 	{
 	return isset($_REQUEST[$a]) ? $_REQUEST[$a] : $b;
 	}
 
+/**
+	$_POST
+	*/
 function post($a, $b = '')
 	{
 	return isset($_POST[$a]) ? $_POST[$a] : $b;
 	}
 
+/**
+	$_POST
+	*/
 function sesh($a, $b = '')
 	{
 	return isset($_SESSION[$a]) ? $_SESSION[$a] : $b;
 	}
 
+/**
+	$_POST
+	*/
 function cook($a, $b = '')
 	{
 	return isset($_COOKIE[$a]) ? $_COOKIE[$a] : $b;
 	}
 
+/**
+	$_POST
+	*/
 function is($array, $index, $else = '')
 	{
 	return isset($array[$index]) ? $array[$index] : $else;
 	}
 
+	/**@}*/
+
+/**
+	Synonymous with ternary operator.
+
+	\param	bool	$bool	Condition.
+	\param	mixed	$then	To return if true.
+	\param	mixed	$else	To return if false.
+	*/
 function iff($bool, $then, $else = '')
 	{
 	return $bool ? $then : $else;
 	}
-	/**@}*/
 
 /* INPUTS */
 
@@ -66,6 +93,9 @@ function iff($bool, $then, $else = '')
 	@{*/
 
 /* */
+/**
+	group
+	*/
 function input_group()
 	{
 	$args = func_get_args();
@@ -77,13 +107,18 @@ function input_group()
 	return new \Input\Group($name, $args);
 	}
 
-/* new style */
+/**
+	new style
+	*/
 function action_group($inputs = array())
 	{
 	$name = 'input-group';
 	return new \Action\Group($name, $inputs);
 	}
 
+/**
+	toggle
+	*/
 function input_toggle($name, $options = array())
 	{
 	$inp = new \Input\Toggle($name);
@@ -91,6 +126,9 @@ function input_toggle($name, $options = array())
 	return $inp;
 	}
 
+/**
+	hidden
+	*/
 function input_hidden($name, $value = '')
 	{
 	$inp =  new \Input\Hidden($name);
@@ -98,21 +136,33 @@ function input_hidden($name, $value = '')
 	return $inp;
 	}
 
+/**
+	money
+	*/
 function input_money($name, $len = 30, $value = '')
 	{
 	return new \Input\Money($name, $len, $value);
 	}
 
+/**
+	check
+	*/
 function input_check($name)
 	{
 	return new \Input\Check($name);
 	}
 
+/**
+	swatch
+	*/
 function input_swatch($name)
 	{
 	return new \Input\Swatch($name);
 	}
 
+/**
+	checklist
+	*/
 function input_checklist()
 	{
 	$args = func_get_args();
@@ -120,88 +170,139 @@ function input_checklist()
 	return new \Input\Checklist($name, $args);
 	}
 
+/**
+	file
+	*/
 function input_file($name, $table = '', $table_id = 0)
 	{
 	return new \Input\File($name, $table, $table_id);
 	}
 
+/**
+	radio
+	*/
 function input_radio($name, $options = array())
 	{
 	return new \Input\Radio($name, $options);
 	}
 
+/**
+	text
+	*/
 function input_text($name, $len = '', $value = '')
 	{
 	return new \Input\Text($name, $len, $value);
 	}
 
+/**
+	email
+	*/
 function input_email($name)
 	{
 	return new \Input\Email($name);
 	}
 
+/**
+	duration
+	*/
 function input_duration($name)
 	{
 	return new \Input\Duration($name);
 	}
 
+/**
+	phone
+	*/
 function input_phone($name, $value = '')
 	{
 	return new \Input\Phone($name, 12, $value);
 	}
 
+/**
+	password
+	*/
 function input_password($name, $len = 10)
 	{
 	return new \Input\Password($name, $len);
 	}
 
+/**
+	stripe
+	*/
 function input_stripe($name, $amount, $id)
 	{
 	return new \Input\Stripe($name, $amount, $id);
 	}
 
+/**
+	button
+	*/
 function input_button($name)
 	{
 	return new \Input\Button($name);
 	}
 
+/**
+	submit
+	*/
 function input_submit($name)
 	{
 	$inp = new \Input\Button($name);
 	return $inp->type('submit');
 	}
 
+/**
+	textarea
+	*/
 function input_textarea($name, $len = 250)
 	{
 	return new \Input\Textarea($name, $len);
 	}
 
+/**
+	select
+	*/
 function input_select($name, $options = array())
 	{
 	return new \Input\Select($name, $options);
 	}
 
+/**
+	date
+	*/
 function input_date($name, $value = '')
 	{
 	$inp = new \Input\Date($name, 10, $value);
 	return $inp->add_class('date-calendar');
 	}
 
+/**
+	state
+	*/
 function input_state($name)
 	{
 	return new \Input\State($name);
 	}
 
+/**
+	time
+	*/
 function input_time($name)
 	{
 	return new \Input\Time($name);
 	}
 
+/**
+	thumb
+	*/
 function input_thumb($name, $booking)
 	{
 	return new \Input\Thumb($name, $booking);
 	}
 
+/**
+	date_triple
+	*/
 function input_date_triple($name)
 	{
 	return new \Input\DateTriple($name);
@@ -323,6 +424,19 @@ function print_var($var, $str = false)
 function newlines($s)
 	{
 	return "<p>" . str_replace("\n", "<br>", str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $s)) . "</p>";
+	}
+function pv($var)
+	{
+	return print_var($var, true);
+	}
+
+// function div($class, ...$args) {
+function div()
+	{
+	$args = func_get_args();
+	$class = array_shift($args);
+
+	return "<div class='$class'>" . implode($args) . "</div>";
 	}
 
 /* DATE FUNCTIONS */
