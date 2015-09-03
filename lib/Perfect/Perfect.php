@@ -10,6 +10,10 @@ class Perfect
 		return $this;
 		}
 
+	public function params($params)
+		{
+		}
+
 	public function my_display()
 		{
 		return 'Define my_display';

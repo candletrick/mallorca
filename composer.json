@@ -1,0 +1,12 @@
+{
+    "name": "yatsuha/mallorca",
+    "description": "Write frontend in the backend.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Blake",
+            "email": "yatsuha@fastmail.se"
+        }
+    ],
+    "require": {}
+}

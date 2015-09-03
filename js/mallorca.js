@@ -59,25 +59,25 @@ var Mallorca = (function () {
 			// iterate incrementally
 			page_k = 0;
 			var pages = [];
-			// console.log(page);
 			// if(typeof(console) !== 'undefined') console.log(pages);
 			for (k in page) {
-				if (k == 'request' || k == 'POST') {
+				if (k == 'request') {
 					// if(typeof(console) !== 'undefined') console.log(page[k]);
 					continue;
 					}
-
-				if (k == 'clear_url' && page[k] == true) {
-					history.replaceState('', '', local_path + '' + location.hash);
+				else if (k == 'clear_url' && page[k] == true) {
+					// history.replaceState('', '', local_path + '' + location.hash);
 					}
 				else if (k == 'set_url') {
-					// if (location.hash) location.hash = requests.length;
-					// location.hash = page[k];
-					// history.replaceState('', '', local_path + page[k]); // + location.hash); // '#' + requests.length); // location.hash);
-					history.pushState('', '', local_path + page[k]); // + location.hash); // '#' + requests.length); // location.hash);
+					history.pushState('', '', local_path + page[k]);
 					}
 				else if (k == 'set_title') {
 					document.title = page[k];
+					}
+				else if (k == 'redirect') {
+					// alert(k + page[k]);
+					window.location = page[k];
+					return false;
 					}
 				else {
 					pages.push({

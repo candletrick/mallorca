@@ -268,6 +268,14 @@ function input_select($name, $options = array())
 	}
 
 /**
+	timer
+	*/
+function input_timer($name, $key, $id)
+	{
+	return new \Input\Timer($name, $key, $id);
+	}
+
+/**
 	date
 	*/
 function input_date($name, $value = '')

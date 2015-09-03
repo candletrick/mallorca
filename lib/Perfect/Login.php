@@ -4,18 +4,18 @@ namespace Perfect;
 /**
 	Standard login.
 	*/
-class Login
+class Login extends \Perfect
 	{
 	/**
 		Normal display.
 		*/
-	public function my_display($label = 'Login', $after = 'validate')
+	public function my_display($label = 'Login', $after = 'validate', $data = [])
 		{
 		return ''
 		. div('login-wrapper',
 			div('control', div('label'), div('input coral', $label)),
 			div('control', div('label'), div('input', alert(true))),
-			input_group([
+			action_group([
 				input_text('email', 20)->label("Em:")
 					->set_value(cook('login_email')),
 				input_password('password')->label("Pa:")
@@ -24,8 +24,9 @@ class Login
 					->set_value(cook('login_remember')),
 				input_button('Login')->add_class('data-enter')->label('ThY')->click(array_merge([
 					call($this, $after)->html('.content'),
-					], website()))
-				])->my_display()
+					], website())),
+				sesh_alert()
+				])->data($data)->my_display()
 			);
 		}
 
@@ -48,30 +49,38 @@ class Login
 		*/
 	public function validate()
 		{
-		$d = \Request::$data;
-		$a = \Db::one_row("select * from user where email=" . db()->esc(is($d, 'email')));
-
 		$ok = false;
 
-		if (! $a) alert("Email not recognized.");
-		else if ($a['password'] != self::encrypt(is($d, 'password'), $a['salt'])) alert("Password is not correct.");
-		else if (! $a['is_confirmed']) alert("Please check your email to confirm your account.");
+		$d = \Request::$data;
+		if (empty($d)) {
+			if (! sesh('alert')) alert('Please login below..');
+			}
 		else {
-			// cookies
-			$expire = is($d, 'remember') ? time() + (3600 * 72) : time() - 1000;
-			setcookie('login_email', $d['email'], $expire);
-			setcookie('login_password', $d['password'], $expire);
-			setcookie('login_remember', is($d, 'remember'), $expire);
+			$a = \Db::one_row("select * from user where email=" . \Db::esc(is($d, 'email')));
 
-			alert('You are now logged in as ' . $a['email'] . '.');
-			$_SESSION['login_id'] = $a['id'];
-			$ok = true;
+			if (! $a) alert("Email not recognized.");
+			else if ($a['password'] != self::encrypt(is($d, 'password'), $a['salt'])) alert("Password is not correct.");
+			else if (! $a['is_confirmed']) alert("Please check your email to confirm your account.");
+			else {
+				// cookies
+				$expire = is($d, 'remember') ? time() + (3600 * 72) : time() - 1000;
+				setcookie('login_email', $d['email'], $expire);
+				setcookie('login_password', $d['password'], $expire);
+				setcookie('login_remember', is($d, 'remember'), $expire);
+
+				alert('You are now logged in as ' . $a['email'] . '.');
+				$_SESSION['login_id'] = $a['id'];
+				$ok = true;
+				}
 			}
 
 		if (! $ok) {
 			\Request::kill();
-			return $this->my_display();
+			return $this->my_display('Login', 'validate', $d);
 			}
+
+		return $ok;
+		// die(pv($ok));
 		}
 
 	/**

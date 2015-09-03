@@ -10,11 +10,26 @@ class Request
 	/** Stop execution. */
 	static public $stop = false;
 
+	/** Is POST request? */
+	static public $is_post = false;
+
+	/** Is init? */
+	static public $is_init = false;
+
 	/** Form-submitted request data. */
 	static public $data;
 
+	/** Stack. */
+	static public $stack = array();
+
 	/** The initial url parameters. */
-	static public $json_get;
+	static public $json_get = array();
+
+	/** The initial url path. */
+	static public $path;
+
+	/** Synonym for $path */
+	static public $q;
 
 	/** Returned data array. */
 	static public $return;
@@ -25,21 +40,19 @@ class Request
 	/**
 		New mallorca style rendering.
 		*/
-	static public function unfold($q)
+	static public function unfold()
 		{
-		$get = self::$json_get;
-		unset($get['q']);
+		$content = static::call_path(self::$q, self::$json_get);
 
-		$content = static::call_path($q, $get);
-		
-		echo json_encode(array(
-			'POST'=>$_POST,
-			'.content'=>array(
-				'selector'=>'.content',
-				'content'=>$content,
-				'method'=>'replace'
-				)
-			));
+		// self::$stop for redirects
+		$return = self::$stop ? self::$return : array(
+			'request'=>$_POST,
+			'.content'=>array('selector'=>'.content', 'content'=>$content, 'method'=>'replace')
+			);
+
+		// die('a' . pv($return));
+
+		echo json_encode($return);
 		die;
 		}
 
@@ -52,6 +65,46 @@ class Request
 		}
 
 	/**
+		Set up any url parameters for use app-wide.
+		*/
+	static public function init()
+		{
+		self::$json_get = post('json_get', array());
+		self::$q = is(self::$json_get, 'q');
+		unset(self::$json_get['q']);
+
+		self::$is_post = $_SERVER['REQUEST_METHOD'] == 'POST';
+		self::$is_init = ! isset($_POST['stack']);
+
+		// $data = array();
+		// $stack = isset($_POST['stack']) ? $_POST['stack'] : array('data-fn'=>stack(website()));
+		$stack = self::$is_init ? array('data-fn'=>stack(website())) : post('stack');
+			
+		if (is($stack, 'data-fn')) {
+			// $data_fn = array();
+			// $stack = post('stack');
+			parse_str(is($stack, 'data-fn'), self::$stack);
+			parse_str(is($stack, 'data'), self::$data);
+			// $stack = $data_fn;
+			}
+		// self::$stack = $data_fn;
+		// self::$data = $data;
+
+		// TODO make this more robust
+		// first call_path is the "path"
+		foreach (self::$stack as $s) {
+			if (is($s, 'path')) {
+				self::$path = is($s, 'path');
+				break;
+				}
+			}
+		
+		self::$return = array(
+			'request'=>print_r($stack, true)
+			);
+		}
+
+	/**
 		The main app response function.
 		Only reacts to POST requests.
 		Can handle paths via the new mallorca style.
@@ -59,22 +112,30 @@ class Request
 		*/
 	static public function respond()
 		{
-		self::$json_get = post('json_get');
-		$q = is(self::$json_get, 'q');
+		// login check
+		$logged_in = \Login::check();
 
-		// only comes through from POST
-		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-			return;
+		if (self::$is_post && ! $logged_in) {
+			$login = new \Perfect\Login();
+			$try = $login->validate();
+			if ($try === true) self::respond_to_stack();
+			else {
+				echo json_encode(array(
+					'.content'=>array('selector'=>'.content', 'content'=>$try, 'method'=>'replace')
+					));
+				die;
+				}
 			}
-		// else if (post('path')) {
-		else if (post('init') && $q) {
-			self::unfold($q);
+
+		// "requests" only come through POST
+		if (! self::$is_post) return;
+		else if (post('init') && self::$q) {
+			self::unfold();
 			}
 		else {
-			// die(pv($_REQUEST));
 			$stack = isset($_POST['stack']) ? $_POST['stack'] : array('data-fn'=>stack(website()));
 
-			self::respond_to($stack);
+			self::respond_to_stack(); // $stack);
 			}
 		}
 
@@ -83,8 +144,9 @@ class Request
 			'.main'=>fn('Login::display')
 		\return	JSON encoded array of CSS selectors => content.
 		*/
-	static public function respond_to($stack = array())
+	static public function respond_to_stack() // $stack = array())
 		{
+		/*
 		$data = array();
 
 		// more useful version to unparse here, so that complicated nested input names, need not be used
@@ -100,10 +162,9 @@ class Request
 		self::$return = array(
 			'request'=>print_r($stack, true)
 			);
+			*/
 		 
-		 // die(pv($stack));
-
-		foreach ($stack as $v) {
+		foreach (self::$stack as $v) {
 			self::respond_to_one($v);
 			}
 
@@ -117,9 +178,7 @@ class Request
 	static public function respond_to_one($v)
 		{
 		$s = '';
-		// $params = array_merge(is($v, 'params', array()), $data);
 		$params = is($v, 'params', array());
-		// $key = is($v, 'selector', $k);
 		$out = array();
 
 		if (self::$stop) return;
@@ -131,16 +190,16 @@ class Request
 			$s = $out['content'];
 			}
 		else if (array_key_exists('path', $v)) {
-			$s = static::call_path($v['path'], $params, is($v, 'function', 'my_display'));
 			self::$return['set_url'] = $v['path'] . (! empty($params) ? '&' . http_build_query($params) : '');
+			$s = static::call_path($v['path'], $params, is($v, 'function', 'my_display'));
 			}
 
-		// if (! isset(self::$return[self::$count])) self::$return[self::$count] = array();
+		// one more chance to kill
+		// if (self::$stop) return;
+		// die(pv(self::$return));
 
 		$key = is($v, 'selector', is($out, 'selector'));
 
-		// $json[$key] = array(
-		// self::$return[self::$count++] = array(
 		self::$return[] = array(
 			'selector'=>$key,
 			'content'=>$s,
@@ -154,6 +213,32 @@ class Request
 	static public function send($call)
 		{
 		self::respond_to_one($call->props);
+		}
+
+	/**
+		"Redirect" in the middle of a request.
+		*/
+	static public function base_redir($path, $params = array())
+		{
+		if (! self::$is_post) {
+			if ($path == req('q')) return;
+			\Path::base_redir($path, $params);
+			}
+		else {
+			/*
+			if (self::$is_init && self::$q == $path) {
+				return;
+				}
+			else
+			*/
+			if (self::$path == $path) {
+				return;
+				}
+			echo json_encode(array(
+				'redirect'=>\Path::base_to($path, $params)
+				));
+			die;
+			}
 		}
 
 	/**
@@ -177,6 +262,9 @@ class Request
 		else {
 			// $new = new $class();
 			$class = _to_class(implode('/', $parts) . '/model');
+			if (! class_exists($class)) {
+				die('Classes not found: ' . _to_class($path) . ' or ' . _to_class($path) . "\\Model");
+				}
 			$model = new $class();
 			$model->params($params);
 

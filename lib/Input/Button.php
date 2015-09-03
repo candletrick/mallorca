@@ -1,27 +1,47 @@
 <?php
 namespace Input;
 
+/**
+	Button
+	*/
 class Button extends \Input
 	{
+	/**
+		data-fn actions to be performed.
+		\sa stack()
+		*/
 	public $data_fn;
+
+	/** JS function to run after click event.  */
 	public $after_fn;
+	
+	/** JS function to run before click event.  */
 	public $before_fn;
+
+	/** Param for $before_fn */
 	public $before_param;
 
+	/**
+		*/
 	function my_construct()
 		{
-		// $this->value = $this->label;
 		$this->my_label = $this->label;
 		$this->label = '';
 		$this->classes = 'button';
 		}
 
+	/**
+		Set label.
+		Needs to be a little different for a button.
+		*/
 	function label($label = '')
 		{
 		$this->my_label = $label;
 		return $this;
 		}
 
+	/**
+		*/
 	function my_input()
 		{
 		$label = htmlspecialchars($this->my_label, ENT_QUOTES);
@@ -33,12 +53,11 @@ class Button extends \Input
 		. " $this->attrs>";
 		}
 
-	function refresh($refresh, $stack) {
-		list($class, $fn) = $refresh;
-		$stack['.' . $fn] = fn($class . '::' . $fn);
-		return $this->stack($stack);
-		}
-		
+	/**
+		Indicate JS functions (from effects.js) to run before click event.
+		\param	string	$before	Function name.
+		\param	string	$param	Parameter if there is one.
+		*/
 	function before($before, $param = '')
 		{
 		$this->before_fn = $before;
@@ -46,12 +65,20 @@ class Button extends \Input
 		return $this;
 		}
 
+	/**
+		Indicate JS functions (from effects.js) to run after click event.
+		\param	string	$after	Function name.
+		*/
 	function after($after)
 		{
 		$this->after_fn = $after;
 		return $this;
 		}
 
+	/**
+		Indicate a mallorca-style call stack to be performed on click.
+		\param	array	$xs	Array of call() function calls.
+		*/
 	function click($xs = array())
 		{
 		$this->classes .= " data-fn action";
@@ -59,7 +86,6 @@ class Button extends \Input
 		return $this;
 		}
 
-	// phase this out
 	function stack($xs = array(), $after_fn = '')
 		{
 		$this->classes .= " action";
@@ -67,6 +93,8 @@ class Button extends \Input
 		if ($after_fn) $this->after_fn = $after_fn;
 		return $this;
 		}
+	/*
+	// phase this out
 
 	function merge($fn)
 		{
@@ -80,6 +108,16 @@ class Button extends \Input
 		return $this;
 		}
 
+	function refresh($refresh, $stack)
+		{
+		list($class, $fn) = $refresh;
+		$stack['.' . $fn] = fn($class . '::' . $fn);
+		return $this->stack($stack);
+		}
+		*/
+
+	/**
+		*/
 	function set_value($v)
 		{
 		$this->attrs .= " data-value='$v' ";

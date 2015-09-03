@@ -30,15 +30,32 @@ class Login
 		{
 		$id = id_zero(sesh('login_id'));
 
-		if (sesh('login_id')) {
-			// self::$data = \Db::one_row("select a.*, b.user_type
-			// from user a left outer join user_type b on a.user_type_id=b.id where a.id=" . $id) ?: array();
-			self::$data = \Db::one_row("select a.* from user a where a.id=" . $id) ?: array();
-			if (empty(self::$data)) unset($_SESSION['login_id']);
+		self::$data = select('user', ['*', m('id')->where($id)])->one_row() ?: array();
+
+		if (empty(self::$data)) {
+			// die(pv(\Request::$stack));
+			// \Request::base_redir('user/login');
+			return false;
 			}
 
 		self::$id = $id;
-		self::$esc = db()->esc($id);
+		self::$esc = \Db::esc($id);
+
+		return true;
+		/*
+
+		if (empty(self::$data)) {
+			unset($_SESSION['login_id']);
+			// die('a'.req('q'));
+			if (req('q') != 'user/login') {
+				\Request::base_redir('logout');
+				die;
+				}
+			}
+		// die('b'.req('q'));
+		die('sog');
+
+		*/
 		}
 
 	/**

@@ -146,11 +146,12 @@ class Group
 		{
 		$cs = array();
 		foreach ($this->inputs as $input) {
-			if ($input->type == 'hidden') $cs[] = $input->my_display();
+			if (! is_object($input)) $cs[] = div('control', div('label'), div('input', $input));
+			else if ($input->type == 'hidden') $cs[] = $input->my_display();
 			else {
 				$cs[] = div('control ' . $input->type,
-					($input->label ? div('label ' . $input->label_classes, $input->label) : '')
-					. div('input', $input->my_display())
+					div('label ' . $input->label_classes, $input->label),
+					div('input', $input->my_display())
 					);
 				}
 			}
