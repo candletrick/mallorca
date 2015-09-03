@@ -30,7 +30,9 @@ var Mallorca = (function () {
 		if (hold) return;
 
 		// back button history
-		requests.push(data);
+		var hist = {};
+		for (x in data) hist[x] = data[x];
+		requests.push(hist);
 		// only keep 10
 		if (requests.length > 10) requests.shift();
 		// if (location.hash) location.hash = requests.length;
@@ -60,16 +62,11 @@ var Mallorca = (function () {
 			// console.log(page);
 			// if(typeof(console) !== 'undefined') console.log(pages);
 			for (k in page) {
-				if (k == 'request') {
-					if(typeof(console) !== 'undefined') console.log(page[k]);
+				if (k == 'request' || k == 'POST') {
+					// if(typeof(console) !== 'undefined') console.log(page[k]);
 					continue;
 					}
 
-				pages.push({
-					'selector' : page[k]['selector'],
-					'content' : page[k]['content'],
-					'method' : page[k]['method']
-					});
 				if (k == 'clear_url' && page[k] == true) {
 					history.replaceState('', '', local_path + '' + location.hash);
 					}
@@ -81,6 +78,13 @@ var Mallorca = (function () {
 					}
 				else if (k == 'set_title') {
 					document.title = page[k];
+					}
+				else {
+					pages.push({
+						'selector' : page[k]['selector'],
+						'content' : page[k]['content'],
+						'method' : page[k]['method']
+						});
 					}
 				}
 			load_next(page_k, pages);
@@ -172,7 +176,7 @@ var Mallorca = (function () {
 
 		if (sel == '') return false;
 		if ($(sel).length != 1) {
-			alert(sel + ' has multiple results. Please choose a unique selector.');
+			alert(sel + ' has ' + $(sel).length + ' results. Please choose a unique selector.');
 			return false;
 			}
 
@@ -207,6 +211,7 @@ var Mallorca = (function () {
 
 		window.onpopstate = function (e) {
 			e.preventDefault();
+			// console.log(requests);
 			if (hold) return true;
 			requests.pop();
 			var last = requests.pop();
