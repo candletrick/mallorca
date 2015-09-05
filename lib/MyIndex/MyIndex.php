@@ -79,6 +79,9 @@ class MyIndex
 		$this->keytype = 'id';
 		if ($this->parent) {
 			$this->keyname = $this->parent->name . '_' . $this->keytype;
+			// request / mallorca style
+			// $json_get = req('json_get');
+			// $this->id = id_zero(! empty($json_get) ? is($json_get, $this->keyname) : req($this->keyname));
 			$this->id = id_zero(req($this->keyname));
 			$this->key_pair = array($this->keyname=>$this->id);
 			}

@@ -22,6 +22,7 @@ class Model
 	function __call($fn, $params = [])
 		{
 		$class = _to_class($fn);
+		if (! class_exists($class)) die("Class $class does not exist.");
 		$new = new $class();
 		return $new->model($this);
 		}

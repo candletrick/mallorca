@@ -41,7 +41,7 @@ class CoralLookup extends \Perfect\Lookup
 			foreach ($one as $k=>$two) {
 				// show
 				if (! isset($show[$k])) continue;
-				if ($k == 'id') continue;
+				// if ($k == 'id') continue;
 
 				if ($b == 'th') {
 					$sort = stack([

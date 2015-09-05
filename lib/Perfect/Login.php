@@ -6,6 +6,67 @@ namespace Perfect;
 	*/
 class Login extends \Perfect
 	{
+
+	use \NoAuth;
+
+	/** Login id. */
+	static public $id = 0;
+
+	/** Escaped id for queries. */
+	static public $esc = 0;
+
+	/** User data. */
+	static private $data = array();
+	
+	/**
+		\param	string	$name	Data key.
+		\return Get user data by key.
+		*/
+	static public function get($name)
+		{
+		return array_key_exists($name, self::$data) ? self::$data[$name] : '';
+		}
+	/**
+		Check if the user is logged in.
+		Runs every page load.
+		*/
+	static public function check()
+		{
+		$id = id_zero(sesh('login_id'));
+
+		self::$data = select('user', ['*', m('id')->where($id)])->one_row() ?: array();
+
+		if (empty(self::$data)) {
+			// die(pv(\Request::$stack));
+			// \Request::base_redir('user/login');
+			return false;
+			}
+
+		self::$id = $id;
+		self::$esc = \Db::esc($id);
+
+		return true;
+		/*
+
+		if (empty(self::$data)) {
+			unset($_SESSION['login_id']);
+			// die('a'.req('q'));
+			if (req('q') != 'user/login') {
+				\Request::base_redir('logout');
+				die;
+				}
+			}
+		// die('b'.req('q'));
+		die('sog');
+
+		*/
+		}
+
+	static public function is_admin()
+		{
+		return self::get('is_admin');
+		}
+
 	/**
 		Normal display.
 		*/
@@ -35,9 +96,11 @@ class Login extends \Perfect
 		*/
 	public function my_register()
 		{
-		if (req('confirmation_link')) {
-			$ok = self::confirm(req('confirmation_link'));
-			if ($ok) return $this->my_display();
+		$link = is(\Request::$json_get, 'confirmation_link');
+		if ($link) {
+			$ok = self::confirm($link);
+			\Request::send(call_path('user/login'));
+			\Request::kill();
 			}
 
 		return $this->my_display('Register', 'register');
@@ -91,8 +154,15 @@ class Login extends \Perfect
 		$d = \Request::$data;
 		$ok = self::create(is($d, 'email'), is($d, 'password'), $d);
 
-		if ($ok) return 'Lok OK!';
-		else return $this->my_register();
+		\Request::kill();
+
+		if ($ok) {
+			alert('An email has been sent to ' . is($d, 'email') . ' for confirmation.');
+			return $this->my_display();
+			}
+		else {
+			return $this->my_register();
+			}
 		}
 
 	/**

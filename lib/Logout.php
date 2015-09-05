@@ -8,7 +8,8 @@ class Logout extends \Module
 		session_destroy();
 		session_start();
 		alert('You are now logged out.');
-		\Request::base_redir('user/login');
+		// \Request::base_redir('user/login');
+		\Request::redir('user/login');
 		}
 
 	public function my_display()

@@ -24,7 +24,7 @@ var json_get = " . json_encode($get) . ";
 	*/
 function mallorca_wrapper()
 	{
-	return div('wrapper', div('content') . div('push')) . div('footer')
+	return div('wrapper', div('content fade') . div('push')) . div('footer')
 	. mallorca_init()
 	. script_tag('js/mallorca.js')
 	;

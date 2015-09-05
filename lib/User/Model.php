@@ -3,6 +3,8 @@ namespace User;
 
 class Model extends \Model
 	{
+	use \NoAuth;
+
 	public function my_table()
 		{
 		return 'user';
@@ -26,6 +28,7 @@ class Model extends \Model
 				->data->type('str', 64)->end,
 			'confirmation_expires_at',
 			'user_type_id',
+			'is_admin',
 			'is_confirmed',
 			'is_deleted',
 			on('remember')

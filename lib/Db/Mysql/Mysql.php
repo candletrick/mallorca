@@ -30,10 +30,20 @@ class Mysql extends \Db\Engine {
 		return "`$s`";
 		}
 
-	public function query($query) {
+	public function query($query, $second = false) {
 		$result = mysqli_query($this->conn, $query);
 		if (! $result) {
-			echo $query; print_var(mysqli_error($this->conn)); die;
+			$error = mysqli_error($this->conn);
+			if (! $second && strpos($error, 'Unknown') !== false) {
+				echo \Model\Scan::my_display();
+				echo "\n\n";
+				self::query($query, true);
+				}
+			else {
+				echo "MySQL error:\n" . $error;
+				echo "\n\nQuery:\n" . $query;
+				die;
+				}
 			}
 		return $result;
 		}

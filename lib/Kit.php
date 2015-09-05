@@ -358,6 +358,15 @@ function _to_words($s)
 	return ucwords(str_replace("_", " ", $s));
 	}
 
+function _to_path($s)
+	{
+	// $s = preg_replace("/^\\/", "", $s);
+	if (strpos($s, "\\") === 0) $s = substr($s, 1);
+	$s = str_replace("\\", "/", $s);
+	// $s = str_replace("_", "/", $s);
+	return strtolower($s);
+	}
+
 function _to_class($s)
 	{
 	$ex = explode('/', $s);
