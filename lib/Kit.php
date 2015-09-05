@@ -456,6 +456,14 @@ function div()
 	return "<div class='$class'>" . implode($args) . "</div>";
 	}
 
+function span()
+	{
+	$args = func_get_args();
+	$class = array_shift($args);
+
+	return "<span class='$class'>" . implode($args) . "</span>";
+	}
+
 /* DATE FUNCTIONS */
 
 function date_to($format, $date)
