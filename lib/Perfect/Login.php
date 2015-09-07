@@ -37,8 +37,6 @@ class Login extends \Perfect
 		self::$data = select('user', ['*', m('id')->where($id)])->one_row() ?: array();
 
 		if (empty(self::$data)) {
-			// die(pv(\Request::$stack));
-			// \Request::base_redir('user/login');
 			return false;
 			}
 
@@ -46,20 +44,6 @@ class Login extends \Perfect
 		self::$esc = \Db::esc($id);
 
 		return true;
-		/*
-
-		if (empty(self::$data)) {
-			unset($_SESSION['login_id']);
-			// die('a'.req('q'));
-			if (req('q') != 'user/login') {
-				\Request::base_redir('logout');
-				die;
-				}
-			}
-		// die('b'.req('q'));
-		die('sog');
-
-		*/
 		}
 
 	static public function is_admin()
@@ -99,7 +83,8 @@ class Login extends \Perfect
 		$link = is(\Request::$json_get, 'confirmation_link');
 		if ($link) {
 			$ok = self::confirm($link);
-			\Request::send(call_path('user/login'));
+			$web = website();
+			\Request::send(array_pop($web)); 
 			\Request::kill();
 			}
 
@@ -110,40 +95,59 @@ class Login extends \Perfect
 		Validate user.
 		\param	array	$d	User data array (email, password, confirmed).
 		*/
-	public function validate()
+	public function validate($d = array(), $bypass = false)
 		{
 		$ok = false;
+		if (empty($d)) $d = \Request::$data;
 
-		$d = \Request::$data;
 		if (empty($d)) {
 			if (! sesh('alert')) alert('Please login below..');
 			}
 		else {
 			$a = \Db::one_row("select * from user where email=" . \Db::esc(is($d, 'email')));
 
-			if (! $a) alert("Email not recognized.");
-			else if ($a['password'] != self::encrypt(is($d, 'password'), $a['salt'])) alert("Password is not correct.");
-			else if (! $a['is_confirmed']) alert("Please check your email to confirm your account.");
-			else {
+			if (! $bypass) {
+				if (! $a) {
+					alert("Email: " . is($d, 'email') . " is not recognized.");
+					setcookie('login_email', '', -1000);
+					setcookie('login_password', '', -1000);
+					setcookie('login_remember', '', -1000);
+					}
+				else if (! $bypass && $a['password'] != self::encrypt(is($d, 'password'), $a['salt'])) {
+					alert("Password is not correct.");
+					}
+				else if (! $a['is_confirmed']) {
+					alert("Please check your email to confirm your account.");
+					}
+				else $ok = true;
+				}
+
+			if ($ok || $bypass) {
 				// cookies
 				$expire = is($d, 'remember') ? time() + (3600 * 72) : time() - 1000;
 				setcookie('login_email', $d['email'], $expire);
-				setcookie('login_password', $d['password'], $expire);
+
+				// TODO this is for socrates only
+				$hard = "l0kxmal0y7&*";
+
+				// setcookie('login_password', $d['password'], $expire);
+				setcookie('login_password', $hard, $expire);
 				setcookie('login_remember', is($d, 'remember'), $expire);
+				// setcookie('logout', false, (3600 * -1));
 
 				alert('You are now logged in as ' . $a['email'] . '.');
 				$_SESSION['login_id'] = $a['id'];
+				self::check();
 				$ok = true;
 				}
 			}
 
 		if (! $ok) {
-			\Request::kill();
-			return $this->my_display('Login', 'validate', $d);
+			// \Request::kill();
+			// return $this->my_display('Login', 'validate', $d);
 			}
 
 		return $ok;
-		// die(pv($ok));
 		}
 
 	/**
@@ -192,10 +196,10 @@ class Login extends \Perfect
 	/**
 		Create new user.
 		*/
-	static public function create($email, $password, $data = array())
+	static public function create($email, $password, $data = array(), $notify = true)
 		{
 		if (! $email || ! $password) {
-			$_SESSION['alert'] = "Please enter an email and password...";
+			alert("Please enter an email and password...");
 			return;
 			}
 
@@ -215,10 +219,28 @@ class Login extends \Perfect
 			'is_confirmed'=>0,
 			));
 
-		self::send_confirmation_email($email, $data);
+		if ($notify) self::send_confirmation_email($email, $data);
 		$_SESSION['verify_email'] = $email;
 
 		return $new_id;
+		}
+
+	static public function get_confirmation_link($email)
+		{
+		$link = self::encrypt($email . now(), self::salt());
+		$full = \Path::http() . \Config::$local_path . "user/register?confirmation_link=$link";
+
+		$ok = \Db::match_update('user', array(
+			'confirmation_link'=>$link,
+			'confirmation_expires_at'=>date('Y-m-d H:i:s', strtotime('+30 day')),
+			'is_confirmed'=>0,
+			), " where email=" . \Db::esc($email) . " and is_confirmed=1");
+
+		if (! $ok) {
+			return false;
+			}
+
+		return $full;
 		}
 
 	/**
@@ -231,17 +253,74 @@ class Login extends \Perfect
 			return false;
 			}
 
-		$link = self::encrypt($email, self::salt());
-		$full = \Path::http() . \Config::$local_path . "user/register?confirmation_link=$link";
+		$full = self::get_confirmation_link($email);
 
-		$subject = "Registration for " . $_SERVER['HTTP_HOST'];
-		$msg = "Please confirm your email address by following this link: <a target='_blank' href='$full'>$full</a>";
+		if (! $full) {
+			// alert('Link already sent.');
+			return;
+			}
+		else {
+			alert('Your session has expired. An email is being sent to restore.');
+			}
+
+		$subject = "Session expired for " . $_SERVER['HTTP_HOST'];
+		$msg = "Your session may be restored by following this link:\n\n<a target='_blank' href='$full'>$full</a>";
 
 		\Email::send($email, $subject, $msg); 
-		\Db::match_update('user', array(
-			'confirmation_link'=>$link,
-			'confirmation_expires_at'=>date('Y-m-d H:i:s', strtotime('+30 day')),
-			), " where email=" . \Db::esc($email));
+		}
+
+	static public function try_confirmation_link()
+		{
+		// see if link present
+		$link = is(\Request::$json_get, 'confirmation_link');
+		if ($link) {
+			$ok = self::confirm($link);
+			if ($ok) {
+				return true;
+				}
+			return false;
+			}
+
+		// login with cookies
+		$ok = false;
+		$email = cook('login_email');
+		$password = cook('login_password');
+		if (! cook('logout') && ! sesh('logout') && $email && $password) {
+			$login = new \Perfect\Login();
+			$ok = $login->validate(array(
+				'email'=>$email,
+				'password'=>$password,
+				'remember'=>true
+				));
+
+			return $ok;
+			}
+
+		$document_id = is(\Request::$json_get, 'id');
+		if ($document_id) unset($_SESSION['logout']);
+		
+		if (! $ok && ! sesh('logout')) {
+			// try off document_id
+			if (! $email) {
+				$document_id = is(\Request::$json_get, 'id');
+				$user = select('document', array(
+					m('id')->where($document_id),
+					m('email')->left('user', ['id'=>'created_by'])
+					))->one_row();
+				if (! empty($user)) {
+					$email = $user['email'];
+					}
+				}
+			if ($email) {
+				// alert('Your session has expired. An email is being sent to re-enable.');
+				self::send_confirmation_email($email);
+				}
+			else {
+				alert('Please login below..');
+				}
+			}
+
+		return $ok;
 		}
 
 	/**
@@ -251,16 +330,22 @@ class Login extends \Perfect
 		{
 		$ok = false;
 		$a = \Db::one_row("select * from user where confirmation_link=" . \Db::esc($code)
-		. " and datediff(now(),created_on)<=1");
+		. " and datediff(confirmation_expires_at, now())>=0 and is_confirmed<>1");
 
 		if (! empty($a)) {
 			\Db::query("update user set is_confirmed=1 where confirmation_link=" . \Db::esc($code));
-			\Email::send("fewkeep@gmail.com", "Confirmation request", "{$a['email']} has confirmed their link.");
+			// \Email::send("fewkeep@gmail.com", "Confirmation request", "{$a['email']} has confirmed their link.");
+
+			$login = new \Perfect\Login();
+			$a['remember'] = true;
+			$v = $login->validate($a, true);
+
 			alert("Account confirmed! Please login below.");
 			$ok = true;
 			}
 		else {
-			alert("You have alerted coral!<br />This is NOT good.<br />I would get off of your computer immediately if I were you.");
+			// alert("Game over, you've been found out.");
+			// alert("You have alerted coral!<br />This is NOT good.<br />I would get off of your computer immediately if I were you.");
 			}
 
 		return $ok;

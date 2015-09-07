@@ -349,38 +349,25 @@ class Request
 		// all function calls happen here, so auth
 		$logged_in = \Login::check();
 
-
 		if (! $logged_in) {
-			// die($class . pv(class_uses($class)));
 
+			// try to login with cookies
+			$ok = \Perfect\Login::try_confirmation_link();
+
+			if ($ok) {
+				// continue
+				$web = website();
+				self::send(array_pop($web));
+				self::kill();
+				}
 			if (in_array('NoAuth', $uses)) {
-
-				 // die('rot yu');
+				// OK (login class being called)
 				}
 			else {
-				 // die('not yu' . $class);
-				self::send(call_path('user/login')); self::kill();
-				// self
-				}
-			
-			// if (! $clear)
-			// self::send(call_path('user/login')); self::kill();
-			/*
-			$login = new \Perfect\Login();
-			$try = $login->validate();
-			if ($try === true) self::respond_to_stack();
-			else {
-				echo json_encode(array(
-					'.content'=>array('selector'=>'.content', 'content'=>$try, 'method'=>'replace')
-					));
-				die;
+				self::send(call_path('user/login'));
+				self::kill();
 				}
 			}
-			*/
-			}
-
-
-
 
 		$parent = get_parent_class($class);
 		$out = array();
