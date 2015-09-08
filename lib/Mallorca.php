@@ -16,7 +16,14 @@ function mallorca_init($init = true)
 var local_path = '" . http() . \Config::$local_path . "';
 var mallorca_init = " . ($init ? 'true' : 'false') . ";
 var json_get = " . json_encode($get) . ";
-</script>";
+</script>"
+	. style_tag('ext/mallorca/css/mallorca.css')
+	. style_tag('ext/mallorca/css/featherlight.css')
+
+	. script_tag('ext/mallorca/js/effects.js')
+	. script_tag('ext/mallorca/js/featherlight.js')
+	. script_tag('ext/mallorca/js/mallorca.js')
+	;
 	}
 
 /**
@@ -26,7 +33,6 @@ function mallorca_wrapper()
 	{
 	return div('wrapper', div('content fade') . div('push')) . div('footer')
 	. mallorca_init()
-	. script_tag('js/mallorca.js')
 	;
 	}
 

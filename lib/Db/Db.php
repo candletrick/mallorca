@@ -141,6 +141,7 @@ class Db {
 			$name = $row['Field'];
 			$type = $row['Type'];
 
+			// echo $name . ' : ' . $type . ' : ' . id_zero(is($data,$name)) . "<br>";
 			if (isset($data[$name])) {
 				$value = strpos($type, 'char') !== false ? self::$db->esc($data[$name])
 				: (strpos($type, 'dec') !== false ? (preg_replace("/[^\d\.-]/", '', $data[$name]) ?: 'NULL')

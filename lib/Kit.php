@@ -345,7 +345,8 @@ function safe_id($name, $default = 0)
 
 function id_zero($x)
 	{
-	return is_string($x) && preg_match("/^\d+$/", $x) ? $x : 0;
+	// return is_string($x) && preg_match("/^\d+$/", $x) ? $x : 0;
+	return preg_match("/^\d+$/", $x) ? $x : 0;
 	}
 
 function _to_camel($s)

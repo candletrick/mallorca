@@ -47,8 +47,6 @@ class Request
 		$out = static::call_path($q, self::$json_get);
 
 		$content = is($out, 'content');
-		// die(pv(self::$is_init));
-		// die(pv($content));
 
 		// self::$stop for redirects
 		$return = self::$stop ? self::$return : array(
@@ -222,7 +220,6 @@ class Request
 
 		// one more chance to kill
 		if (self::$stop) {
-			// die(pv(self::$return));
 			if (! empty(self::$return)) return;
 			}
 
@@ -297,9 +294,6 @@ class Request
 				}
 			$fns = array($fn);
 			if ($method) array_unshift($fns, $method);
-			// die($class . $method);
-			// $wrap = 
-			// die(pv($params));
 
 			return self::call_class($class, $fns, $params, true);
 			}
@@ -346,9 +340,12 @@ class Request
 		$uses = class_uses($class);
 		$out = array();
 
+		\Login::before_call();
 		// all function calls happen here, so auth
-		$logged_in = \Login::check();
+		// $logged_in = \Login::check();
+		// die($class . pv($logged_in));
 
+		/*
 		if (! $logged_in) {
 
 			// try to login with cookies
@@ -368,26 +365,26 @@ class Request
 				self::kill();
 				}
 			}
+			*/
 
 		$parent = get_parent_class($class);
 		$out = array();
+		// die($parent);
 
 		// modules must be constructed this way
-		if (in_array($parent, array('Module'))) {
-			// $q = is(self::$json_get, 'q');
+		// if (in_array($parent, array('Module'))) {
+		if (strpos($parent, 'Module') !== false) {
 			$q = _to_path($class);
 			$new = \Path::index($q);
-			// die(pv(self::$json_get) . pv($new));
 			while (isset($new->child)) $new = $new->child;
-			$out['content'] = $new->my_display();
+			 // die(pv($fns));
+			// $out['content'] = $new->my_display();
 			}
 		else {
-			   //  echo pv($params); die(pv(self::$json_get));
 			$new = new $class();
 			$new->params(array_merge(self::$json_get, $params));
-			// }
+			}
 
-			// echo pv(class_uses($new)); die(pv(class_implements($new)));
 			$out = array();
 
 			foreach ($fns as $index=>$step) {
@@ -434,7 +431,6 @@ class Request
 
 			$out['content'] = $new;
 
-			}
 
 		// echo pv($out);
 

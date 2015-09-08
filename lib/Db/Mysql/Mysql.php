@@ -73,6 +73,7 @@ class Mysql extends \Db\Engine {
 		$query = "update " . $this->ent($table)
 		. " set " . implode(',', $pairs)
 		. " " . $where;
+		// die($query);
 	
 		$this->query($query);
 
