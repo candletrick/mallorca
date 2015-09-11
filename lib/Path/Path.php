@@ -127,9 +127,9 @@ class Path
 	/**
 		\return Link.
 		*/
-	static public function link_to($text, $path, $params = array())
+	static public function link_to($text, $path, $params = array(), $class = '')
 		{
-		return "<a href='" . self::base_to($path, $params) . "'>$text</a>";
+		return "<a class='$class' href='" . self::base_to($path, $params) . "'>$text</a>";
 		}
 
 	/**
