@@ -360,8 +360,9 @@ class Request
 			// $out['content'] = $new->my_display();
 			}
 		else {
-			$new = new $class();
-			$new->params(array_merge(self::$json_get, $params));
+			// die($class . pv(array_merge(self::$json_get, $params)));
+			$new = new $class(array_merge(self::$json_get, $params));
+			// $new->params(array_merge(self::$json_get, $params));
 			}
 
 			$out = array();

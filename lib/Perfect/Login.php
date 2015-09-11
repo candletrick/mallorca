@@ -119,8 +119,8 @@ class Login extends \Perfect
 			action_group(array(
 				input_password('password', 60),
 				input_password('password_confirm', 60)->label('Confirm'),
-				input_hidden('c', is($get, 'c')),
-				input_hidden('e', is($get, 'e')),
+				input_hidden('link', is($get, 'link')),
+				input_hidden('email', is($get, 'email')),
 				input_button('Reset')->click([
 					call($this, 'handle_reset'),
 					call($this, 'my_display')->html('.m-content')
@@ -142,10 +142,10 @@ class Login extends \Perfect
 	public function handle_reset()
 		{
 		$d = \Request::$data;
-		$email = is($d, 'e');
+		$email = is($d, 'email');
 		$password = is($d, 'password');
 		$confirm = is($d, 'password_confirm');
-		$link = is($d, 'c');
+		$link = is($d, 'link');
 
 		self::reset_password($email, $password, $confirm, $link);
 		}
@@ -360,7 +360,7 @@ class Login extends \Perfect
 			}
 
 		$link = self::encrypt($email, self::salt());
-		$full = "http://" . $_SERVER['HTTP_HOST'] . \Config::$local_path . "/user/reset&e=$email&c=$link";
+		$full = "http://" . $_SERVER['HTTP_HOST'] . \Config::$local_path . "/user/reset&email=$email&link=$link";
 		$msg = "A request for password reset has been submitted.\n\nIf you requested this, go to this confirmation link to reset your password: <a href='$full'>Reset Password</a>";
 
 		\Email::send($email, "Reset Password", $msg);
@@ -398,13 +398,13 @@ class Login extends \Perfect
 			return $ok;
 			}
 
-		$document_id = is(\Request::$json_get, 'id');
+		$document_id = is(\Request::$json_get, 'document_id');
 		if ($document_id) unset($_SESSION['logout']);
 		
 		if (! $ok && ! sesh('logout')) {
 			// try off document_id
 			if (! $email) {
-				$document_id = is(\Request::$json_get, 'id');
+				$document_id = is(\Request::$json_get, 'document_id');
 				$user = select('document', array(
 					m('id')->where($document_id),
 					m('email')->left('user', ['id'=>'created_by'])

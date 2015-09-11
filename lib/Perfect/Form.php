@@ -6,7 +6,7 @@ class Form extends \Perfect
 	public function my_display()
 		{
 		// \Request::$data
-		 // die($this->model->id);
+		// die('hey' . $this->model->id);
 		return div('banner', 
 			div('title', input_button('lookup')->stack([
 				// call($this->model, 'lookup | my_display')->html('.lookup-wrapper')

@@ -53,7 +53,7 @@ class CoralLookup extends \Perfect\Lookup
 				// else if ($k == 'content') {
 				else {
 					$df = stack([
-						$this->model->path('form', ['id'=>$id])// pipe('my_display')->html('.lookup-wrapper')
+						$this->model->path('form', [$this->model->keyname=>$id])// pipe('my_display')->html('.lookup-wrapper')
 						]);
 					$s .= "<$b class='data-fn' data-fn=\"$df\">$two</$b>";
 					}

@@ -7,13 +7,17 @@ class Model
 	{
 	/**
 		*/
-	function __construct($id = 0)
+	function __construct($args = [])
 		{
 		$this->table = $this->my_table();
 		$this->columns = $this->my_columns();
-		$this->id = $id;
-		$this->data = [];
+		$this->keyname = $this->table . '_id';
 		$this->path = strtolower(str_replace("\\", "/", get_class($this)));
+		$this->id = id_zero(is($args, $this->keyname));
+		$this->data = $this->id ? select($this->table, [
+			m('id')->where($this->id),
+			'*'
+			])->one_row() : [];
 		}
 
 	/**
@@ -26,6 +30,20 @@ class Model
 		$new = new $class();
 		return $new->model($this);
 		}
+
+	/*
+	static public function init_with($args)
+		{
+		$class = get_called_class();
+		$model = new $class();
+		// $model->params = $args;
+		$id = is($args, 'id');
+		if ($id) {
+			$model->id = id_zero($id);
+			$model->data = select($model->table, [m('id')->where($id), '*'])->one_row();
+			}
+		}
+		*/
 
 	static public function select()
 		{
@@ -142,7 +160,7 @@ class Model
 
 	/**
 		*/
-	function form($id = 0)
+	function form() // $id = 0)
 		{
 		$this->id = id_zero($id);
 		if ($this->id) $this->data = select($this->table, ['*', m('id')->where($this->id)])->one_row();
