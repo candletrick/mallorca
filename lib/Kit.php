@@ -579,8 +579,8 @@ function file_dir($s)
 function sesh_alert()
 	{
 	$alert = sesh('alert');
-	if ($alert) return div('sesh-alert', $alert);
 	$_SESSION['alert'] = '';
+	if ($alert) return div('sesh-alert', $alert);
 	}
 
 function alert($msg = '')

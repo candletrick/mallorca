@@ -33,8 +33,8 @@ class Email
 
 	static public function chain()
 		{
-		$mail = new \PHPMailer();
-		//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+		$mail = new \PHPMailer(true);
+		$mail->SMTPDebug = 3;                               // Enable verbose debug output
 
 		// $mail->isSMTP();                                      // Set mailer to use SMTP
 		// $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
@@ -69,8 +69,11 @@ class Email
 		$mail->Subject = $subject;
 		$mail->Body    = $msg;
 
-		$mail->send();
-		// if(! $mail->send()) {
-		// die('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+		if(! $mail->send()) {
+			die('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+			}
+		else {
+			// die('Mail sent.');
+			}
 		}
 	}

@@ -193,7 +193,7 @@ table {
 .logo .pink {
   color: #456;
 }
-.fade {
+.logo .fade {
   float: left;
 }
 .fade-7 {
@@ -242,6 +242,14 @@ table {
   transition-property: color;
   transition-duration: 0.5s;
 }
+.banner .whoami {
+  float: right;
+  color: #fff;
+  margin-top: 15px;
+}
+.banner .whoami .button {
+  font-size: 14px;
+}
 .vertical_nav {
   text-align: left;
 }
@@ -258,7 +266,8 @@ table {
   display: inline;
   margin: 0 10px 0 0;
 }
-.action_nav li a {
+.action_nav li a,
+.action_nav li .button {
   text-transform: uppercase;
   font-size: 12px;
   text-decoration: none;
@@ -369,12 +378,18 @@ table {
   margin: 6px 0 16px 0;
   display: inline-block;
 }
+.control-group .label.small {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 12px;
+}
 .control-group .label.refocus {
   color: #911;
 }
 .control-group .input,
 .control-group .label {
   display: table-cell;
+  vertical-align: middle;
   padding: 4px 10px 4px 0;
 }
 .control-group .checklist,
@@ -442,7 +457,8 @@ table {
   border: 1px solid #ccc;
   box-shadow: 0 1px 1px rgba(0,0,0,0.075) inset;
   font-size: 14px;
-  width: 500px;
+  display: block;
+  width: 100%;
 }
 .control-group .input-text.date-calendar {
   width: 100px;
@@ -472,7 +488,8 @@ table {
 .control-group textarea {
   padding: 4px;
   margin: 10px 0 0 0;
-  width: 500px;
+  width: 700px;
+  height: 200px;
 }
 .swatch-group .swatch {
   height: 26px;
@@ -504,11 +521,13 @@ table {
 .lookup-wrapper .banner .title {
   float: left;
 }
+.lookup-wrapper .banner .f-right {
+  float: right;
+}
 .lookup-wrapper .banner .delete {
   float: right;
+  text-decoration: underline;
   margin: 6px 10px;
-}
-.lookup-wrapper .banner .delete a {
   font-size: 14px;
   color: #888;
 }
@@ -581,9 +600,86 @@ table {
   padding: 8px;
   border: 1px solid #bbb;
 }
+.table td .button {
+  font-size: 14px;
+}
 .table td img {
   width: 60px;
   border-radius: 60px;
+}
+.banner .button,
+.button.banner {
+  font-size: 20px;
+  color: #2ae;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  border: none;
+  width: auto;
+}
+.banner .button.selected,
+.button.banner.selected {
+  color: #000;
+}
+.control .button {
+  border: none;
+  background: none;
+  font-size: 18px;
+  padding: 4px 0;
+  cursor: pointer;
+  border-bottom: 3px solid #7bf;
+}
+.control .button.remove {
+  color: #666;
+  font-size: 13px;
+  border: none;
+  text-decoration: underline;
+}
+.login-wrapper {
+  border-collapse: collapse;
+  text-align: left;
+  margin: 0 auto;
+  width: 460px;
+  padding: 10px;
+  font-family: "Open Sans";
+}
+.login-wrapper .control-group {
+  display: table;
+}
+.login-wrapper .control {
+  display: table-row;
+}
+.login-wrapper .input,
+.login-wrapper .label {
+  display: table-cell;
+  padding: 10px;
+  font-weight: bold;
+}
+.login-wrapper .label {
+  text-align: right;
+  width: 100px;
+}
+.login-wrapper .control-group .input-text {
+  box-shadow: none;
+  border-radius: 0;
+  padding: 4px 0 4px 2px;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  width: 200px;
+  font-size: 16px;
+}
+.login-wrapper .control-group input[type="button"] {
+  border: none;
+  padding: 2px 11px 2px 11px;
+  background: #00cfff;
+  color: #fff;
+  border: none;
+  border: 1px solid #00afdd;
+  font-size: 16px;
+}
+.login-wrapper .coral {
+  font-size: 32px;
+  color: #000;
 }
 /* ******* */
 /* MOBILE */

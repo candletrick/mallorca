@@ -27,6 +27,13 @@ class Model
 		return $new->model($this);
 		}
 
+	static public function select()
+		{
+		$class = get_called_class();
+		$model = new $class();
+		return select($model->table, ['*']);
+		}
+
 	function my_allow()
 		{
 		return [

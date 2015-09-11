@@ -36,6 +36,8 @@ class Request
 	/** Returned data array. */
 	static public $return;
 
+	static public $login_check = false;
+
 	/** Current index of the return array. */
 	// static public $count;
 	
@@ -51,11 +53,16 @@ class Request
 		// self::$stop for redirects
 		$return = self::$stop ? self::$return : array(
 			// 'request'=>$_POST,
-			'.content'=>array('selector'=>'.content', 'content'=>$content, 'method'=>'replace')
+			'.m-content'=>array('selector'=>'.m-content', 'content'=>$content, 'method'=>'replace')
 			);
 
 		echo json_encode($return);
 		die;
+		}
+
+	static public function get($name, $else = '')
+		{
+		return is(self::$json_get, $name, req($name, $else));
 		}
 
 	/**
@@ -129,26 +136,6 @@ class Request
 		*/
 	static public function respond()
 		{
-		// login check
-		/*
-		$logged_in = \Login::check();
-
-		if (self::$is_post && ! $logged_in) {
-			// die(self::$path . 'hey');
-			// self::send(call_path('user/login')); self::kill();
-			/*
-			$login = new \Perfect\Login();
-			$try = $login->validate();
-			if ($try === true) self::respond_to_stack();
-			else {
-				echo json_encode(array(
-					'.content'=>array('selector'=>'.content', 'content'=>$try, 'method'=>'replace')
-					));
-				die;
-				}
-			}
-				*/
-
 		// "requests" only come through POST
 		if (! self::$is_post) return;
 		else if (post('init') && is(self::$json_get, 'q')) {
@@ -265,6 +252,17 @@ class Request
 		}
 			*/
 
+	static public function is_module($parent)
+		{
+		return in_array($parent, array(
+			'Module',
+			'Module\Dashboard',
+			'Module\StepByStep',
+			'Module\Lookup',
+			'Form\Create',
+			));
+		}
+
 	/**
 		Call a on() model object as a path.
 		*/
@@ -277,13 +275,14 @@ class Request
 		$parent = get_parent_class($class);
 
 		// module style
-		if (in_array($parent, array('Module'))) {
+		if (self::is_module($parent)) {
 			// $new = \Path::index($path);
 			// while (isset($new->child)) $new = $new->child;
 			// return $new->my_display();
 			// $method = '
-		// 	die($class);
-			return self::call_class($class); // , array('my_display'), array($params)
+			// 	die($class);
+			$fns = array($fn);
+			return self::call_class($class, $fns); // , array('my_display'), array($params)
 			}
 		// model style
 		else {
@@ -340,32 +339,11 @@ class Request
 		$uses = class_uses($class);
 		$out = array();
 
-		\Login::before_call();
-		// all function calls happen here, so auth
-		// $logged_in = \Login::check();
-		// die($class . pv($logged_in));
-
-		/*
-		if (! $logged_in) {
-
-			// try to login with cookies
-			$ok = \Perfect\Login::try_confirmation_link();
-
-			if ($ok) {
-				// continue
-				$web = website();
-				self::send(array_pop($web));
-				self::kill();
-				}
-			if (in_array('NoAuth', $uses)) {
-				// OK (login class being called)
-				}
-			else {
-				self::send(call_path('user/login'));
-				self::kill();
-				}
-			}
-			*/
+		// if (! self::$login_check) {
+			\Login::before_call($class);
+			// self::$login_check = true;
+			// }
+		// if (! self::$logged_in)
 
 		$parent = get_parent_class($class);
 		$out = array();
@@ -373,7 +351,8 @@ class Request
 
 		// modules must be constructed this way
 		// if (in_array($parent, array('Module'))) {
-		if (strpos($parent, 'Module') !== false) {
+		// if (strpos($parent, 'Module') !== false) {
+		if (self::is_module($parent)) {
 			$q = _to_path($class);
 			$new = \Path::index($q);
 			while (isset($new->child)) $new = $new->child;
@@ -426,6 +405,7 @@ class Request
 			&& self::$wrap
 			&& ($wrap || self::$is_init)) {
 				// if (is_object($call) && $fn == 'my_display') {
+				// die(pv($new));
 				$new = \Path\Wrapper::my_wrapper($new);
 				}
 

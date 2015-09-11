@@ -24,6 +24,9 @@ var Mallorca = (function () {
 	// clicked element
 	var clicker;
 
+	// functions to run once ready
+	var ready_fn = [];
+
 	/**
 		*/
 	function request(data) {
@@ -148,6 +151,14 @@ var Mallorca = (function () {
 			}
 
 		$('.input-text').keyup(set_enters);
+
+		// console.log(ready_fn);
+		for (fn in ready_fn) {
+			ready_fn[fn]();
+			}
+		ready_fn = [];
+		// console.log(ready_fn);
+
 		}
 
 	function load_next(index, pages) {
@@ -236,9 +247,20 @@ var Mallorca = (function () {
 		return this;
 		}
 
+	function on_hold() {
+		return hold;
+		}
+
+	function ready(fn) {
+		if (hold) ready_fn.push(fn);
+		else fn();
+		}
+
 	return {
 		request: request,
 		run_stack: run_stack,
-		init: init
+		init: init,
+		on_hold: on_hold,
+		ready: ready
 		}
 	})().init();

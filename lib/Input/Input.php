@@ -191,9 +191,9 @@ abstract class Input
 	public function show_when($value, $names = array(), $initial = true)
 		{
 		$init = $initial ? 'true' : 'false';
-		$fn = "show_when('$this->name', '$value', " . json_encode($names) . ", $init)";
-		$this->addhtml .= "<script>
-		$(document).ready(function() {"
+		$fn = "show_when('$this->name', '$value', " . json_encode($names) . ", $init);";
+		$this->addhtml .= "<script type='text/javascript'>
+		Mallorca.ready(function() {"
 			. ($initial ? $fn : '')
 			. "
 			$('#$this->name, input[name=$this->name]').click(function() {

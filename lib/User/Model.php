@@ -48,4 +48,16 @@ class Model extends \Model
 		$login = new \Perfect\Login();
 		return $login->my_display();
 		}
+
+	public function forgot()
+		{
+		$login = new \Perfect\Login();
+		return $login->forgot_display();
+		}
+
+	public function reset()
+		{
+		$login = new \Perfect\Login();
+		return $login->reset_display();
+		}
 	}

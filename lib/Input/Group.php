@@ -4,6 +4,7 @@ namespace Input;
 class Group
 	{
 	public $name;
+	public $step_name;
 	public $label = '';
 	public $inputs = array();
 	public $data = array();
@@ -25,6 +26,7 @@ class Group
 	public function __construct($name, $inputs)
 		{
 		$this->name = $name;
+		$this->step_name = $name;
 		$this->inputs = $inputs;
 		}
 

@@ -46,10 +46,15 @@ class Login extends \Perfect
 		return true;
 		}
 
+	/**
+		\return true If logged in user is admin.
+		*/
 	static public function is_admin()
 		{
 		return self::get('is_admin');
 		}
+
+	/* DISPLAY FUNCTIONS */
 
 	/**
 		Normal display.
@@ -68,11 +73,77 @@ class Login extends \Perfect
 				input_check('remember')->add_label_class('small')->label('Remember Me')
 					->set_value(cook('login_remember')),
 				input_button('Login')->add_class('data-enter')->label('ThY')->click(array_merge([
-					call($this, $after)->html('.content'),
+					call($this, $after)->html('.m-content'),
 					], website())),
+				// div('control',
+					// div('label'),
+					// div('input',
+					"<a class='forgot' href='" . \Path::base_to('user/forgot') . "'>Forgot Password</a>",
+					// )
+					// ),
 				sesh_alert()
 				])->data($data)->my_display()
 			);
+		}
+
+	/**
+		Forgot password form.
+		*/
+	public function forgot_display()
+		{
+		return div('login-wrapper',
+			div('control', div('label'), div('input coral', 'Forgot Password')),
+			sesh_alert(),
+			action_group(array(
+				input_text('email', 60),
+				input_button('Send Reset Email')->click([
+					call($this, 'handle_forgot'),
+					call_path('user/login')
+					]),
+				))->my_display()
+			);
+		}
+
+	public function reset_display()
+		{
+		$get = \Request::$json_get;
+
+		return div('login-wrapper',
+			// pv($_REQUEST),
+			div('control', div('label'), div('input coral', 'Reset Password')),
+			div('notice', (get('email') ? 'For ' . get('email') : '' )),
+			sesh_alert(),
+			action_group(array(
+				input_password('password', 60),
+				input_password('password_confirm', 60)->label('Confirm'),
+				input_hidden('link', is($get, 'link')),
+				input_hidden('email', is($get, 'email')),
+				input_button('Reset')->click([
+					call($this, 'handle_reset'),
+					call_path('user/login')
+					])
+				))->my_display()
+			);
+		}
+
+	/**
+		*/
+	public function handle_forgot()
+		{
+		self::send_reset_email(is(\Request::$data, 'email'));
+		}
+
+	/**
+		*/
+	public function handle_reset()
+		{
+		$d = \Request::$data;
+		$email = is($d, 'email');
+		$password = is($d, 'password');
+		$confirm = is($d, 'password_confirm');
+		$link = is($d, 'link');
+
+		self::reset_password($email, $password, $confirm, $link);
 		}
 
 	/**
@@ -140,11 +211,6 @@ class Login extends \Perfect
 				self::check();
 				$ok = true;
 				}
-			}
-
-		if (! $ok) {
-			// \Request::kill();
-			// return $this->my_display('Login', 'validate', $d);
 			}
 
 		return $ok;
@@ -269,6 +335,27 @@ class Login extends \Perfect
 		\Email::send($email, $subject, $msg); 
 		}
 
+	/**
+		*/
+	static public function send_reset_email($email)
+		{
+		if (! $email) {
+			alert("Please enter an email...");
+			return;
+			}
+
+		$link = self::encrypt($email, self::salt());
+		$full = "http://" . $_SERVER['HTTP_HOST'] . \Config::$local_path . "/user/reset&email=$email&c=$link";
+		$msg = "A request for password reset has been submitted.\n\nIf you requested this, go to this confirmation link to reset your password: <a href='$full'>Reset Password</a>";
+
+		\Email::send($email, "Reset Password", $msg);
+		alert("An email containing a link to reset password has been sent to $email");
+		\Db::match_update('user', array(
+			'confirmation_link'=>$link,
+			'confirmation_expires_at'=>date("Y-m-d H:i:s", strtotime('+1 day'))
+			), " where email=" . \Db::esc($email));
+		}
+
 	static public function try_confirmation_link()
 		{
 		// see if link present
@@ -349,5 +436,71 @@ class Login extends \Perfect
 			}
 
 		return $ok;
+		}
+
+	/**
+		Reset user password.
+		*/
+	static public function reset_password($email, $password, $confirm, $link)
+		{
+		if ($password != $confirm) {
+			alert('The passwords entered do not match.');
+			return false;
+			}
+		if (\Db::value("select 1 from user where confirmation_link=" . db()->esc($link)
+		. " and confirmation_expires_at<now()")) {
+			alert('This request is expired. Please re-submit.');
+			return false;
+			}
+
+		$salt = self::salt();
+		$up = \Db::match_update('user', array(
+			'password'=>self::encrypt($password, $salt),
+			'salt'=>$salt
+			), " where email=" . db()->esc($email)
+			. " and confirmation_link=" . db()->esc($link)
+			. " and confirmation_expires_at>now()");
+
+		if ($up) {
+			alert('Password reset successfully');
+			return true;
+			}
+		else {
+			alert('Error with password reset, please re-submit your request.');
+			return false;
+			}
+		}
+
+	/**
+		A function to run before making calls via request.
+		TODO make it so that it only calls once
+		\param 	string	$class	The name of the class calling.
+		*/
+	static public function before_call($class)
+		{
+		$uses = class_uses($class);
+		$logged_in = self::check();
+		// die(pv($_SESSION));
+
+		if (! $logged_in) {
+
+			// try to login with cookies
+			$ok = \Perfect\Login::try_confirmation_link();
+			// die(pv($ok));
+
+			if ($ok) {
+				// continue
+				$web = website();
+				\Request::send(array_pop($web));
+				\Request::kill();
+				}
+			if (in_array('NoAuth', $uses)) {
+				// OK (login class being called)
+				}
+			else {
+				\Request::send(call_path('user/login'));
+				\Request::kill();
+				}
+			}
 		}
 	}

@@ -17,8 +17,8 @@ var local_path = '" . http() . \Config::$local_path . "';
 var mallorca_init = " . ($init ? 'true' : 'false') . ";
 var json_get = " . json_encode($get) . ";
 </script>"
-	. style_tag('ext/mallorca/css/mallorca.css')
 	. style_tag('ext/mallorca/css/featherlight.css')
+	// . style_tag('ext/mallorca/css/mallorca.css')
 
 	. script_tag('ext/mallorca/js/effects.js')
 	. script_tag('ext/mallorca/js/featherlight.js')
@@ -31,8 +31,8 @@ var json_get = " . json_encode($get) . ";
 	*/
 function mallorca_wrapper()
 	{
-	return div('wrapper', div('content fade') . div('push')) . div('footer')
-	. mallorca_init()
+	return div('m-wrapper', div('m-content fade') . div('m-push')) . div('m-footer')
+	// . mallorca_init()
 	;
 	}
 
@@ -85,7 +85,7 @@ function call($class, $fn, $params = array(''))
 function call_path($path = '', $params = array()) {
 	return new \ServerCall(array(
 		'path'=>$path,
-		'selector'=>'.content',
+		'selector'=>'.m-content',
 		'params'=>$params
 		));
 	}
