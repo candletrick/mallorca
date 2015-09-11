@@ -306,46 +306,54 @@ class Login extends \Perfect
 		return $new_id;
 		}
 
-	static public function get_confirmation_link($email)
+	static public function get_confirmation_link($email, $restore = false)
 		{
 		$link = self::encrypt($email . now(), self::salt());
-		$full = \Path::http() . \Config::$local_path . "user/register?confirmation_link=$link";
+		// $full = \Path::http() . \Config::$local_path . "user/register?confirmation_link=$link";
 
 		$ok = \Db::match_update('user', array(
 			'confirmation_link'=>$link,
 			'confirmation_expires_at'=>date('Y-m-d H:i:s', strtotime('+30 day')),
 			'is_confirmed'=>0,
-			), " where email=" . \Db::esc($email)); // . " and is_confirmed=1");
+			// if restoring add confirmed so no multiple emails
+			), " where email=" . \Db::esc($email) . ($restore ? " and is_confirmed=1" : ''));
 
 		if (! $ok) {
 			return false;
 			}
 
-		return $full;
+		return $link;
 		}
 
 	/**
 		Send confirmation email.
 		*/
-	static public function send_confirmation_email($email = '', $data = array())
+	static public function send_confirmation_email($email = '', $data = array(), $restore = false)
 		{
 		if (! $email) {
 			alert('Your session has expired');
 			return false;
 			}
 
-		$full = self::get_confirmation_link($email);
+		$link = self::get_confirmation_link($email, $restore);
+		$full = \Path::http() . \Config::$local_path . "user/register?confirmation_link=$link";
 
 		if (! $full) {
 			// alert('Link already sent.');
 			return;
 			}
 		else {
-			alert('Your session has expired. An email is being sent to restore.');
+			alert('Your session has expired.<br>An email is being sent to restore.');
 			}
 
-		$subject = "Session expired for " . $_SERVER['HTTP_HOST'];
-		$msg = "Your session may be restored by following this link:\n\n<a target='_blank' href='$full'>$full</a>";
+		if (! $restore) {
+			$subject = "Complete registration for " . $_SERVER['HTTP_HOST'];
+			$msg = "Please confirm your email address by following this link:<br><br><a target='_blank' href='$full'>$full</a>";
+			}
+		else {
+			$subject = "Session expired for " . $_SERVER['HTTP_HOST'];
+			$msg = "Please follow this link to restore your session:<br><br><a target='_blank' href='$full'>$full</a>";
+			}
 
 		\Email::send($email, $subject, $msg); 
 		}
@@ -361,9 +369,11 @@ class Login extends \Perfect
 
 		$link = self::encrypt($email, self::salt());
 		$full = "http://" . $_SERVER['HTTP_HOST'] . \Config::$local_path . "/user/reset&email=$email&link=$link";
-		$msg = "A request for password reset has been submitted.\n\nIf you requested this, go to this confirmation link to reset your password: <a href='$full'>Reset Password</a>";
+		$subject = "Reset Password for " . $_SERVER['HTTP_HOST'];
+		$msg = "A request for password reset has been submitted.<br>
+		If you requested this, go to this confirmation link to reset your password:<br><br><a href='$full'>Reset Password</a>";
 
-		\Email::send($email, "Reset Password", $msg);
+		\Email::send($email, $subject, $msg);
 		alert("An email containing a link to reset password has been sent to $email");
 		\Db::match_update('user', array(
 			'confirmation_link'=>$link,
@@ -415,7 +425,7 @@ class Login extends \Perfect
 				}
 			if ($email) {
 				// alert('Your session has expired. An email is being sent to re-enable.');
-				self::send_confirmation_email($email);
+				self::send_confirmation_email($email, [], true);
 				}
 			else {
 				// alert('Please login below..');
