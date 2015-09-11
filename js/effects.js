@@ -1,6 +1,9 @@
 
 /**
 	th = $(this) by convention
+
+	A simple helper class for common functions to run merely on the frontend,
+	after the array of call() functions is complete from the PHP side.
 	*/
 
 var effects = {

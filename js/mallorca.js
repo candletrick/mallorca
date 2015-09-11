@@ -1,33 +1,38 @@
+/**
+	A class that allows php functions to be called from the frontend.
+	*/
 var Mallorca = (function () {
 	
-	// Pages index
+	/** Pages index */
 	var page_k;
 
-	// Hold while loading
+	/** Hold while loading */
 	var hold = false;
 
-	// Wait to show spinner
+	/** Wait to show spinner */
 	var hold_tm;
 
-	// Debug loading icon
+	/** Debug loading icon */
 	var loading_icon = true;
 
-	// Interval between panel loading
+	/** Interval between panel loading */
 	var fade_interval = 140;
 
-	// The wait before beginning the spinner
+	/** The wait before beginning the spinner */
 	var spinner_interval = 1500; //777
 
-	// Request history for the back button
+	/** Request history for the back button */
 	var requests = [];
 
-	// clicked element
+	/** clicked element */
 	var clicker;
 
-	// functions to run once ready
+	/** functions to run once ready */
 	var ready_fn = [];
 
 	/**
+	 	Run request.
+	 	\param	string	data
 		*/
 	function request(data) {
 		if (hold) return;
@@ -63,15 +68,13 @@ var Mallorca = (function () {
 			// iterate incrementally
 			page_k = 0;
 			var pages = [];
-			// if(typeof(console) !== 'undefined') console.log(pages);
 			for (k in page) {
 				if (k == 'request') {
-					// if(typeof(console) !== 'undefined') console.log(page[k]);
 					continue;
 					}
-				else if (k == 'clear_url' && page[k] == true) {
+				// else if (k == 'clear_url' && page[k] == true) {
 					// history.replaceState('', '', local_path + '' + location.hash);
-					}
+					// }
 				else if (k == 'set_url') {
 					history.pushState('', '', local_path + page[k]);
 					}
@@ -79,7 +82,6 @@ var Mallorca = (function () {
 					document.title = page[k];
 					}
 				else if (k == 'redirect') {
-					// alert(k + page[k]);
 					window.location = page[k];
 					return false;
 					}
@@ -92,19 +94,15 @@ var Mallorca = (function () {
 					}
 				}
 			load_next(page_k, pages);
-
-			/*
-			for (k in page) {
-				if (k == 'request') {
-					if(typeof(console) !== 'undefined') console.log(page[k]);
-					continue;
-					}
-				}
-				*/
 			});
 		}
 
 
+	/**
+		This function able to be called more directly, in the case of custom refresh sections.
+		\param	string	data_fn Prepare this with PHP's stack()
+		\param	string	data	Form or otherwise
+		*/
 	function run_stack(data_fn, data) {
 		var req = json_get;
 		req['stack'] = {
@@ -114,6 +112,12 @@ var Mallorca = (function () {
 		request(req);
 		}
 
+	/**
+		The request preparation function used here.
+		It seeks to gather all input data up to the nearest parent element with the class "data-group"
+		That is, from the button that was clicked submitting the request.
+		If the clicking element has the class "all-data", all input data from the page will be passed along.
+		*/
 	function run_request(e) {
 		e.stopPropagation();
 
@@ -134,6 +138,10 @@ var Mallorca = (function () {
 		return false;
 		}
 
+	/**
+		Cleanup after request has been processed and completed.
+		Primarily resets click events on all new data-fn elements.
+		*/
 	function done_loading() {
 
 		if (clicker) {
@@ -152,15 +160,15 @@ var Mallorca = (function () {
 
 		$('.input-text').keyup(set_enters);
 
-		// console.log(ready_fn);
 		for (fn in ready_fn) {
 			ready_fn[fn]();
 			}
 		ready_fn = [];
-		// console.log(ready_fn);
-
 		}
 
+	/**
+		Load the next element / request.
+		*/
 	function load_next(index, pages) {
 		var init = true;
 
@@ -176,14 +184,6 @@ var Mallorca = (function () {
 		if (! $(selector).length) load_next(page_k, pages);
 		// var iv = $(selector).hasClass('no-fade') ? 0 : fade_interval;
 		var iv = $(selector).hasClass('fade') ? fade_interval : 0;
-
-		/*
-		if (selector == '') {
-			if (clicker) sel = clicker;
-			else return false;
-			}
-		else sel = $(selector);
-		*/
 		var sel = selector;
 
 		if (sel == '') return false;
@@ -192,7 +192,6 @@ var Mallorca = (function () {
 			return false;
 			}
 
-		// alert(sel + $(sel).html());
 		$(sel).fadeOut(iv, function() {
 			if (meth == 'append') $(this).append(content);
 			else if (meth == 'prepend') $(this).prepend(content);
@@ -210,7 +209,6 @@ var Mallorca = (function () {
 		Make it possible to submit forms by clicking enter.
 		*/
 	function set_enters(e) {
-		// var e = evt || window.event; // ff || ie
 		var k = e.which || e.keyCode; // ff || ie		
 
 		if (k == 13) {
@@ -218,12 +216,14 @@ var Mallorca = (function () {
 			}
 		}
 
+	/**
+		Initialize.
+		*/
 	function init() {
-		// location.hash = '0';
 
+		// back button functionality
 		window.onpopstate = function (e) {
 			e.preventDefault();
-			// console.log(requests);
 			if (hold) return true;
 			requests.pop();
 			var last = requests.pop();
@@ -247,10 +247,18 @@ var Mallorca = (function () {
 		return this;
 		}
 
+	/**
+		Indicate whether mallorca is on hold (running a request).
+		*/
 	function on_hold() {
 		return hold;
 		}
 
+	/**
+		Add a function to a queue to run after mallorca finishes it's request.
+		The usage would be, you are returning some inline script from your request itself.
+		It sholud wait until it itself is done loading to run.
+		*/
 	function ready(fn) {
 		if (hold) ready_fn.push(fn);
 		else fn();
@@ -263,4 +271,5 @@ var Mallorca = (function () {
 		on_hold: on_hold,
 		ready: ready
 		}
+
 	})().init();
