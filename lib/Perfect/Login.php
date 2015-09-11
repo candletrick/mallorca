@@ -59,8 +59,12 @@ class Login extends \Perfect
 	/**
 		Normal display.
 		*/
-	public function my_display($label = 'Login', $after = 'validate', $data = [])
+	public function my_display($label = 'Login', $after = 'valid_check', $data = [])
 		{
+		if (empty($data)) $data = \Request::$data;
+
+		if (! $label) $label = 'Login';
+
 		return ''
 		. div('login-wrapper',
 			div('control', div('label'), div('input coral', $label)),
@@ -75,12 +79,10 @@ class Login extends \Perfect
 				input_button('Login')->add_class('data-enter')->label('ThY')->click(array_merge([
 					call($this, $after)->html('.m-content'),
 					], website())),
-				// div('control',
-					// div('label'),
-					// div('input',
-					"<a class='forgot' href='" . \Path::base_to('user/forgot') . "'>Forgot Password</a>",
-					// )
-					// ),
+				input_button('Forgot Password')->add_class('forgot')->click([
+					call($this, 'forgot_display')->html('.m-content')
+					]),
+					// "<a class='forgot' href='" . \Path::base_to('user/forgot') . "'>Forgot Password</a>",
 				sesh_alert()
 				])->data($data)->my_display()
 			);
@@ -92,13 +94,14 @@ class Login extends \Perfect
 	public function forgot_display()
 		{
 		return div('login-wrapper',
-			div('control', div('label'), div('input coral', 'Forgot Password')),
-			sesh_alert(),
+			div('control', div('label'), div('input coral', 'Forgot<br>Password')),
 			action_group(array(
-				input_text('email', 60),
+				// sesh_alert(),
+				input_text('email', 60)->label('Em:'),
 				input_button('Send Reset Email')->click([
 					call($this, 'handle_forgot'),
-					call_path('user/login')
+					call($this, 'my_display')->html('.m-content')
+					// call_path('user/login')
 					]),
 				))->my_display()
 			);
@@ -110,9 +113,9 @@ class Login extends \Perfect
 
 		return div('login-wrapper',
 			// pv($_REQUEST),
-			div('control', div('label'), div('input coral', 'Reset Password')),
+			div('control', div('label'), div('input coral', 'Reset<br>Password')),
 			div('notice', (get('email') ? 'For ' . get('email') : '' )),
-			sesh_alert(),
+			// sesh_alert(),
 			action_group(array(
 				input_password('password', 60),
 				input_password('password_confirm', 60)->label('Confirm'),
@@ -120,7 +123,8 @@ class Login extends \Perfect
 				input_hidden('email', is($get, 'email')),
 				input_button('Reset')->click([
 					call($this, 'handle_reset'),
-					call_path('user/login')
+					call($this, 'my_display')->html('.m-content')
+					// call_path('user/login')
 					])
 				))->my_display()
 			);
@@ -163,6 +167,17 @@ class Login extends \Perfect
 		}
 
 	/**
+		*/
+	public function valid_check()
+		{
+		$ok = $this->validate();
+		if (! $ok) {
+			\Request::kill();
+			return $this->my_display();
+			}
+		}
+	
+	/**
 		Validate user.
 		\param	array	$d	User data array (email, password, confirmed).
 		*/
@@ -172,7 +187,7 @@ class Login extends \Perfect
 		if (empty($d)) $d = \Request::$data;
 
 		if (empty($d)) {
-			if (! sesh('alert')) alert('Please login below..');
+			// if (! sesh('alert')) alert('Please login below..');
 			}
 		else {
 			$a = \Db::one_row("select * from user where email=" . \Db::esc(is($d, 'email')));
@@ -300,7 +315,7 @@ class Login extends \Perfect
 			'confirmation_link'=>$link,
 			'confirmation_expires_at'=>date('Y-m-d H:i:s', strtotime('+30 day')),
 			'is_confirmed'=>0,
-			), " where email=" . \Db::esc($email) . " and is_confirmed=1");
+			), " where email=" . \Db::esc($email)); // . " and is_confirmed=1");
 
 		if (! $ok) {
 			return false;
@@ -403,7 +418,7 @@ class Login extends \Perfect
 				self::send_confirmation_email($email);
 				}
 			else {
-				alert('Please login below..');
+				// alert('Please login below..');
 				}
 			}
 

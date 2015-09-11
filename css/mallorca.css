@@ -668,7 +668,7 @@ table {
   width: 200px;
   font-size: 16px;
 }
-.login-wrapper .control-group input[type="button"] {
+.login-wrapper .control .button {
   border: none;
   padding: 2px 11px 2px 11px;
   background: #00cfff;
@@ -676,6 +676,15 @@ table {
   border: none;
   border: 1px solid #00afdd;
   font-size: 16px;
+}
+.login-wrapper .control .button.forgot {
+  background: none;
+  text-decoration: underline;
+  cursor: normal;
+  border: none;
+  padding: 0;
+  color: #999;
+  font-size: 13px;
 }
 .login-wrapper .coral {
   font-size: 32px;
