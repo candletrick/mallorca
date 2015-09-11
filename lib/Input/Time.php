@@ -1,6 +1,9 @@
 <?php
 namespace Input;
 
+/**
+	Time of day select.
+	*/
 class Time extends Select
 	{
 	public function my_construct($options = array())

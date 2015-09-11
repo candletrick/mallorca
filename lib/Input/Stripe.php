@@ -7,12 +7,14 @@ class Stripe extends \Input
 	// static public $secret_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
 	// static public $publishable_key = "pk_test_6pRNASCoBOKtIshFeQd4XMUh";
 
-	// test sherissa
-	static public $secret_key = "sk_test_jOe3ZoOd3ZPKyP3PSN5OWz3E";
-	static public $publishable_key = "pk_test_cgy34UaavgtIE7ccdn584KV1";
+	static public $secret_key;
+	static public $publishable_key;
 
 	public function my_construct($amount = 0, $id = 0)
 		{
+		self::$secret_key = is(\Config::$stripe, 'secret_key');
+		self::$publishable_key = is(\Config::$stripe, 'publishable_key');
+
 		// require_once 'ext/stripe-php-1.18.0/lib/Stripe.php';
 		\Stripe::setApiKey(self::$secret_key);
 		$this->booking_id = $id;

@@ -3,19 +3,26 @@ namespace Action;
 
 /**
 	Synonymous for input_group, but a new version.
+
+	Defines a group of inputs / form.
 	*/
 class Group
 	{
+	/** Name. */
 	public $name;
+	
+	/** Display label. */
 	public $label = '';
+
+	/** Array of inputs. */
 	public $inputs = array();
+
+	/** Data to fill the inputs with. */
 	public $data = array();
 
 	/** Allow passing in a step by step group. */
 	public $allow = true;
 	
-	public $skip = false;
-
 	/** Make uneditable after completion. */
 	public $lock = false;
 
@@ -25,12 +32,17 @@ class Group
 	/* Check function. */
 	public $check_fn;
 
+	/**
+		*/
 	public function __construct($name, $inputs)
 		{
 		$this->name = $name;
 		$this->inputs = $inputs;
 		}
 
+	/**
+		Set properties dynamically.
+		*/
 	public function __call($name, $args = array())
 		{
 		// dynamic function
@@ -44,18 +56,28 @@ class Group
 			}
 		}
 
+	/**
+		Make all fields mandatory.
+		*/
 	public function mand_all()
 		{
 		foreach ($this->inputs as $input) $input->mand();
 		return $this;
 		}
 
+	/**
+		Make all fields optional.
+		*/
 	public function opt_all()
 		{
 		foreach ($this->inputs as $input) $input->opt();
 		return $this;
 		}
 
+	/**
+		Set the data for the group.
+		\return $this
+		*/
 	public function data($data)
 		{
 		if (! empty($data)) {
@@ -80,6 +102,12 @@ class Group
 		return $this;
 		}
 
+	/**
+		Run a check for all inputs to see that they meet mandatory conditions.
+		Set $this->allow at the same time.
+		\param	array	$data	Data to check.
+		\return boolean
+		*/
 	public function mandatory($data)
 		{
 		//|| ! $this->check_fns[$input->name](is($data, $input->name), $input))
@@ -121,12 +149,20 @@ class Group
 		return $this;
 		}
 	
+	/**
+		Set a custom check function for saving.
+		*/
 	public function check($fn)
 		{
 		$this->check_fn = $fn;
 		return $this;
 		}
 		
+	/**
+		"refocus" an invalid input by re-rendering it as required.
+		\param	string	$name	Input name.
+		\param	string	$msg	Message.
+		*/
 	public function refocus($name, $msg)
 		{
 		foreach ($this->inputs as $inp) {
@@ -137,11 +173,17 @@ class Group
 			}
 		}
 
+	/**
+		Alias for my_display
+		*/
 	public function display()
 		{
 		return $this->my_display();
 		}
 
+	/**
+		Render the input group.
+		*/
 	public function my_display($class = '')
 		{
 		$cs = array();
@@ -157,19 +199,4 @@ class Group
 			}
 		return div('control-group data-group ' . $class, implode('', $cs));
 		}
-
-	/*
-	public function label($label)
-		{
-		$this->label = $label;
-		return $this;
-		}
-	
-	public function skip($bool)
-		{
-		$this->skip = $bool;
-		return $this;
-		}
-
-		*/
 	}

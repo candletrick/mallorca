@@ -1,8 +1,12 @@
 <?php
 namespace Input;
 
+/**
+	Display a date as 3 select boxes, Y M D
+	*/
 class DateTriple extends \Input
 	{
+	/** Sub select box fields. */
 	public $parts = array();
 
 	public function my_construct()

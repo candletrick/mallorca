@@ -1,6 +1,11 @@
 <?php
 namespace User;
 
+/**
+	Standard user table structure.
+
+	Pairs with the Perfect\Login class.
+	*/
 class Model extends \Model
 	{
 	use \NoAuth;
@@ -14,25 +19,17 @@ class Model extends \Model
 		{
 		return [
 			'id',
-			on('name')
-				->data->type('str', 140)->end
-				->lookup->asc()->end,
-			on('email')
-				->data->type('str', 64)->end
-				->lookup->end,
-			on('password')
-				->data->type('str', 64)->end,
-			on('salt')
-				->data->type('str', 32)->end,
-			on('confirmation_link', 64)
-				->data->type('str', 64)->end,
+			on('name')->set_type('str', 140)->lookup->asc()->end,
+			on('email')->set_type('str', 64)->lookup->end,
+			on('password')->set_type('str', 64),
+			on('salt') ->set_type('str', 32),
+			on('confirmation_link', 64)->set_type('str', 64),
 			'confirmation_expires_at',
 			'user_type_id',
 			'is_admin',
 			'is_confirmed',
 			'is_deleted',
-			on('remember')
-				->data->type('bool')->end,
+			on('remember')->set_type('bool'),
 			'created_on',
 			];
 		}

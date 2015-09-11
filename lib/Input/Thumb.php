@@ -1,6 +1,9 @@
 <?php
 namespace Input;
 
+/**
+	Image thumbnail selection input.
+	*/
 class Thumb extends \Input
 	{
 	public function my_construct($booking = array())
@@ -20,11 +23,4 @@ class Thumb extends \Input
 		echo \Home\Sitters::grid(\Sitter\Schema::available_query($this->booking));
 		return ob_get_clean();
 		}
-
-	/*
-	public function check($value)
-		{
-		return true;
-		}
-		*/
 	}

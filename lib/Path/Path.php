@@ -25,40 +25,6 @@ class Path
 
 	/**
 		The main function of the application.  Grab the route and hand it off to the index system.
-	static public function interpret($path = '')
-		{
-		if (! $path) {
-			$path = self::$q = get('q');
-			if (! self::$q) $path = self::$q = self::$home_path;
-			}
-
-		$paths = explode('/', $path);
-		$name = array_shift($paths);
-		
-		$index = $wrapper = new \Path\Wrapper($name, $paths);
-
-		// walk down the children,
-		while (isset($index->child)) $index = $index->child;
-
-		// and check for index redefinitions
-		while ($my = $index->my_index()) {
-			// don't remake original
-			if ($my == 'path/wrapper') {
-				$wrapper->child = $index;
-				break;
-				}
-			else {
-				$class = '\\' . implode('\\', array_map('_to_camel', explode('/', $my)));
-				$index = new $class($name, $paths, null, $index);
-				}
-			}
-
-		return $wrapper; // ->my_display();
-		}
-		*/
-
-	/**
-		The main function of the application.  Grab the route and hand it off to the index system.
 		*/
 	static public function interpret($wraps = array('Path', 'Wrapper'))
 		{

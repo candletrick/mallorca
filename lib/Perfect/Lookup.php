@@ -1,26 +1,36 @@
 <?php
 namespace Perfect;
 
+/**
+	Just another redo of the lookup class, for mallorca this time.
+	May or may not keep.
+	*/
 class Lookup extends \Perfect
 	{
+	/** */
 	public $wrapper = [
 		'searched'=>'.table-wrapper',
 		];
 
+	/**
+		*/
 	public function my_display()
 		{
 		return $this->my_full($this->my_query()->results());
 		}
 
+	/**
+		*/
 	public function search_table()
 		{
 		return $this->model->form()->my_search_form();
 		}
 
+	/**
+		*/
 	public function my_full($data)
 		{
 		return 
-		// div('lookup-wrapper',
 		div('left', 
 			div('search-table',
 				div('hd', 'Search')
@@ -28,7 +38,6 @@ class Lookup extends \Perfect
 				)
 			)
 		. div('right',
-			// $this->model->my_quick_add()
 			div('banner', $this->my_banner())
 			. div('pre-table')
 			. div('table-wrapper', 
@@ -37,26 +46,27 @@ class Lookup extends \Perfect
 			);
 		}
 
+	/**
+		*/
 	public function my_banner()
 		{
 		return _to_words($this->model->table)
 		. ' &bull; ' . input_button('New')->click([
-			$this->model->path('form') // ->html('.lookup-wrapper')
+			$this->model->path('form')
 			]);
 		}
 
+	/**
+		*/
 	public function filter()
 		{
 		return $this->model->columns;	
 		}
 
+	/**
+		*/
 	public function my_table($data)
 		{
-		/*
-		$keys = empty($data) ? $this->get_names()
-		: array_keys(current($data));
-		*/
-		// $keys = $this->filter();
 		$keys = $this->get_lookup();
 		$th = [];
 		foreach ($keys as $k=>$v) {
@@ -69,6 +79,8 @@ class Lookup extends \Perfect
 		. "</table>";
 		}
 
+	/**
+		*/
 	public function my_rows()
 		{
 		$query = $this->my_query();
@@ -77,6 +89,8 @@ class Lookup extends \Perfect
 		return $this->nest_two($query->results());
 		}
 
+	/**
+		*/
 	public function nest_two($data, $a = 'tr', $b = 'td')
 		{
 		$s = '';
@@ -90,6 +104,8 @@ class Lookup extends \Perfect
 		return $s;
 		}
 
+	/**
+		*/
 	public function searched()
 		{
 		$new = [];
@@ -97,13 +113,13 @@ class Lookup extends \Perfect
 			if ($v) $new[] = m($k)->where_like($v);
 			}
 
-		// $q = $this->my_query()->combine($new);
-		// die(pv($q));
 		$data = $this->my_query()->combine($new)->results();
 		
 		return $this->my_table($data);
 		}
 
+	/**
+		*/
 	public function sorted($sort = '')
 		{
 		$sort = strtolower($sort);
@@ -112,11 +128,11 @@ class Lookup extends \Perfect
 		return $this->my_table($data);
 		}
 
+	/**
+		*/
 	public function my_query()
 		{
 		return $this->model->my_lookup_query() ?: select($this->model->table, $this->get_lookup());
-		// return select($this->model->table, $this->get_names());
-		// return select($this->model->table, $this->get_lookup());
 		}
 	}
 	

@@ -1,23 +1,56 @@
 <?php
 
 /**
-	Model.
+	Primarily, to define tables for auto-creating / updating from the PHP side.
+
+	my_table(), and my_columns() being the required functions.
+
+	At the time of writing, it is taking on the character of a \MyIndex replacement due to the nature
+	of being called as a "path" by mallorca.
 	*/
 class Model
 	{
-	/**
-		*/
-	function __construct($args = [])
+	/** Table name. */
+	public $table;
+
+	/** Array of column names / on() objects */
+	public $columns;
+
+	/** Table key name, such as table_id */
+	public $keyname;
+
+	/** The model as a path prefix, for example: User/Model yields /user */
+	public $path;
+
+	/** Row data. */
+	public $data;
+
+	/** Row id. */
+	public $id;
+
+	function __construct()
 		{
 		$this->table = $this->my_table();
 		$this->columns = $this->my_columns();
 		$this->keyname = $this->table . '_id';
 		$this->path = strtolower(str_replace("\\", "/", get_class($this)));
-		$this->id = id_zero(is($args, $this->keyname));
+		$this->data = [];
+		$this->id = 0;
+		}
+
+	/**
+		Construct that is meant to take place from \Request, passing in the URL arguments
+		appropriately to capture the id and any other params.
+		*/
+	function my_construct($params = [])
+		{
+		$this->id = id_zero(is($params, $this->keyname));
 		$this->data = $this->id ? select($this->table, [
 			m('id')->where($this->id),
 			'*'
 			])->one_row() : [];
+
+		return $this;
 		}
 
 	/**
@@ -31,20 +64,10 @@ class Model
 		return $new->model($this);
 		}
 
-	/*
-	static public function init_with($args)
-		{
-		$class = get_called_class();
-		$model = new $class();
-		// $model->params = $args;
-		$id = is($args, 'id');
-		if ($id) {
-			$model->id = id_zero($id);
-			$model->data = select($model->table, [m('id')->where($id), '*'])->one_row();
-			}
-		}
+	/**
+		Simply get a select object for a given model without instantiating.
+		Intended to be modified after.
 		*/
-
 	static public function select()
 		{
 		$class = get_called_class();
@@ -52,15 +75,16 @@ class Model
 		return select($model->table, ['*']);
 		}
 
+	/**
 	function my_allow()
 		{
 		return [
 			'my_save',
 			];
 		}
+		*/
 
 	/**
-		*/
 	function params($params = [])
 		{
 		$this->params = $params;
@@ -78,13 +102,19 @@ class Model
 			}
 		return $this->data;
 		}
+		*/
 
+	/**
+		\param	string	$name	Column name.
+		\return Column value if it exists.
+		*/
 	function get($name)
 		{
 		return is($this->data, $name, "\$$name not set.");
 		}
 
 	/**
+		Perform match_upsert with \Request::$data, based on the model.
 		*/
 	function my_save()
 		{
@@ -96,15 +126,16 @@ class Model
 		}
 
 	/**
+		Delete a row from the table.
+		TODO add additional constraints redefine function
+		\param	string	$id	Id of the row to delete.
 		*/
 	function my_delete($id = 0)
 		{
-		// $id = id_zero(is($data, 'id'));
 		if ($id) \Db::query("delete from $this->table where id=" . id_zero($id));
 		}
 
 	/**
-		*/
 	function call($fn, $params = [])
 		{
 		$params = array_merge([
@@ -115,7 +146,6 @@ class Model
 		}
 
 	/**
-		*/
 	function path($path, $params = [])
 		{
 		$class = str_replace('model', $path, $this->path);
@@ -123,35 +153,23 @@ class Model
 		}
 
 	/**
-		*/
 	function path_fn($path, $fn, $params = [], $method = 'replace')
 		{
 		$class = str_replace('model', $path, $this->path);
 		return call_path_fn($class, $fn, $params, $method);
 		}
+		*/
 
 	/**
-		*/
 	function lookup()
 		{
-		/*
-		// $o = new \Perfect\Lookup();
-		$ex = explode("\\", get_class($this));
-		array_pop($ex);
-		array_push($ex, 'Lookup');
-		$lookup_class = implode("\\", $ex);
-		if (class_exists($lookup_class)) {
-			$mod = new $lookup_class();
-			return $mod->my_display();
-			}
-			*/
-		
-		
 		$o = new \CoralLookup();
 		return $o->model($this);
 		}
+		*/
 
 	/**
+		phase out
 		*/
 	function my_lookup_query()
 		{
@@ -159,7 +177,6 @@ class Model
 		}
 
 	/**
-		*/
 	function form() // $id = 0)
 		{
 		$this->id = id_zero($id);
@@ -167,4 +184,5 @@ class Model
 		$o = new \Perfect\Form($this);
 		return $o->model($this);
 		}
+		*/
 	}

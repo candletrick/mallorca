@@ -3,10 +3,8 @@ namespace Input;
 
 class Submit extends \Input
 	{
-	
 	function my_construct()
 		{
-		// $this->label = '';
 		$this->classes
 		}
 

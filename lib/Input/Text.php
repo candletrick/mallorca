@@ -12,7 +12,7 @@ class Text extends \Input
 	/** Locked, display only. */
 	public $lock = false;
 
-	/** */
+	/** Placeholder */
 	public $placeholder = '';
 
 	public function my_construct($len = '', $value = '')
@@ -36,6 +36,10 @@ class Text extends \Input
 		. "	onkeypress=\"return finalmask(event, this, '$mask', 0);\">";
 		}
 
+	/**
+		Set placeholder.
+		\param	string	$placeholder
+		*/
 	public function placeholder($placeholder)
 		{
 		$this->placeholder = $placeholder;

@@ -86,36 +86,6 @@ class Button extends \Input
 		return $this;
 		}
 
-	function stack($xs = array(), $after_fn = '')
-		{
-		$this->classes .= " action";
-		$this->data_fn = stack($xs);
-		if ($after_fn) $this->after_fn = $after_fn;
-		return $this;
-		}
-	/*
-	// phase this out
-
-	function merge($fn)
-		{
-		$this->data_fn .= merge($fn);
-		return $this;
-		}
-
-	function link_to($path, $params = array())
-		{
-		$this->attrs = " onClick=\"window.location = '" . \Path::http() . \Path::base_to($path, $params) . "'; return false;\" ";
-		return $this;
-		}
-
-	function refresh($refresh, $stack)
-		{
-		list($class, $fn) = $refresh;
-		$stack['.' . $fn] = fn($class . '::' . $fn);
-		return $this->stack($stack);
-		}
-		*/
-
 	/**
 		*/
 	function set_value($v)

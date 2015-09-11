@@ -135,5 +135,17 @@ class Config {
 	static public $home_path = '';
 
 	/** Admin email. */
-	static public $admin_email = 'yatsuha@fastmail.se';
+	static public $admin_email = 'fewkeep@gmail.com';
+
+	/** Email settings. */
+	static public $email = array(
+		'from_name'=>'hello',
+		'from_email'=>'hello@localhost', // . $_SERVER['HTTP_HOST'],
+		);
+
+	/** Stripe connection info. */
+	static public $stripe = array(
+		'secret_key'=>"sk_test_BQokikJOvBiI2HlWgH4olfQ2",
+		'publishable_key'=>"pk_test_6pRNASCoBOKtIshFeQd4XMUh",
+		);
 	}

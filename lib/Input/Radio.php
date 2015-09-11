@@ -36,6 +36,8 @@ class Radio extends \Input
 		return $this;
 		}
 
+	/**
+		*/
 	public function click_toggle()
 		{
 		$classes = array();

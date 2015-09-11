@@ -19,32 +19,19 @@ class Request
 	/** Form-submitted request data. */
 	static public $data;
 
-	/** Stack. */
-	// static public $stack = array();
-
 	/** The initial url parameters. */
 	static public $json_get = array();
 
+	/** Whether to wrap the request with HTML wrapper function. */
 	static public $wrap = true;
-
-	/** The initial url path. */
-	// static public $path;
-
-	/** Synonym for $path */
-	// static public $q;
 
 	/** Returned data array. */
 	static public $return;
 
-	static public $login_check = false;
-
-	/** Current index of the return array. */
-	// static public $count;
-	
 	/**
 		New mallorca style rendering.
 		*/
-	static public function unfold($q)
+	static public function render_path($q)
 		{
 		$out = static::call_path($q, self::$json_get);
 
@@ -60,6 +47,11 @@ class Request
 		die;
 		}
 
+	/**
+		Get a value that was initially in $_GET / url.
+		\param	string	$name	key name
+		\param	string	$else	fallback value
+		*/
 	static public function get($name, $else = '')
 		{
 		return is(self::$json_get, $name, req($name, $else));
@@ -73,17 +65,24 @@ class Request
 		self::$stop = true;
 		}
 
+	/**
+		Simulate a "redirect", in other words, stop the execution change and render path.
+		\param	string	$path	Url path.
+		\param	array	$params
+		*/
 	static public function redir($path, $params = array())
 		{
 		self::send(call_path($path, $params));
 		self::kill();
 		}
 
+	/**
+		Indicate not to wrap the display out.
+		*/
 	static public function no_wrap()
 		{
 		self::$wrap = false;
 		}
-		
 
 	/**
 		Set up any url parameters for use app-wide.
@@ -91,41 +90,8 @@ class Request
 	static public function init()
 		{
 		self::$json_get = post('json_get', array());
-		// self::$q = is(self::$json_get, 'q');
-		// unset(self::$json_get['q']);
-
 		self::$is_post = $_SERVER['REQUEST_METHOD'] == 'POST';
-		self::$is_init = post('init'); // ! isset($_POST['stack']);
-
-		// $data = array();
-		// $stack = isset($_POST['stack']) ? $_POST['stack'] : array('data-fn'=>stack(website()));
-		/*
-		$stack = self::$is_init ? array('data-fn'=>stack(website())) : post('stack');
-			
-		if (is($stack, 'data-fn')) {
-			// $data_fn = array();
-			// $stack = post('stack');
-			parse_str(is($stack, 'data-fn'), self::$stack);
-			parse_str(is($stack, 'data'), self::$data);
-			// $stack = $data_fn;
-			}
-		// self::$stack = $data_fn;
-		// self::$data = $data;
-
-		/*
-		// TODO make this more robust
-		// first call_path is the "path"
-		foreach (self::$stack as $s) {
-			if (is($s, 'path')) {
-				self::$path = is($s, 'path');
-				break;
-				}
-			}
-		
-		self::$return = array(
-			'request'=>print_r($stack, true)
-			);
-			*/
+		self::$is_init = post('init');
 		}
 
 	/**
@@ -139,7 +105,7 @@ class Request
 		// "requests" only come through POST
 		if (! self::$is_post) return;
 		else if (post('init') && is(self::$json_get, 'q')) {
-			self::unfold(is(self::$json_get, 'q'));
+			self::render_path(is(self::$json_get, 'q'));
 			}
 		else {
 			$stack = isset($_POST['stack']) ? $_POST['stack'] : array('data-fn'=>stack(website()));
@@ -162,17 +128,13 @@ class Request
 			$data_fn = array();
 			parse_str(is($stack, 'data-fn'), $data_fn);
 			parse_str(is($stack, 'data'), $data);
-			// $stack = $m;
 			}
 		else {
 			die('No stack.');
 			}
 
 		self::$data = $data;
-		self::$return = array(
-			// don't show this because passwords could be there
-			// 'request'=>print_r($stack, true)
-			);
+		self::$return = array();
 		 
 		foreach ($data_fn as $fn) {
 			self::respond_to_one($fn);
@@ -228,30 +190,10 @@ class Request
 		}
 
 	/**
-		"Redirect" in the middle of a request.
-	static public function base_redir($path, $params = array())
-		{
-		if (! self::$is_post) {
-			if ($path == req('q')) return;
-			\Path::base_redir($path, $params);
-			}
-		else {
-			/*
-			if (self::$is_init && self::$q == $path) {
-				return;
-				}
-			else
-			if (self::$path == $path) {
-				return;
-				}
-			echo json_encode(array(
-				'redirect'=>\Path::base_to($path, $params)
-				));
-			die;
-			}
-		}
-			*/
-
+		A list of class types which render as modules.
+		Only for use here.
+		\param	string	$parent	Parent class name.
+		*/
 	static public function is_module($parent)
 		{
 		return in_array($parent, array(
@@ -276,17 +218,11 @@ class Request
 
 		// module style
 		if (self::is_module($parent)) {
-			// $new = \Path::index($path);
-			// while (isset($new->child)) $new = $new->child;
-			// return $new->my_display();
-			// $method = '
-			// 	die($class);
 			$fns = array($fn);
-			return self::call_class($class, $fns); // , array('my_display'), array($params)
+			return self::call_class($class, $fns);
 			}
 		// model style
 		else {
-			// $new = new $class();
 			$class = _to_class(implode('/', $parts) . '/model');
 			if (! class_exists($class)) {
 				die('Classes not found: ' . _to_class($path) . ' or ' . _to_class($path) . "\\Model");
@@ -296,38 +232,6 @@ class Request
 
 			return self::call_class($class, $fns, $params, true);
 			}
-			// $model = new $class();
-			// $model->params($params);
-		// self::call_class($class, array('my_display'), array($params));
-		/*
-		// module style
-		if (in_array($parent, array('Module'))) {
-			$new = \Path::index($path);
-			while (isset($new->child)) $new = $new->child;
-			return $new->my_display();
-			}
-		// model style
-		else {
-			// $new = new $class();
-			$class = _to_class(implode('/', $parts) . '/model');
-			if (! class_exists($class)) {
-				die('Classes not found: ' . _to_class($path) . ' or ' . _to_class($path) . "\\Model");
-				}
-			$model = new $class();
-			$model->params($params);
-
-			// if (! method_exists($schema, $method)) die($method . " does not exist for $schema_class.");
-			$call = call_user_func_array(array($model, $method), $params);
-			$body = is_object($call) ? $call->$fn() : $call;
-
-			// $body = $model->$method($params)->$fn();
-			if (is_object($call) && $fn == 'my_display') {
-				$body = \Path\Wrapper::my_wrapper($body);
-				}
-
-			return $body;
-			}
-			*/
 		}
 
 	/**
@@ -339,81 +243,64 @@ class Request
 		$uses = class_uses($class);
 		$out = array();
 
-		// if (! self::$login_check) {
-			\Login::before_call($class);
-			// self::$login_check = true;
-			// }
-		// if (! self::$logged_in)
+		\Login::before_call($class);
 
 		$parent = get_parent_class($class);
 		$out = array();
-		// die($parent);
 
-		// modules must be constructed this way
-		// if (in_array($parent, array('Module'))) {
-		// if (strpos($parent, 'Module') !== false) {
 		if (self::is_module($parent)) {
 			$q = _to_path($class);
 			$new = \Path::index($q);
 			while (isset($new->child)) $new = $new->child;
-			 // die(pv($fns));
-			// $out['content'] = $new->my_display();
 			}
 		else {
-			// die($class . pv(array_merge(self::$json_get, $params)));
-			$new = new $class(array_merge(self::$json_get, $params));
-			// $new->params(array_merge(self::$json_get, $params));
+			$new = new $class(); // array_merge(self::$json_get, $params));
+			$new->my_construct(array_merge(self::$json_get, $params));
 			}
 
-			$out = array();
+		$out = array();
 
-			foreach ($fns as $index=>$step) {
-				/*
-				// parameter matching
-				echo pv($new->my_allow());
-				$allow = [];
-				foreach ($new->my_allow() as $k=>$v) {
-					if (preg_match("/^\d+$/", $k)) $allow[$v] = [];
-					else $allow[$k] = $v;
-					}
-				// echo $step; die(pv($allow));
-
-				if (! isset($allow[$step])) {
-					die("You must add $step to my_allow()");
-					}
-
-				$args = is($params, $index, []);
-				$call_args = [];
-				foreach ($allow[$step] as $k=>$v) {
-					$call_args[$k] = is($args, $k, $v);
-					}
-					*/
-				$call_args = is($params, $index, array());
-
-				// $ref = new ReflectionMethod($new, $step); echo pv($ref->getParameters());
-
-				// default wrappers
-				if (isset($new->wrapper) && isset($new->wrapper[$step])) {
-					$out['selector'] = $new->wrapper[$step];
-					}
-
-				// $new must be chaining
-				if (is_object($new))
-					$new = call_user_func_array(array($new, $step), $call_args);
+		foreach ($fns as $index=>$step) {
+			/** LEAVE HERE
+			// parameter matching
+			echo pv($new->my_allow());
+			$allow = [];
+			foreach ($new->my_allow() as $k=>$v) {
+				if (preg_match("/^\d+$/", $k)) $allow[$v] = [];
+				else $allow[$k] = $v;
 				}
 
-			if (! in_array('NoWrap', $uses)
-			&& self::$wrap
-			&& ($wrap || self::$is_init)) {
-				// if (is_object($call) && $fn == 'my_display') {
-				// die(pv($new));
-				$new = \Path\Wrapper::my_wrapper($new);
+			if (! isset($allow[$step])) {
+				die("You must add $step to my_allow()");
 				}
 
-			$out['content'] = $new;
+			$args = is($params, $index, []);
+			$call_args = [];
+			foreach ($allow[$step] as $k=>$v) {
+				$call_args[$k] = is($args, $k, $v);
+				}
+				*/
+			$call_args = is($params, $index, array());
 
+			// default wrappers
+			if (isset($new->wrapper) && isset($new->wrapper[$step])) {
+				$out['selector'] = $new->wrapper[$step];
+				}
 
-		// echo pv($out);
+			// $new must be chaining
+			if (is_object($new)) {
+				$new = call_user_func_array(array($new, $step), $call_args);
+				}
+			}
+
+		// add wrapper
+		if (! in_array('NoWrap', $uses)
+		&& self::$wrap
+		&& ($wrap || self::$is_init)) {
+			$new = \Path\Wrapper::my_wrapper($new);
+			}
+
+		$out['content'] = $new;
 
 		return $out;
 		}

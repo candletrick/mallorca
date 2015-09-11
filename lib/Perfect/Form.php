@@ -1,15 +1,18 @@
 <?php
 namespace Perfect;
 
+/**
+	Just another redo of the \Form\Create class, for mallorca this time.
+	May or may not keep.
+	*/
 class Form extends \Perfect
 	{
+	/**
+		*/
 	public function my_display()
 		{
-		// \Request::$data
-		// die('hey' . $this->model->id);
 		return div('banner', 
 			div('title', input_button('lookup')->stack([
-				// call($this->model, 'lookup | my_display')->html('.lookup-wrapper')
 				$this->model->path('lookup', ['id'=>0])
 				])
 				. ' &gt; '
@@ -26,11 +29,15 @@ class Form extends \Perfect
 			;
 		}
 
+	/**
+		*/
 	public function my_form()
 		{
 		return $this->control_group($this->my_inputs());
 		}
 
+	/**
+		*/
 	public function my_search_form()
 		{
 		return "<script type='text/javascript'>
@@ -41,8 +48,6 @@ class Form extends \Perfect
 				var data = $(this).closest('.data-group').find(':input').serialize();
 				var data_fn = '" . stack([
 					call($this->model, 'lookup | searched')
-						// ->html('.table-wrapper')
-					// '.table'=>$this->model->path_fn('lookup', 'searched')
 					]) . "';
 				searching = setTimeout(function () {
 					Mallorca.run_stack(data_fn, data);
@@ -58,6 +63,8 @@ class Form extends \Perfect
 			);
 		}
 
+	/**
+		*/
 	public function my_search_inputs()
 		{
 		foreach ($this->get_lookup() as $name) {
@@ -66,10 +73,11 @@ class Form extends \Perfect
 			}
 		}
 
+	/**
+		*/
 	public function my_inputs()
 		{
 		foreach ($this->get_edit() as $col) {
-		// foreach ($this->model->columns as $col) {
 
 			$o = is_object($col);
 			$name = $o ? $col->get_name() : $col;
@@ -91,7 +99,6 @@ class Form extends \Perfect
 			if ($name == 'id') continue;
 			if (isset($col->data)) {
 				if (isset($col->data->type)) {
-					// list($type, $opt) = $col->data->type;
 					$types = $col->data->type;
 					$type = is($types, 0);
 					$opt = is($types, 1);
@@ -112,10 +119,11 @@ class Form extends \Perfect
 		yield input_button('Save')->click([
 			call($this->model, 'my_save'),
 			$this->model->path('lookup')
-			// '.save-status'=>$this->model->call('my_save')
 			]);
 		}
 
+	/**
+		*/
 	public function control_group($inputs)
 		{
 		$inps = [];
@@ -126,6 +134,8 @@ class Form extends \Perfect
 		return div('perfect-form control-group data-group', implode('', $inps));
 		}
 
+	/**
+		*/
 	public function control($input)
 		{
 		$label = div('label', $input->label);

@@ -1,6 +1,9 @@
 <?php
 namespace Input;
 
+/**
+	Three part time select.
+	*/
 class TimeTriple extends DateTriple
 	{
 	public function my_construct()

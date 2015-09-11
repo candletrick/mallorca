@@ -377,6 +377,11 @@ function _to_class($s)
 
 /* IMAGES / TAGS */
 
+/**
+	\defgroup tag_helpers	HTML / header tag helpers.
+
+	@{*/
+
 function title_tag($title = 'My Page')
 	{
 	return '<title>' . $title . '</title>' . "\n";
@@ -424,6 +429,8 @@ function image_url($url, $folder = 'public/images')
 	return \Config::$local_path . "$folder/$url";
 	}
 
+	/** @} */
+
 
 /* MARKUP */
 
@@ -467,6 +474,14 @@ function span()
 
 /* DATE FUNCTIONS */
 
+/**
+	Convert almost any date to specified format.
+	Thanks to the PHP date() function.
+	Unlike PHP's date alone, if the conversion was unsuccessful the original string will be returned.
+	This function also handles potential Date objects (no longer an issue, yet can come up in working with SQL).
+	\param string $format See PHP's date() for details.
+	\param mixed $date The input date.
+	*/
 function date_to($format, $date)
 	{
 	if (is_object($date)) return $date->format($format);
@@ -531,6 +546,11 @@ function how_long_ago($date, $base = 60, $before = '', $after = '')
 	: "<span class='past'>$qty $ago Ago</span>");
 	}
 
+/**
+	Simplified day_diff formula.
+	\param	date $start	Start date.
+	\param	date $end	End date.
+	*/
 function day_diff($start, $end)
 	{
 	return date_diff(date_create($start), date_create($end))->format('%r%a');
@@ -553,6 +573,10 @@ function day_range($start, $end, $blank = array())
 
 /**
 	Map all days over an array of select days.
+	\param	date	$start	Start date.
+	\param	date	$end	End date.
+	\param	array	$data	Data. Array of dates(keys)=>mixed(row data)
+	\return	Modified $data array.
 	*/
 function days_over($start, $end, $data)
 	{
@@ -566,6 +590,10 @@ function days_over($start, $end, $data)
 
 /* FILES */
 
+/**
+	Get the full file directory to a file from the relative path.
+	\param	$s	Bare file name.
+	*/
 function file_dir($s)
 	{
 	$script = $_SERVER['SCRIPT_FILENAME'];
@@ -576,18 +604,37 @@ function file_dir($s)
 	
 /* SESSION */
 
+/**
+	Get the _SESSION alert message and clear.
+	\return sesh-alert div
+	*/
 function sesh_alert()
 	{
 	$alert = sesh('alert');
-	$_SESSION['alert'] = '';
-	if ($alert) return div('sesh-alert', $alert);
+	// $_SESSION['alert'] = '';
+	// if (count($_SESSION['alert'] > 3))
+	array_shift($_SESSION['alert']);
+
+	if ($alert) return div('sesh-alert', implode('<br>', $alert));
 	}
 
+/**
+	Add an alert message to the session for displaying across pages.
+	\param	string	$msg	Message to add.
+	*/
 function alert($msg = '')
 	{
+	/*
 	$alert = sesh('alert');
 	if ($msg === true) $_SESSION['alert'] = '';
 	else if ($msg) $_SESSION['alert'] = $msg;
 	return $alert;
+	*/
+	if (! isset($_SESSION['alert'])) $_SESSION['alert'] = array();
+
+	if ($msg) {
+		array_push($_SESSION['alert'], $msg);
+		// if (count($_SESSION['alert'] > 3)) array_shift($_SESSION['alert']);
+		}
 	}
 
