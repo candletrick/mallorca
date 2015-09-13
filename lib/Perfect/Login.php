@@ -413,8 +413,8 @@ class Login extends \Perfect
 		
 		if (! $ok && ! sesh('logout')) {
 			// try off document_id
-			if (! $email) {
-				$document_id = is(\Request::$json_get, 'document_id');
+			if (! $email && $document_id) {
+				// $document_id = is(\Request::$json_get, 'document_id');
 				$user = select('document', array(
 					m('id')->where($document_id),
 					m('email')->left('user', ['id'=>'created_by'])
