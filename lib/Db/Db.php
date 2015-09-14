@@ -194,6 +194,7 @@ class Db {
 		*/
 	static public function insert_unique($table, $data) {
 		if (! self::value("select id from $table where " . self::where($data))) self::$db->insert($table, $data);
+		return false;
 		}
 
 	/**
