@@ -616,9 +616,15 @@ function sesh_alert()
 		array_shift($_SESSION['alert']);
 		}
 
-	$alert = sesh('alert');
+	$alerts = sesh('alert');
+	$divs = array();
+	foreach ($alerts as $k=>$v) {
+		$divs[] = div('row', $v . " <span class='data-fn' dismiss' after-fn=\"remove_row\" data-fn=\"" . stack(array(
+			call('Perfect\Login', 'dismiss_alert', array('id'=>$k))
+			)) . "\">dismiss</span>");
+		}
 
-	if ($alert) return div('sesh-alert', implode('<br>', $alert));
+	return div('sesh-alert', implode('', $divs));
 	}
 
 /**
@@ -635,7 +641,7 @@ function alert($msg = '')
 	*/
 	if (! isset($_SESSION['alert'])) $_SESSION['alert'] = array();
 
-	if ($msg) {
+	if ($msg && is_string($msg)) {
 		array_push($_SESSION['alert'], $msg);
 		// if (count($_SESSION['alert'] > 3)) array_shift($_SESSION['alert']);
 		}

@@ -169,14 +169,15 @@ table {
 }
 .top-alert {
   background: #ff9;
-  border: 1px solid #cc7;
 }
 .top-alert .sesh-alert {
   width: 886px;
   margin: 0 auto;
   color: #777;
   font-size: 13px;
-  padding: 10px 0;
+}
+.top-alert .sesh-alert .row {
+  margin: 6px 0;
 }
 .logo {
   width: 886px;

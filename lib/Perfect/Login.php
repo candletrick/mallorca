@@ -22,9 +22,9 @@ class Login extends \Perfect
 		\param	string	$name	Data key.
 		\return Get user data by key.
 		*/
-	static public function get($name)
+	static public function get($name, $else = '')
 		{
-		return array_key_exists($name, self::$data) ? self::$data[$name] : '';
+		return array_key_exists($name, self::$data) ? self::$data[$name] : $else;
 		}
 	/**
 		Check if the user is logged in.
@@ -121,13 +121,18 @@ class Login extends \Perfect
 				input_password('password_confirm', 60)->label('Confirm'),
 				input_hidden('link', is($get, 'link')),
 				input_hidden('email', is($get, 'email')),
-				input_button('Reset')->click([
+				input_button('Reset')->add_class('data-enter')->click([
 					call($this, 'handle_reset'),
 					call($this, 'my_display')->html('.m-content')
 					// call_path('user/login')
 					])
 				))->my_display()
 			);
+		}
+
+	public function dismiss_alert($id = 0)
+		{
+		if (isset($_SESSION['alert'][$id])) unset($_SESSION['alert'][$id]);
 		}
 
 	/**

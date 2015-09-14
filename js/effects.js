@@ -27,7 +27,7 @@ var effects = {
 		},
 
 	'remove_row' : function (th) {
-		th.closest('tr, .tr').remove();
+		th.closest('tr, .tr, .row').remove();
 		},
 
 	'clear_inputs' : function (th) {
