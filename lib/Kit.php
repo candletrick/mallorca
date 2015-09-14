@@ -610,10 +610,13 @@ function file_dir($s)
 	*/
 function sesh_alert()
 	{
-	$alert = sesh('alert');
 	// $_SESSION['alert'] = '';
 	// if (count($_SESSION['alert'] > 3))
-	array_shift($_SESSION['alert']);
+	while (count($_SESSION['alert'] > 2)) {
+		array_shift($_SESSION['alert']);
+		}
+
+	$alert = sesh('alert');
 
 	if ($alert) return div('sesh-alert', implode('<br>', $alert));
 	}
