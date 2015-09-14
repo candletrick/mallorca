@@ -141,7 +141,6 @@ class Model
 		return call_path($class, $params);
 		}
 
-	/**
 	function call($fn, $params = [])
 		{
 		$params = array_merge([
@@ -150,6 +149,7 @@ class Model
 
 		return call($this, $fn, $params);
 		}
+	/**
 
 	/**
 
