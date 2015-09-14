@@ -150,7 +150,7 @@ var Mallorca = (function () {
 			}
 
 		// re-bind action buttons
-		$(".action, .data-fn").unbind('click').click(run_request)
+		$(".data-fn").unbind('click').click(run_request)
 
 		hold = false;
 		if (loading_icon) {
