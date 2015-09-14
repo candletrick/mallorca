@@ -612,7 +612,7 @@ function sesh_alert()
 	{
 	// $_SESSION['alert'] = '';
 	// if (count($_SESSION['alert'] > 3))
-	while (count($_SESSION['alert'] > 2)) {
+	while (count($_SESSION['alert']) > 2) {
 		array_shift($_SESSION['alert']);
 		}
 
