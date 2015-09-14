@@ -21,10 +21,10 @@ class Table extends \Db\Table {
 		}
 
 	public function int($name, $max = 'int') {
-		$type = ($max <= 255 ? 'tinyint(3) unsigned'
-		: ($max <= 655535 ? 'smallint(5) unsigned'
-		: ($max <= 16000000 ? 'mediumint(8) unsigned'
-		: 'int unsigned')));
+		$type = ($max <= 255 ? 'tinyint(3) unsigned default 0'
+		: ($max <= 655535 ? 'smallint(5) unsigned default 0'
+		: ($max <= 16000000 ? 'mediumint(8) unsigned default 0'
+		: 'int unsigned default 0')));
 		return $this->parent->column($name, $type);
 		}
 
@@ -42,7 +42,7 @@ class Table extends \Db\Table {
 		}
 
 	public function bool($name) {
-		return $this->parent->column($name, "tinyint(1)");
+		return $this->parent->column($name, "tinyint(1) default 0");
 		}
 
 	public function blob($name) {
@@ -70,7 +70,7 @@ class Table extends \Db\Table {
 		}
 
 	public function who() {
-		return $this->parent->column('created_by', "mediumint(8) unsigned");
+		return $this->parent->column('created_by', "mediumint(8) unsigned default 0");
 		}
 
 	public function when() {
