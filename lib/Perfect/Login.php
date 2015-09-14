@@ -481,7 +481,8 @@ class Login extends \Perfect
 		$salt = self::salt();
 		$up = \Db::match_update('user', array(
 			'password'=>self::encrypt($password, $salt),
-			'salt'=>$salt
+			'salt'=>$salt,
+			'is_confirmed'=>1
 			), " where email=" . db()->esc($email)
 			. " and confirmation_link=" . db()->esc($link)
 			. " and confirmation_expires_at>now()");
