@@ -39,7 +39,7 @@ class Request
 
 		// self::$stop for redirects
 		$return = self::$stop ? self::$return : array(
-			// 'request'=>$_POST,
+			'request'=>$_POST,
 			'.m-content'=>array('selector'=>'.m-content', 'content'=>$content, 'method'=>'replace')
 			);
 
@@ -134,7 +134,9 @@ class Request
 			}
 
 		self::$data = $data;
-		self::$return = array();
+		self::$return = array(
+			'request'=>$stack
+			);
 		 
 		foreach ($data_fn as $fn) {
 			self::respond_to_one($fn);

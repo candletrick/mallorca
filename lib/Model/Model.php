@@ -58,7 +58,7 @@ class Model
 		*/
 	function __call($fn, $params = [])
 		{
-		$class = _to_class($fn);
+		$class = "\\Perfect" . _to_class($fn);
 		if (! class_exists($class)) die("Class $class does not exist.");
 		$new = new $class();
 		return $new->model($this);
@@ -135,6 +135,12 @@ class Model
 		if ($id) \Db::query("delete from $this->table where id=" . id_zero($id));
 		}
 
+	function path($path, $params = [])
+		{
+		$class = str_replace('model', $path, $this->path);
+		return call_path($class, $params);
+		}
+
 	/**
 	function call($fn, $params = [])
 		{
@@ -146,11 +152,6 @@ class Model
 		}
 
 	/**
-	function path($path, $params = [])
-		{
-		$class = str_replace('model', $path, $this->path);
-		return call_path($class, $params);
-		}
 
 	/**
 	function path_fn($path, $fn, $params = [], $method = 'replace')
@@ -161,12 +162,12 @@ class Model
 		*/
 
 	/**
+		*/
 	function lookup()
 		{
 		$o = new \CoralLookup();
 		return $o->model($this);
 		}
-		*/
 
 	/**
 		phase out

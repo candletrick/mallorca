@@ -12,7 +12,7 @@ class Form extends \Perfect
 	public function my_display()
 		{
 		return div('banner', 
-			div('title', input_button('lookup')->stack([
+			div('title', input_button('lookup')->click([
 				$this->model->path('lookup', ['id'=>0])
 				])
 				. ' &gt; '

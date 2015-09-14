@@ -70,6 +70,7 @@ var Mallorca = (function () {
 			var pages = [];
 			for (k in page) {
 				if (k == 'request') {
+					console.log(page[k]);
 					continue;
 					}
 				// else if (k == 'clear_url' && page[k] == true) {

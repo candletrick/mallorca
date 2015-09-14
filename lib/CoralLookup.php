@@ -45,49 +45,17 @@ class CoralLookup extends \Perfect\Lookup
 
 				if ($b == 'th') {
 					$sort = stack([
-						// '.table-wrapper'=>$this->model->path_fn('lookup', 'sorted', ['sort'=>$two])
 						call($this->model, 'lookup')->pipe('sorted', ['sort'=>$two])->html('.table-wrapper')
 						]);
 					$s .= "<$b class='data-fn' data-fn=\"$sort\">$two</$b>";
 					}
-				// else if ($k == 'content') {
 				else {
 					$df = stack([
-						call_path($this->model->path . '/form', [$this->model->keyname=>$id])// pipe('my_display')->html('.lookup-wrapper')
+						$this->model->path('form', [$this->model->keyname=>$id])// pipe('my_display')->html('.lookup-wrapper')
 						]);
 					$s .= "<$b class='data-fn' data-fn=\"$df\">$two</$b>";
 					}
-				/*
-				else if ($k == 'child_count') {
-					$df = stack([
-						'.table-wrapper'=>$this->model->path_fn('lookup', 'searched', ['parent_id'=>$id]),
-						'.pre-table'=>div('banner', $one['content'] . " &bull; "
-							. input_button('Back to All')->stack([	
-								'.table-wrapper'=>$this->model->path_fn('lookup', 'searched', []),
-								'.pre-table'=>''
-								])
-							)
-						]);
-					$s .= "<$b class='data-fn no-data' data-fn=\"$df\">$two</$b>";
-					}
-					*/
-				// else $s .= "<$b>$two</$b>";
 				}
-			/*
-			$s .= $b == 'td' ? "<$b>"
-			. input_button('Caps')->click([
-				call($this->model, 'caps | coral_lookup | my_rows', [], 'replaceWith')->replaceWith("#row_$id")
-				])
-			. input_button('Nest')->click([
-				call($this->model, 'nest | coral_lookup | my_display', ['id'=>$id])->html('.lookup-wrapper')
-				])->add_class('all-data')
-			. input_button(' X ')->click([
-				call($this->model, 'my_delete', ['id'=>$id])
-				])
-				// ->before('confirm_delete')
-				->after('remove_row')
-			. "</$b>" : '<th></th>';
-				*/
 			$s .= input_hidden('id', $id);
 			$s .= "</$a>";
 			}
