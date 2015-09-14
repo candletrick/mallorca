@@ -254,6 +254,7 @@ class Request
 			while (isset($new->child)) $new = $new->child;
 			}
 		else {
+			// die($class . pv($fns));
 			$new = new $class(); // array_merge(self::$json_get, $params));
 			$new->my_construct(array_merge(self::$json_get, $params));
 			}

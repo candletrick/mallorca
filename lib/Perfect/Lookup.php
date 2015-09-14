@@ -52,7 +52,8 @@ class Lookup extends \Perfect
 		{
 		return _to_words($this->model->table)
 		. ' &bull; ' . input_button('New')->click([
-			$this->model->path('form')
+			// $this->model->path('form')
+			call_path($this->model->path . '/form')
 			]);
 		}
 
