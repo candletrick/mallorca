@@ -219,10 +219,10 @@ class Login extends \Perfect
 				setcookie('login_email', $d['email'], $expire);
 
 				// TODO this is for socrates only
-				$hard = "l0kxmal0y7&*";
+				// $hard = "l0kxmal0y7&*";
 
 				// setcookie('login_password', $d['password'], $expire);
-				setcookie('login_password', $hard, $expire);
+				setcookie('login_password', is($d, 'password'), $expire);
 				setcookie('login_remember', is($d, 'remember'), $expire);
 				// setcookie('logout', false, (3600 * -1));
 
