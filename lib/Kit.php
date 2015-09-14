@@ -619,7 +619,7 @@ function sesh_alert()
 	$alerts = sesh('alert');
 	$divs = array();
 	foreach ($alerts as $k=>$v) {
-		$divs[] = div('row', $v . " <span class='data-fn' dismiss' after-fn=\"remove_row\" data-fn=\"" . stack(array(
+		$divs[] = div('row', $v . " <span class='dismiss data-fn' dismiss' after-fn=\"remove_row\" data-fn=\"" . stack(array(
 			call('Perfect\Login', 'dismiss_alert', array('id'=>$k))
 			)) . "\">dismiss</span>");
 		}

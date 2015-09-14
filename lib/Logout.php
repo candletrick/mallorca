@@ -8,10 +8,14 @@ class Logout extends \Module
 		session_destroy();
 		session_start();
 
-		// $expire = is($d, 'remember') ? time() + (3600 * 72) : time() - 1000;
+		setcookie('login_email', '', (3600 * -1));
+		setcookie('login_password', '', (3600 * -1));
+		setcookie('login_remember', '', (3600 * -1));
 		setcookie('logout', true, (3600 * 60));
-		// die(pv($_COOKIE));
+
+		$_COOKIE = array();
 		$_SESSION['logout'] = true;
+
 		alert('You are now logged out.');
 		// \Request::base_redir('user/login');
 		\Request::redir('user/login');

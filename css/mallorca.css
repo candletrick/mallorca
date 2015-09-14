@@ -176,8 +176,20 @@ table {
   color: #777;
   font-size: 13px;
 }
+.top-alert .sesh-alert :first-child {
+  padding-top: 10px;
+}
+.top-alert .sesh-alert :last-child {
+  padding-bottom: 10px;
+}
 .top-alert .sesh-alert .row {
-  margin: 6px 0;
+  padding-bottom: 10px;
+}
+.dismiss {
+  text-decoration: underline;
+  font-style: italic;
+  color: #bbb;
+  cursor: pointer;
 }
 .logo {
   width: 886px;
