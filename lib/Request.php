@@ -134,9 +134,9 @@ class Request
 			}
 
 		self::$data = $data;
-		self::$return = array(
-			'request'=>$stack
-			);
+		self::$return = array();
+			// 'request'=>pv($data_fn)
+			// );
 		 
 		foreach ($data_fn as $fn) {
 			self::respond_to_one($fn);
@@ -257,7 +257,7 @@ class Request
 			}
 		else {
 			$new = new $class(); 
-			$id = is(self::$json_get, $new->keyname);
+			$id = isset($new->keyname) ? is(self::$json_get, $new->keyname) : 0;
 			$new->my_construct($id); // array_merge(self::$json_get, $params));
 			}
 
@@ -303,6 +303,7 @@ class Request
 			$new = \Path\Wrapper::my_wrapper($new);
 			}
 
+		// die($new);
 		$out['content'] = $new;
 
 		return $out;

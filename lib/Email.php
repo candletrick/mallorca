@@ -28,13 +28,39 @@ class Email
 		return $mail;
 		}
 
+	static public function send($to, $subject, $msg)
+		{
+		if (\Config::$local_path == '/') self::send_live($to, $subject, $msg);
+		else self::send_local($to, $subject, $msg);
+		}
+
+	static public function send_local($to, $subject, $msg, $html = true)
+		{
+		$headers = 'From: "localhost" <fewkeep@gmail.com>'
+		. "\r\nReply-To: fewkeep@gmail.com"
+		. "\r\nX-Mailer: PHP/' . phpversion()"
+		;
+
+		// To send HTML mail, the Content-type header must be set
+		if ($html) {
+			$headers .= "\r\nMIME-Version: 1.0"
+			. "\r\nContent-type: text/html; charset=iso-8859-1"
+			. "\r\n"
+			;
+			}
+
+		// testing
+		// mail('fewkeep@gmail.com', $subject . " on behalf of " . $to, $msg, $headers);
+		return mail($to, $subject, $msg, $headers);
+		}
+
 	/**
 		Shorthand send function.
 		\param	string	$to	To field.
 		\param	string	$subject	Subject.
 		\param	string	$msg	Body.
 		*/
-	static public function send($to, $subject, $msg)
+	static public function send_live($to, $subject, $msg)
 		{
 		$from_name = is(\Config::$email, 'from_name', 'Hello');
 		$from_email = is(\Config::$email, 'from_email', 'hello@' . $_SERVER['HTTP_HOST']);

@@ -66,6 +66,7 @@ var Mallorca = (function () {
 				}
 
 			// iterate incrementally
+			console.log(page);
 			page_k = 0;
 			var pages = [];
 			for (k in page) {

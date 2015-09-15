@@ -68,7 +68,7 @@ class Login extends \Perfect
 		return ''
 		. div('login-wrapper',
 			div('control', div('label'), div('input coral', $label)),
-			div('control', div('label'), div('input', alert(true))),
+			// div('control', div('label'), div('input', alert(true))),
 			action_group([
 				input_text('email', 20)->label("Em:")
 					->set_value(cook('login_email')),
@@ -208,6 +208,7 @@ class Login extends \Perfect
 					alert("Password is not correct.");
 					}
 				else if (! $a['is_confirmed']) {
+					self::send_confirmation_email(is($d, 'email'));
 					alert("Please check your email to confirm your account.");
 					}
 				else $ok = true;
