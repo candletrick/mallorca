@@ -257,8 +257,9 @@ class Request
 			}
 		else {
 			$new = new $class(); 
-			$id = isset($new->keyname) ? is(self::$json_get, $new->keyname) : 0;
-			$new->my_construct($id); // array_merge(self::$json_get, $params));
+			$ms = array_merge(self::$json_get, $params);
+			$id = isset($new->keyname) ? is($ms, $new->keyname) : 0;
+			$new->my_construct($id);
 			}
 
 		$out = array();
