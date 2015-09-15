@@ -58,8 +58,8 @@ var Mallorca = (function () {
 				var page = $.parseJSON(html);
 				}
 			catch (error) {
-				// alert(html);
-				$.featherlight($('<pre>').html(html));
+				alert(html);
+				// $.featherlight($('<pre>').html(html));
 				hold = false;
 				$('.loading-mask').hide();
 				return;

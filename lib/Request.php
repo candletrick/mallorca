@@ -221,7 +221,7 @@ class Request
 		// module style
 		if (self::is_module($parent)) {
 			$fns = array($fn);
-			return self::call_class($class, $fns);
+			return self::call_class($class, $fns, $params, true);
 			}
 		// model style
 		else {
@@ -256,9 +256,9 @@ class Request
 			while (isset($new->child)) $new = $new->child;
 			}
 		else {
-			// die($class . pv($fns));
-			$new = new $class(); // array_merge(self::$json_get, $params));
-			$new->my_construct(array_merge(self::$json_get, $params));
+			$new = new $class(); 
+			$id = is(self::$json_get, $new->keyname);
+			$new->my_construct($id); // array_merge(self::$json_get, $params));
 			}
 
 		$out = array();

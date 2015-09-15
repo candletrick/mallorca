@@ -42,15 +42,27 @@ class Model
 		Construct that is meant to take place from \Request, passing in the URL arguments
 		appropriately to capture the id and any other params.
 		*/
-	function my_construct($params = [])
+	function my_construct($id = 0) // $params = [])
 		{
-		$this->id = id_zero(is($params, $this->keyname));
+		// $this->id = id_zero(is($params, $this->keyname));
+		$this->id = id_zero($id);
 		$this->data = $this->id ? select($this->table, [
 			m('id')->where($this->id),
 			'*'
 			])->one_row() : [];
 
 		return $this;
+		}
+
+	/**
+		Create model instance and set id / data.
+		*/
+	static public function one($id = 0)
+		{
+		$class = get_called_class();
+		$model = new $class();
+		$model->my_construct($id);
+		return $model;
 		}
 
 	/**
