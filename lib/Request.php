@@ -258,8 +258,11 @@ class Request
 		else {
 			$new = new $class(); 
 			$ms = array_merge(self::$json_get, $params);
-			$id = isset($new->keyname) ? is($ms, $new->keyname) : 0;
-			$new->my_construct($id);
+			if ($parent == 'Model') {
+				$id = isset($new->keyname) ? is($ms, $new->keyname) : 0;
+				$new->my_construct($id);
+				}
+			else $new->my_construct($ms);
 			}
 
 		$out = array();
