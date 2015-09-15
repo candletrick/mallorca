@@ -261,7 +261,7 @@ class Login extends \Perfect
 		*/
 	static public function exists($email)
 		{
-		return \Db::value("select 1 from user where email=" . \Db::esc($email));
+		return \Db::value("select id from user where email=" . \Db::esc($email));
 		}
 
 	/**
@@ -290,9 +290,10 @@ class Login extends \Perfect
 			return;
 			}
 
-		if (self::exists($email)) {
+		$id = self::exists($email);
+		if ($id) {
 			alert("There is already an account for $email.");
-			return;	
+			return $id;
 			}
 
 		$salt = self::salt();
