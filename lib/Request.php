@@ -203,6 +203,7 @@ class Request
 			'Module\Dashboard',
 			'Module\StepByStep',
 			'Module\Lookup',
+			'Module\Scroll',
 			'Form\Create',
 			));
 		}
