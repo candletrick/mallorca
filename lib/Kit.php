@@ -610,10 +610,11 @@ function file_dir($s)
 	*/
 function sesh_alert()
 	{
-	// $_SESSION['alert'] = '';
-	// if (count($_SESSION['alert'] > 3))
-	if (! isset($_SESSION['alert'])) return;
-	while (count($_SESSION['alert']) > 2) {
+	$alerts = sesh('alert');
+	if (! is_array($alerts)) $_SESSION['alert'] = array();
+
+	// limit to 4
+	while (count($_SESSION['alert']) > 1) {
 		array_shift($_SESSION['alert']);
 		}
 
@@ -621,7 +622,7 @@ function sesh_alert()
 	$divs = array();
 	foreach ($alerts as $k=>$v) {
 		$divs[] = div('row', $v . " <span class='dismiss data-fn' dismiss' after-fn=\"remove_row\" data-fn=\"" . stack(array(
-			call('Perfect\Login', 'dismiss_alert', array('id'=>$k))
+			call('Login', 'dismiss_alert', array('id'=>$k))
 			)) . "\">dismiss</span>");
 		}
 
@@ -634,17 +635,10 @@ function sesh_alert()
 	*/
 function alert($msg = '')
 	{
-	/*
-	$alert = sesh('alert');
-	if ($msg === true) $_SESSION['alert'] = '';
-	else if ($msg) $_SESSION['alert'] = $msg;
-	return $alert;
-	*/
 	if (! isset($_SESSION['alert'])) $_SESSION['alert'] = array();
 
 	if ($msg && is_string($msg)) {
 		array_push($_SESSION['alert'], $msg);
-		// if (count($_SESSION['alert'] > 3)) array_shift($_SESSION['alert']);
 		}
 	}
 

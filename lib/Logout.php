@@ -17,8 +17,8 @@ class Logout extends \Module
 		$_SESSION['logout'] = true;
 
 		alert('You are now logged out.');
-		// \Request::base_redir('user/login');
-		\Request::redir('user/login');
+		\Path::base_redir('login/home');
+		// \Request::redir('login/home');
 		}
 
 	public function my_display()

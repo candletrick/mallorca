@@ -6,6 +6,7 @@
 /* variables */
 
 teal_border = #42ddfc
+button_blue = #2ae;
 pwidth = 900px;
 hfont = Questrial;
 
@@ -107,10 +108,10 @@ table
 
 .bd 
   background: none;
-  width: pwidth;
+  width: pwidth - 14px
   margin: 0 auto;
   text-align: left;
-  padding: 0 0 15px 0;
+  padding: 0 0 14px 14px;
 
 .push 
   padding-bottom: 90px;
@@ -131,7 +132,7 @@ table
       font-size: 12px;
       color: #ddd;
 
-.banner
+.banner.top
   text-align: left;
   width: 100%;
   background: #252525;
@@ -222,8 +223,10 @@ table
   .whoami
     float: right
     color: #fff
-    margin-top: 15px
-    .button
+    margin-top: 17px
+    .button, a
+      text-decoration: none
+      color: button_blue
       font-size: 14px
 
 .vertical_nav 
@@ -551,12 +554,13 @@ table
       text-decoration: underline
 
 .login-wrapper 
-  border-collapse:collapse;
+  border-collapse: collapse;
   text-align:left;
-  margin:0 auto;
-  width:460px;
-  padding:10px;
+  margin: 0 auto;
+  width: 460px;
+  padding: 100px 10px 10px 10px;
   font-family: "Open Sans"
+
   .control-group 
     display: table;
 
@@ -565,8 +569,8 @@ table
 
   .input, .label 
     display: table-cell;
-    padding:10px;
     font-weight:bold;
+    padding: 10px;
 
   .label 
     text-align:right;
@@ -589,12 +593,11 @@ table
     border:none;
     border:1px solid #00afdd;
     font-size:16px;
-    &.forgot
-      background: none
+
+  .forgot
+    margin: -6px 0;
+    a
       text-decoration: underline
-      cursor: normal
-      border: none
-      padding: 0
       color: #999
       font-size: 13px
 

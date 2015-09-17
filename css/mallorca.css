@@ -132,10 +132,10 @@ table {
 }
 .bd {
   background: none;
-  width: 900px;
+  width: 886px;
   margin: 0 auto;
   text-align: left;
-  padding: 0 0 15px 0;
+  padding: 0 0 14px 14px;
 }
 .push {
   padding-bottom: 90px;
@@ -159,7 +159,7 @@ table {
   font-size: 12px;
   color: #ddd;
 }
-.banner {
+.banner.top {
   text-align: left;
   width: 100%;
   background: #252525;
@@ -269,9 +269,12 @@ table {
 .banner .whoami {
   float: right;
   color: #fff;
-  margin-top: 15px;
+  margin-top: 17px;
 }
-.banner .whoami .button {
+.banner .whoami .button,
+.banner .whoami a {
+  text-decoration: none;
+  color: #2ae;
   font-size: 14px;
 }
 .vertical_nav {
@@ -664,7 +667,7 @@ table {
   text-align: left;
   margin: 0 auto;
   width: 460px;
-  padding: 10px;
+  padding: 100px 10px 10px 10px;
   font-family: "Open Sans";
 }
 .login-wrapper .control-group {
@@ -676,8 +679,8 @@ table {
 .login-wrapper .input,
 .login-wrapper .label {
   display: table-cell;
-  padding: 10px;
   font-weight: bold;
+  padding: 10px;
 }
 .login-wrapper .label {
   text-align: right;
@@ -701,12 +704,11 @@ table {
   border: 1px solid #00afdd;
   font-size: 16px;
 }
-.login-wrapper .control .button.forgot {
-  background: none;
+.login-wrapper .forgot {
+  margin: -6px 0;
+}
+.login-wrapper .forgot a {
   text-decoration: underline;
-  cursor: normal;
-  border: none;
-  padding: 0;
   color: #999;
   font-size: 13px;
 }

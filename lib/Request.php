@@ -17,7 +17,7 @@ class Request
 	static public $is_init = false;
 
 	/** Form-submitted request data. */
-	static public $data;
+	static public $data = array();
 
 	/** The initial url parameters. */
 	static public $json_get = array();
@@ -160,7 +160,8 @@ class Request
 			$s = $v;
 			}
 		else if (array_key_exists('class', $v)) {
-			$out = static::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'));
+			// $out = static::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'), is($v, 'static'));
+			$out = static::call_class($v['class'], $v['functions'], $params, false, is($v, 'static'));
 			$s = $out['content'];
 			}
 		else if (array_key_exists('path', $v)) {
@@ -240,22 +241,33 @@ class Request
 	/**
 		Call simple instance function.
 		*/
-	static public function call_class($class, $fns = array(), $params = array(), $wrap = false)
+	static public function call_class($class, $fns = array(), $params = array(), $wrap = false, $static = false)
 		{
 		$parent = get_parent_class($class);
 		$uses = class_uses($class);
 		$out = array();
 
-		\Login::before_call($class);
+		// \Login::before_call($class);
 
 		$parent = get_parent_class($class);
 		$out = array();
 
-		if (self::is_module($parent)) {
+		// static style
+		if ($static) {
+			$first = array_shift($fns);
+			$first_params = array_shift($params);
+			if (! $first_params) $first_params = array();
+			if ($first) {
+				$new = call_user_func_array("$class::$first", $first_params);
+				}
+			}
+		// module style
+		else if (self::is_module($parent)) {
 			$q = _to_path($class);
 			$new = \Path::index($q);
 			while (isset($new->child)) $new = $new->child;
 			}
+		// instance / model / construct style
 		else {
 			$new = new $class(); 
 			$ms = array_merge(self::$json_get, $params);
@@ -308,7 +320,6 @@ class Request
 			$new = \Path\Wrapper::my_wrapper($new);
 			}
 
-		// die($new);
 		$out['content'] = $new;
 
 		return $out;

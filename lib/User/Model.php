@@ -34,6 +34,21 @@ class Model extends \Model
 			];
 		}
 
+	public function my_save()
+		{
+		$data = \Request::$data;
+		$np = is($data, 'new_password');
+
+		if ($np) {
+			$salt = \Login::salt();
+			\Request::$data['password'] = \Login::encrypt($np, $salt);
+			\Request::$data['salt'] = $salt;
+			}
+
+		parent::my_save();
+		}
+
+	/*
 	public function register()
 		{
 		$login = new \Perfect\Login();
@@ -57,4 +72,5 @@ class Model extends \Model
 		$login = new \Perfect\Login();
 		return $login->reset_display();
 		}
+		*/
 	}

@@ -29,9 +29,9 @@ var json_get = " . json_encode($get) . ";
 /**
 	Standard mallorca HTML wrapper with a stick footer built in.
 	*/
-function mallorca_wrapper()
+function mallorca_wrapper($content = '')
 	{
-	return div('m-wrapper', div('m-content fade') . div('m-push')) . div('m-footer')
+	return div('m-wrapper', div('m-content fade', $content) . div('m-push')) . div('m-footer')
 	// . mallorca_init()
 	;
 	}
@@ -65,7 +65,7 @@ function select($table, $columns = array('*'))
 	return new \Db\Query($table, $columns);
 	}
 
-function call($class, $fn, $params = array(''))
+function call($class, $fn, $params = array(''), $static = false)
 	{
 	// allow $this to be passed for $class
 	if (is_object($class)) {
@@ -76,10 +76,16 @@ function call($class, $fn, $params = array(''))
 	$fns = explode(' | ', $fn);
 
 	return new \ServerCall(array(
+		'static'=>$static,
 		'class'=>$class,
 		'functions'=>$fns,
 		'params'=>array($params)
 		));
+	}
+
+function callStatic($class, $fn, $params = array(''))
+	{
+	return call($class, $fn, $params, true);
 	}
 
 function call_path($path = '', $params = array()) {
