@@ -530,8 +530,7 @@ table {
 }
 /* lookups */
 .lookup-wrapper {
-  background: #fff;
-  padding: 14px;
+/* panel(); */
   padding-top: 0;
   margin: 0 auto;
   text-align: left;
