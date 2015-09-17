@@ -30,7 +30,7 @@ class Path
 		{
 		if (! $path) {
 			$path = self::$q = get('q');
-			if (! self::$q) $path = self::$q = self::$home_path;
+			if (! self::$q) $path = self::$q = \Config::$home_path;
 			}
 
 		$paths = explode('/', $path);

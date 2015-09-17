@@ -53,7 +53,7 @@ var Mallorca = (function () {
 				}, spinner_interval);
 			}
 
-		$.post(local_path + 'request.php', data, function (html) {
+		$.post(local_path + 'request.php?' + json_get, data, function (html) {
 			try {
 				var page = $.parseJSON(html);
 				}
@@ -106,7 +106,8 @@ var Mallorca = (function () {
 		\param	string	data	Form or otherwise
 		*/
 	function run_stack(data_fn, data) {
-		var req = json_get;
+		// var req = json_get;
+		var req = {}; // json_get;
 		req['stack'] = {
 			'data-fn' : data_fn,
 			'data' : data
@@ -237,7 +238,7 @@ var Mallorca = (function () {
 			if (mallorca_init) {
 				$(".content").hide();
 				var req = {};
-				for (k in json_get) req[k] = json_get[k];
+				// for (k in json_get) req[k] = json_get[k];
 				req.init = true;
 				request(req);
 				}

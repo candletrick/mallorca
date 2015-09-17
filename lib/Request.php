@@ -154,7 +154,7 @@ class Request
 		$s = '';
 		$params = is($v, 'params', array());
 		$out = array();
-
+		
 		if (self::$stop) return;
 		if (! is_array($v)) {
 			$s = $v;
@@ -309,6 +309,7 @@ class Request
 
 			// $new must be chaining
 			if (is_object($new)) {
+				// echo pv($call_args);
 				$new = call_user_func_array(array($new, $step), $call_args);
 				}
 			}

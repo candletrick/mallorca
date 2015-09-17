@@ -40,7 +40,7 @@ class Module
 	/**
 		Prepare a mallorca-style static function call.
 		*/
-	static public function call($fn, $params = array())
+	static public function call($fn, $params = array(''))
 		{
 		return callStatic(get_called_class(), $fn, $params);
 		}

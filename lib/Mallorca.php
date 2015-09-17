@@ -7,15 +7,13 @@
 function mallorca_init($init = true)
 	{
 	// initialize
-	// $get = $_GET;
-	$get = array(
-		'json_get'=>$_GET
-		);
+	$get = $_GET;
+	// $get = array('json_get'=>$_GET);
 
 	return "<script type='text/javascript'>
 var local_path = '" . http() . \Config::$local_path . "';
 var mallorca_init = " . ($init ? 'true' : 'false') . ";
-var json_get = " . json_encode($get) . ";
+var json_get = '" . http_build_query($get) . "';
 </script>"
 	. style_tag('ext/mallorca/css/featherlight.css')
 	. style_tag('ext/mallorca/css/mallorca.css')
