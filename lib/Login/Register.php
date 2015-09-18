@@ -30,7 +30,7 @@ class Register extends \Module
 		. div('login-wrapper',
 			div('control', div('label'), div('input coral', 'Register')),
 			action_group([
-				input_text('email', 20)->label("Email:"),
+				input_text('email')->label("Email:"),
 				input_password('password')->label("Password:"),
 				input_button('Register')->add_class('data-enter')->click(array(
 					self::call('register')->html('.m-content'),

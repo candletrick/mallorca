@@ -21,7 +21,7 @@ class Home extends \Module
 		. div('login-wrapper',
 			div('control', div('label'), div('input coral', 'Login')),
 			action_group([
-				input_text('email', 20)->label("Em:")
+				input_text('email')->label("Em:")
 					->set_value(cook('login_email')),
 				input_password('password')->label("Pa:")
 					->set_value(cook('login_password')),
