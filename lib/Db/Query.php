@@ -96,6 +96,9 @@ class Query {
 	/** Which alias the column belongs to. */
 	public $belongs = array();
 
+	/** Where clause reference points. */
+	public $marks = array();
+
 	/**
 		*/
 	public function __construct($table, $columns) {
@@ -212,6 +215,22 @@ class Query {
 			else if (isset($column->where_gte)) $this->wheres[] = "$name >= " . \Db::esc($column->where_gte);
 			else if (isset($column->where_between)) $this->wheres[] = "$name >= " . \Db::esc($column->start) . " and $name <= " . \Db::esc($column->end);
 			else if (isset($column->blank)) $this->wheres[] = "($name is null or $name='')";
+
+			// mark
+			if (isset($column->or)) {
+				if (isset($this->marks[$column->or])) {
+					$x = count($this->wheres) - 1;
+					unset($this->wheres[$this->marks[$column->or]['remove']]);
+					$this->wheres[$x] = "((" . $this->marks[$column->or]['add'] . ") or (" . $this->wheres[$x] . "))";
+					}
+				}
+			if (isset($column->mark)) {
+				$x = count($this->wheres) - 1;
+				$this->marks[$column->mark] = array(
+					'remove'=>$x,
+					'add'=>$this->wheres[$x]
+					);
+				}
 
 			// Alias
 			// $name = $name . ($column->name == $column->as ? '' : " as $column->as");

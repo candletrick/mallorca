@@ -194,10 +194,8 @@ table {
   cursor: pointer;
 }
 .logo {
-/*
-  width: pwidth - 14px;
+  width: 886px;
   height: 75px;
-  */
   margin: 0 auto;
   padding: 0 0 0 14px;
   background-repeat: no-repeat;
@@ -288,7 +286,7 @@ table {
   color: #77c;
 }
 .action_nav {
-/* width: pwidth - 14px; */
+  width: 886px;
   list-style-type: none;
   margin: 0 auto;
   padding: 0 0 0 14px;

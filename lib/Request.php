@@ -315,14 +315,12 @@ class Request
 				}
 			}
 
-		/*
 		// add wrapper
 		if (! in_array('NoWrap', $uses)
 		&& self::$wrap
 		&& ($wrap || self::$is_init)) {
 			$new = \Path\Wrapper::my_wrapper($new);
 			}
-			*/
 
 		$out['content'] = $new;
 
