@@ -230,7 +230,7 @@ var Mallorca = (function () {
 			if (hold) return true;
 			requests.pop();
 			var last = requests.pop();
-			request(last);
+			if (last) request(last);
 			return false;
 			};
 
