@@ -19,16 +19,18 @@ class File extends \Input
 		{
 		return 
 		"<script>
-		var drag_{$this->name} = new image_uploader(\"" . \Path::base_to('upload') . "\", \"$this->table\", \"$this->name\");
-		drag_{$this->name}.init();
+		$(document).ready(function() {
+			var drag_{$this->name} = new image_uploader(\"" . \Path::base_to('upload') . "\", \"$this->table\", \"$this->name\");
+			drag_{$this->name}.init();
+			});
 		</script>"
 		. "<div class='drag-image photo' id='drag_image_$this->name'>Drag Here</div>"
 		// . "<div class='photo-preview'></div>"
-		. "<input type='file' id='$this->name' name='{$this->name}_file'>"
+		// . "<input type='file' id='$this->name' name='{$this->name}_file'>"
 		. "<input type='hidden' name='{$this->name}' value='$this->value'>"
 		. "<input type='hidden' value='$this->table_id' name='{$this->name}_table_id'>"
 		// . ($this->value ? "<br /><img src='" . \Form\Create::upload_dir() . "/$this->value'>" : '');
-		. ($this->value ? "<br /><img class='current-image' src='" . \Path::$local_path . "image.php?h=$this->value'>" : '');
+		. ($this->value ? "<br /><img class='current-image' src='" . \Config::$local_path . "image.php?h=$this->value'>" : '');
 		;
 		}
 	}

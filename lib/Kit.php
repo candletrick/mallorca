@@ -416,7 +416,7 @@ function script_tag($path)
 
 function upload_tag($url)
 	{
-	return "<img src='" . \Path::$local_path . "image.php?h=$url'>";
+	return "<img src='" . \Config::$local_path . "image.php?h=$url'>";
 	}
 
 function image_tag($url, $folder = 'public/images')
