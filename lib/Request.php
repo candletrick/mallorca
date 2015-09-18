@@ -154,6 +154,7 @@ class Request
 		$s = '';
 		$params = is($v, 'params', array());
 		$out = array();
+		// die(pv($v));
 		
 		if (self::$stop) return;
 		if (! is_array($v)) {

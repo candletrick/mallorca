@@ -44,4 +44,10 @@ class Module
 		{
 		return callStatic(get_called_class(), $fn, $params);
 		}
+
+	static public function bare()
+		{
+		$class = get_called_class();
+		return new $class(true, true);
+		}
 	}
