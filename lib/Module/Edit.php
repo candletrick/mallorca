@@ -92,9 +92,12 @@ abstract class Edit extends \Module
 		*/
 	static public function control_group($fields)
 		{
+		return action_group($fields)->my_display();
+		/*
 		return "<div class='control-group data-group'>"
 		. implode('', array_map('self::control', $fields))
 		. "</div>";
+		*/
 		}
 
 	static public function control($input)

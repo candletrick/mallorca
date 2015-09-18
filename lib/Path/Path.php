@@ -162,7 +162,7 @@ class Path
 		*/
 	static public function link_to($text, $path, $params = array(), $class = '')
 		{
-		return "<a class='$class' href='" . self::base_to($path, $params) . "'>$text</a>";
+		return "<a class='link $class' href='" . self::base_to($path, $params) . "'>$text</a>";
 		}
 
 	/**
