@@ -65,7 +65,12 @@ class Login extends \Module
 				// die('Not logged in.');
 				return false;
 				}
-			else if (get('q') != 'login/home') {
+			else if (! in_array(get('q'), array(
+				'login/home',
+				'login/register',
+				'login/forgot',
+				'login/reset',
+				))) {
 				\Path::base_redir('login/home');
 				}
 			}
