@@ -61,7 +61,7 @@ var Mallorca = (function () {
 				alert(html);
 				// $.featherlight($('<pre>').html(html));
 				hold = false;
-				// $('.loading-mask').hide();
+				$('.loading-mask').hide();
 				return;
 				}
 
@@ -158,7 +158,7 @@ var Mallorca = (function () {
 		hold = false;
 		if (loading_icon) {
 			clearTimeout(hold_tm);
-			// $('.loading-mask').hide();
+			$('.loading-mask').hide();
 			}
 
 		$('.input-text').keyup(set_enters);
