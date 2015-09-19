@@ -45,6 +45,7 @@ class Reset extends \Module
 		// $link = is($d, 'link');
 
 		$ok = \Login::reset_password($row['email'], $password, $confirm, $row['confirmation_link']);
+		// die(pv(sesh('alert')) . 'hey' . $ok);
 		if (! $ok) {
 			\Request::kill();
 			return self::my_form();

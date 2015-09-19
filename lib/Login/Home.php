@@ -93,6 +93,7 @@ class Home extends \Module
 		$salted = $from_cookie ? $password : \Login::encrypt($password, $row['salt']);
 		$remember = $from_cookie ? 1 : 0;
 
+		// die($password . "\n" . $row['password'] . "\n" . var_dump(strcmp($password, $row['password'])));
 		if (empty($row)) {
 			alert("Email: " . $email . " is not recognized.");
 			setcookie('login_email', '', -1000);
@@ -106,7 +107,7 @@ class Home extends \Module
 			return false;
 			}
 		// the bypass allows the salted password to be used, from a cookie
-		else if ($row['password'] == $password) {
+		else if ($row['password'] == $salted) {
 			// TODO this is for socrates only
 			// $hard = "l0kxmal0y7&*";
 
