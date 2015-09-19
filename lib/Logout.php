@@ -8,10 +8,12 @@ class Logout extends \Module
 		session_destroy();
 		session_start();
 
-		setcookie('login_email', '', (3600 * -1));
-		setcookie('login_password', '', (3600 * -1));
-		setcookie('login_remember', '', (3600 * -1));
-		setcookie('logout', true, (3600 * 60));
+		$path = '/';
+		$domain = '.' . \Config::$domain;
+		setcookie('login_email', '', (3600 * -1), $path, $domain);
+		setcookie('login_password', '', (3600 * -1), $path, $domain);
+		setcookie('login_remember', '', (3600 * -1), $path, $domain);
+		setcookie('logout', true, (3600 * 60), $path, $domain);
 
 		$_COOKIE = array();
 		$_SESSION['logout'] = true;
