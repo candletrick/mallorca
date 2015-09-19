@@ -52,7 +52,7 @@ class Login extends \Module
 					// allow confirmation link to log you in
 					// self::begin_session($row['id']);
 					$_SESSION['login_id'] = $row['id'];
-					\Path::base_redir('/');
+					\Path::base_redir(\Config::$home_path);
 					}
 				}
 			}
