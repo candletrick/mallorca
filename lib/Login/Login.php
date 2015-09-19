@@ -61,7 +61,7 @@ class Login extends \Module
 			}
 
 		if (empty(self::$data)) {
-			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if (is($_SERVER, 'REQUEST_METHOD') == 'POST') {
 				// die('Not logged in.');
 				return false;
 				}

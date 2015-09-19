@@ -90,7 +90,7 @@ class Request
 	static public function init()
 		{
 		self::$json_get = post('json_get', array());
-		self::$is_post = $_SERVER['REQUEST_METHOD'] == 'POST';
+		self::$is_post = is($_SERVER, 'REQUEST_METHOD') == 'POST';
 		self::$is_init = post('init');
 		}
 
