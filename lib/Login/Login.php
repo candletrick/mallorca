@@ -50,7 +50,8 @@ class Login extends \Module
 				else {
 					// TODO make more stringent later
 					// allow confirmation link to log you in
-					self::begin_session($row['id']);
+					// self::begin_session($row['id']);
+					$_SESSION['login_id'] = $row['id'];
 					\Path::base_redir('/');
 					}
 				}
