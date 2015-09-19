@@ -259,7 +259,7 @@ class Login extends \Module
 			$_SESSION['confirmation_link'] = $link;
 			setcookie('login_email', $row['email'], self::cookie_expire());
 
-			alert("Account confirmed! Please login.");
+			alert("Account confirmed!");
 
 			// self::begin_session($row['id']);
 			// \Path::base_redir('/');
