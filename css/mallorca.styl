@@ -89,9 +89,30 @@ table
 .rug 
   clear: both;
 
+/* spin rules */
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* layout */
 
 .loading-mask
+  /*
+  */
   display: none;
   position: fixed;
   background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.4);
@@ -107,6 +128,8 @@ table
   left: 50%;
   width: 70px;
   margin-left: -35px;
+  img
+    max-width: 100%
 
 .bg 
   position: fixed;

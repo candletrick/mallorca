@@ -114,8 +114,19 @@ table {
 .rug {
   clear: both;
 }
+/* spin rules */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
 /* layout */
 .loading-mask {
+/*
+  */
   display: none;
   position: fixed;
   background: none repeat scroll 0% 0% rgba(0,0,0,0.4);
@@ -132,6 +143,9 @@ table {
   left: 50%;
   width: 70px;
   margin-left: -35px;
+}
+.loading img {
+  max-width: 100%;
 }
 .bg {
   position: fixed;
@@ -914,5 +928,37 @@ table {
   .login-wrapper .control-group .input-text {
     width: 100%;
     text-align: center;
+  }
+}
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
