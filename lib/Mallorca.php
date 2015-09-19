@@ -29,7 +29,9 @@ var json_get = '" . http_build_query($get) . "';
 	*/
 function mallorca_wrapper($content = '')
 	{
-	return div('m-wrapper', div('m-content fade', $content) . div('m-push')) . div('m-footer')
+	return 
+		div('loading-mask', div('loading', image_tag('loading-blake.png')))
+		. div('m-wrapper', div('m-content fade', $content) . div('m-push')) . div('m-footer')
 	// . mallorca_init()
 	;
 	}
