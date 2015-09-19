@@ -21,6 +21,9 @@ class Login extends \Module
 		'is_confirmed'=>true,
 		'is_admin'=>true,
 		);
+
+	/** Check for confirmation link. */
+	static public $link_checked = false;
 	
 	/**
 		\param	string	$name	Data key.
@@ -30,12 +33,13 @@ class Login extends \Module
 		{
 		return array_key_exists($name, self::$data) ? self::$data[$name] : $else;
 		}
-	/**
-		Check if the user is logged in.
-		Runs every page load.
-		*/
-	static public function check()
+
+	static public function check_for_link()
 		{
+		// only check once
+		// if (self::$link_checked) return;
+		// self::$link_checked = true;
+
 		// check confirmation links
 		$link = get('confirmation_link');
 		if ($link) {
@@ -51,11 +55,20 @@ class Login extends \Module
 					// TODO make more stringent later
 					// allow confirmation link to log you in
 					// self::begin_session($row['id']);
-					$_SESSION['login_id'] = $row['id'];
+					\Login\Home::validate($row, true);
 					\Path::base_redir(\Config::$home_path);
 					}
 				}
 			}
+		}
+
+	/**
+		Check if the user is logged in.
+		Runs every page load.
+		*/
+	static public function check()
+		{
+		// self::check_for_link();
 
 		$id = id_zero(sesh('login_id'));
 
