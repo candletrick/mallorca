@@ -42,13 +42,16 @@ class Login extends \Module
 			$ok = self::confirm($link);
 
 			if ($ok) {
+				$row = self::confirm_row($link);
 				if (get('reset')) {
-					$row = self::confirm_row($link);
 					alert('Please reset your password for ' . $row['email'] . '.');
 					\Path::base_redir('login/reset');
 					}
 				else {
-					\Path::base_redir('login/home');
+					// TODO make more stringent later
+					// allow confirmation link to log you in
+					self::begin_session($row['id']);
+					\Path::base_redir('/');
 					}
 				}
 			}
@@ -256,6 +259,10 @@ class Login extends \Module
 			setcookie('login_email', $row['email'], self::cookie_expire());
 
 			alert("Account confirmed! Please login.");
+
+			// self::begin_session($row['id']);
+			// \Path::base_redir('/');
+
 			return true;
 			}
 		else {
