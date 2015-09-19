@@ -111,10 +111,13 @@ class Home extends \Module
 			// $hard = "l0kxmal0y7&*";
 
 			// cookies
+			$path = '/';
+			// the leading dot allows it to work for all subdomains
+			$domain = '.' . \Config::$domain;
 			$expire = \Login::cookie_expire($remember);
-			setcookie('login_email', $email, $expire);
-			setcookie('login_password', $salted, $expire);
-			setcookie('login_remember', $remember, $expire);
+			setcookie('login_email', $email, $expire, $path, $domain);
+			setcookie('login_password', $salted, $expire, $path, $domain);
+			setcookie('login_remember', $remember, $expire, $path, $domain);
 			// die('about to set cookies' . $expire . $email . $salted . $remember);
 
 			alert('You are now logged in as ' . $email . '.');

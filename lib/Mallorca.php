@@ -141,6 +141,10 @@ class Config {
 	/** Admin email. */
 	static public $admin_email = 'fewkeep@gmail.com';
 
+	/** Domain */
+	/** Indicate without www, ex) mallorca.com */
+	static public $domain = '127.0.0.1:8000';
+
 	/** Email settings. */
 	static public $email = array(
 		'from_name'=>'hello',
