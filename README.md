@@ -239,4 +239,3 @@ A few other things need to be considered:
 These should all have general rules as well as extensible rules.
 
 Since both sides of the coin are defined on the server (though ultimately comes back from the user), if you wanted to get really granular you could restrict the page from even rendering if it is attempting to specify a return function call which is not allowed! Otherwise you could simply inform if it is not found / allowed.. after the fact.
-
