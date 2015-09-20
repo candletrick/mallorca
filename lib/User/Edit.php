@@ -10,6 +10,7 @@ class Edit extends \Module\Edit
 			input_text('email'),
 			input_text('new_password'),
 			input_check('is_confirmed'),
+			input_check('is_admin'),
 			$this->save_button(),
 			];
 		}
