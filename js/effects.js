@@ -31,7 +31,7 @@ var effects = {
 		},
 
 	'clear_inputs' : function (th) {
-		$('.input-text').attr('value', '');
+		$('.input-text, textarea').attr('value', '');
 		},
 
 	'advance_cat' : function (th) {

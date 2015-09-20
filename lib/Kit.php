@@ -450,9 +450,21 @@ function newlines($s)
 	{
 	return "<p>" . str_replace("\n", "<br>", str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $s)) . "</p>";
 	}
+
+/**
+	\return Shorthand print_r with clean spacing as a string.
+	*/
 function pv($var)
 	{
 	return print_var($var, true);
+	}
+
+/**
+	Implode strings around a global divider.
+	*/
+function divider($xs)
+	{
+	return implode(' &bull; ', $xs);
 	}
 
 // function div($class, ...$args) {

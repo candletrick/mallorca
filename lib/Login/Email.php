@@ -53,7 +53,8 @@ class Email extends \Module
 	static public function send_confirmation_email($email = '', $data = array(), $restore = false)
 		{
 		if (! $email) {
-			alert('Your session has expired');
+			// alert('Your session has expired');
+			alert("Who are you $email?");
 			return false;
 			}
 

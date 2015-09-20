@@ -123,16 +123,22 @@ class Request
 		{
 		$data = array();
 
+		// die(pv($stack));
+		// die(pv(unserialize(gzdecode(hex2bin(is($stack, 'data-fn'))))));
+
 		// more useful version to unparse here, so that complicated nested input names, need not be used
 		if (is($stack, 'data-fn')) {
 			$data_fn = array();
-			parse_str(is($stack, 'data-fn'), $data_fn);
+			$data_fn = unserialize(gzdecode(hex2bin(is($stack, 'data-fn'))));
+			if ($data_fn === false) die('Could not decode the request.');
+			// parse_str(is($stack, 'data-fn'), $data_fn);
 			parse_str(is($stack, 'data'), $data);
 			}
 		else {
 			die('No stack.');
 			}
 
+		// die(count($data_fn) . pv($data_fn));
 		self::$data = $data;
 		self::$return = array();
 			// 'request'=>pv($data_fn)
@@ -151,6 +157,15 @@ class Request
 		*/
 	static public function respond_to_one($one)
 		{
+		// echo pv($one);
+		if (is_object($one)) {
+			$call = $one->props;
+			}
+		else {
+			die(pv($one) . 'Not a valid call.');
+			}
+		// die(pv($one));
+		/*
 		// try to unserialize
 		$unpack = unserialize($one);
 		if ($unpack === false) $call = $one;
@@ -158,8 +173,26 @@ class Request
 			// ServerCall object
 			$call = $unpack->props;
 			}
+			*/
+
 
 		// unpack parameters
+		// self::unpack_params($call['params'], $call['params']);
+		array_walk_recursive($call['params'], function (&$v) {
+			if (is_object($v)) {
+				// die($k . pv($x) . pv($v));
+				$props = $v->props;
+				$ret = static::call_class($props['class'], $props['functions'],
+					is($props, 'params', array()), false, is($props, 'static'));
+				// $x = self::respond_to_one($param); // die(pv($param));
+				// die(pv($out));
+				// $call['params'][$k] = $ret['content'];
+				// return $ret['content'];
+				$v = $ret['content'];
+				}
+			});
+		// die(pv($call));
+		/*
 		foreach ($call['params'] as $k=>$v)
 			{
 			if (is_object($v)) {
@@ -171,6 +204,7 @@ class Request
 				$call['params'][$k] = $ret['content'];
 				}
 			}
+			*/
 
 		// die(pv($call));
 
@@ -218,7 +252,9 @@ class Request
 		*/
 	static public function send($call)
 		{
-		self::respond_to_one($call->props);
+		// die('send');
+		// self::respond_to_one($call->props);
+		self::respond_to_one($call);
 		}
 
 	/**
@@ -340,7 +376,6 @@ class Request
 
 			// $new must be chaining
 			if (is_object($new)) {
-				// echo pv($call_args);
 				$new = call_user_func_array(array($new, $step), $call_args);
 				}
 			}

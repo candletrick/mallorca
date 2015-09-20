@@ -668,17 +668,25 @@ table {
   border-radius: 60px;
 }
 .banner .button,
-.button.banner {
+.button.banner,
+a.banner,
+a:visited.banner {
+  font-family: "Arial";
   font-size: 20px;
+  line-height: 15px;
+  display: inline-block;
   color: #2ae;
   cursor: pointer;
   background: none;
+  text-decoration: none;
   padding: 0;
   border: none;
   width: auto;
 }
 .banner .button.selected,
-.button.banner.selected {
+.button.banner.selected,
+a.banner.selected,
+a:visited.banner.selected {
   color: #000;
 }
 .control .button {

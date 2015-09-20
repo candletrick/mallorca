@@ -57,6 +57,13 @@ class Group
 		}
 
 	/**
+		*/
+	public function __toString()
+		{
+		return $this->my_display();
+		}
+
+	/**
 		Make all fields mandatory.
 		*/
 	public function mand_all()

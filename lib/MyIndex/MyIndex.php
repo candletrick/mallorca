@@ -36,8 +36,11 @@
 	*/
 class MyIndex
 	{
-	/** Name atom along the path. */
+	/** Full name along the path. */
 	public $name;
+
+	/** Name token along the path. */
+	public $token;
 	
 	/** Array of remaining paths.  For example is name is "my", paths is array('example', 'path') */
 	public $paths;
@@ -68,6 +71,7 @@ class MyIndex
 	public function __construct($name, $paths = array(), $parent = null, $child = null, $params = array())
 		{
 		$this->name = $name;
+		$this->token = $name;
 		$this->paths = $paths;
 		$this->parent = $parent;
 

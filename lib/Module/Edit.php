@@ -122,7 +122,7 @@ abstract class Edit extends \Module
 		$model = _to_class($this->index->parent->path . '/model');
 		return input_button('Save')->click([
 			call($model, 'my_save'),
-			call_path($this->index->parent->path . '/lookup')
+			call_path($this->my_return_path())
 			]);
 		}
 
@@ -138,13 +138,13 @@ abstract class Edit extends \Module
 		</script>"
 		. "<div class='lookup-wrapper'>"
 		. "<div class='banner'>"
-		. "<div class='title'><a href='" . \Path::base_to($this->index->parent->path . '/lookup') . "'>"
-			. preg_replace("/y$/", "ie", _to_words($this->index->parent->name)) . "s</a> &gt; " . ucfirst($this->index->name) . "</div>"
+		. "<div class='title'><a class='banner' href='" . \Path::base_to($this->my_return_path()) . "'>"
+			. preg_replace("/y$/", "ie", _to_words($this->index->parent->name)) . "s</a> &gt; " . ucfirst($this->index->token) . "</div>"
 		. ($this->mode == 'edit' ?
 			// "<div class='delete'><a href='" . \Path::here(array('delete'=>1)) . "'>Delete</a></div>"
 			input_button('Delete')->add_class('delete')->click([
 				call($model, 'my_delete', ['id'=>$this->index->id]),
-				call_path($this->index->parent->path . '/lookup')
+				call_path($this->my_return_path())
 				])->before('confirm_delete')
 			: '')
 			. "<div class='rug'></div>"
@@ -226,6 +226,11 @@ abstract class Edit extends \Module
 	function my_delete()
 		{
 		return db()->query("delete from {$this->index->parent->name} where id=" . $this->index->id);
+		}
+
+	function my_return_path()
+		{
+		return $this->index->parent->path . '/lookup';
 		}
 
 	function my_class()

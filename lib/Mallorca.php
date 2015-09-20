@@ -48,15 +48,38 @@ function http()
 	;
 	}
 
+function str_to_hex($s)
+	{
+	$out = '';
+	for ($i = 0; $i < strlen($s); $i++) {
+		$ord = ord($s[$i]);
+		$hex = dechex($ord);
+		$out .= substr('0' . $hex, -2);
+		}
+	return $out;
+	}
+
+function hex_to_str($hex)
+	{
+	$s = '';
+	for ($i = 0; $i < strlen($hex) - 1; $i+=2) {
+		$s .= chr(hexdec($hex[$i] . $hex[$i+1]));
+		}
+	return $s;
+	}
+
 function stack($xs = array()) {
 	$ys = array();
 	foreach ($xs as $x) {
 		if (is_object($x) && get_class($x) == 'ServerCall') {
-			$ys[] = serialize($x); // $x->props;
+			$ys[] = $x; // serialize($x); // $x->props;
 			}
-		else $ys[] = $x;
+		else {
+			$ys[] = $x;
+			}
 		}
-	return http_build_query($ys);
+	return bin2hex(gzencode(serialize($ys)));
+	// return http_build_query($ys);
 	}
 
 

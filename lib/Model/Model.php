@@ -130,6 +130,11 @@ class Model
 		return $this->id;
 		}
 
+	function get_data()
+		{
+		return $this->data;
+		}
+
 	/**
 		Perform match_upsert with \Request::$data, based on the model.
 		*/
@@ -137,9 +142,17 @@ class Model
 		{
 		$data = \Request::$data;
 		$this->id = $id = \Db::match_upsert($this->table, $data, " where id=" . id_zero(is($data, 'id')));
-		$this->data = select($this->table, ['*', m('id')->where($id)])->one_row();
+		$this->data = $this->my_select()->one_row();
 		alert("Saved! New id: $id.");
 		return $this;
+		}
+
+	function my_select()
+		{
+		return select($this->table, [
+			'*',
+			m('id')->where($this->id)
+			]);
 		}
 
 	function my_blank()

@@ -140,6 +140,9 @@ abstract class Create
 		// Changes to columns
 		foreach (db()->describe($name) as $c) {
 			$column = is($columns, $c['Field']);
+			$type = $c['Type'];
+			if ($c['Default'] != '') $type .= " default " . $c['Default'];
+
 			if ($c['Field'] == 'id') continue; // skip id column
 			if (! $column) {
 				echo "\n |_Column: " . self::bold($c['Field']) . " no longer exists... ";
@@ -147,7 +150,7 @@ abstract class Create
 				echo " rows have data in this field. ";
 				echo "<a href='schema.php?table=$name&delete=" . $c['Field'] . "'>Delete?</a>";
 				}
-			else if ($c['Type'] != $column->type) {
+			else if ($type != $column->type) {
 				echo "\n |_Column: " . self::bold($c['Field']) . " changed from [" . $c['Type'] . "] to [" . $column->type . "]. ";
 				echo "<a href='schema.php?table=$name&change=" . $c['Field'] . "'>Change?</a>";
 				}
