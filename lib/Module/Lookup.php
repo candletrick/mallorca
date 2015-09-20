@@ -96,7 +96,18 @@ class Lookup extends \Module
 				}
 			}
 
-		$s .= " | <a href='" . $this->create_path() . "'>New</a></div>";
+		$model = $this->model_class();
+
+		// $s .= " | <a href='" . $this->create_path() . "'>New</a></div>";
+		// die($this->index->keyname);
+		$s .= " | "
+		. input_button('New')->click([
+			// call(),
+			call_path($this->index->parent->path . '/edit', [
+				$this->index->keyname=>call($model, 'my_blank')
+				])
+			])
+		. "</div>";
 		return $s;
 		}
 	

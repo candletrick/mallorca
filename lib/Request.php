@@ -149,11 +149,37 @@ class Request
 	/**
 		Loop over this function.
 		*/
-	static public function respond_to_one($v)
+	static public function respond_to_one($one)
 		{
+		// try to unserialize
+		$unpack = unserialize($one);
+		if ($unpack === false) $call = $one;
+		else {
+			// ServerCall object
+			$call = $unpack->props;
+			}
+
+		// unpack parameters
+		foreach ($call['params'] as $k=>$v)
+			{
+			if (is_object($v)) {
+				$props = $v->props;
+				$ret = static::call_class($props['class'], $props['functions'],
+					is($props, 'params', array()), false, is($props, 'static'));
+				// $x = self::respond_to_one($param); // die(pv($param));
+				// die(pv($out));
+				$call['params'][$k] = $ret['content'];
+				}
+			}
+
+		// die(pv($call));
+
 		$s = '';
+		$v = $call;
 		$params = is($v, 'params', array());
 		$out = array();
+
+		// die(pv(unserialize($v)));
 		// die(pv($v));
 		
 		if (self::$stop) return;
@@ -167,8 +193,8 @@ class Request
 			}
 		else if (array_key_exists('path', $v)) {
 			self::$return['set_url'] = $v['path'] . (! empty($params) ? '&' . http_build_query($params) : '');
-			$out = static::call_path($v['path'], $params, is($v, 'function', 'my_display'));
-			$s = $out['content'];
+			// $out = static::call_path($v['path'], $params, is($v, 'function', 'my_display'));
+			// $s = $out['content'];
 			}
 
 		// one more chance to kill
@@ -183,6 +209,8 @@ class Request
 			'content'=>$s,
 			'method'=>is($v, 'method', 'replace')
 			);
+
+		return $s;
 		}
 
 	/**
@@ -215,6 +243,7 @@ class Request
 		*/
 	static public function call_path($path, $params = array(), $fn = 'my_display')
 		{
+		/*
 		$parts = explode('/', $path);
 		$method = array_pop($parts);
 
@@ -237,6 +266,7 @@ class Request
 
 			return self::call_class($class, $fns, $params, true);
 			}
+			*/
 		}
 
 	/**

@@ -125,6 +125,11 @@ class Model
 		return is($this->data, $name, "\$$name not set.");
 		}
 
+	function get_id()
+		{
+		return $this->id;
+		}
+
 	/**
 		Perform match_upsert with \Request::$data, based on the model.
 		*/
@@ -135,6 +140,17 @@ class Model
 		$this->data = select($this->table, ['*', m('id')->where($id)])->one_row();
 		alert("Saved! New id: $id.");
 		return $this;
+		}
+
+	function my_blank()
+		{
+		$this->id = $id = \Db::match_insert($this->table, [
+			'name'=>"New " . _to_words($this->table),
+			'created_by'=>\Login::$id,
+			'created_at'=>now(),
+			'created_on'=>now(),
+			]);
+		return $id;
 		}
 
 	/**

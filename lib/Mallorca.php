@@ -52,7 +52,7 @@ function stack($xs = array()) {
 	$ys = array();
 	foreach ($xs as $x) {
 		if (is_object($x) && get_class($x) == 'ServerCall') {
-			$ys[] = $x->props;
+			$ys[] = serialize($x); // $x->props;
 			}
 		else $ys[] = $x;
 		}

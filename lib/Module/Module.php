@@ -30,6 +30,14 @@ class Module
 		}
 
 	/**
+		Synonym for above.
+		*/
+	public function my_headers()
+		{
+		return "";
+		}
+
+	/**
 		Redefine the index above you.
 		*/
 	public function my_index()
@@ -49,5 +57,17 @@ class Module
 		{
 		$class = get_called_class();
 		return new $class(true, true);
+		}
+		
+	public function model_class()
+		{
+		$class = get_class($this);
+		// $id = $this->index->id;
+		$ex = explode("\\", $class);
+		array_pop($ex);
+		array_push($ex, 'Model');
+		return implode("\\", $ex);
+
+		// return $model_class::one($id);
 		}
 	}

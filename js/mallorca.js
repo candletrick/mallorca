@@ -78,7 +78,10 @@ var Mallorca = (function () {
 					// history.replaceState('', '', local_path + '' + location.hash);
 					// }
 				else if (k == 'set_url') {
-					history.pushState('', '', local_path + page[k]);
+					// alert(k);
+					// TODO keep working on, just replacing to redirect for now
+					window.location = local_path + page[k];
+					// history.pushState('', '', local_path + page[k]);
 					}
 				else if (k == 'set_title') {
 					document.title = page[k];
