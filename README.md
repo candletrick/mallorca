@@ -8,10 +8,12 @@ Intermediate, syntactical layer inbetween server and client.
 
 Question? Why must a web application be based upon RESTful routes? What is a route?
 When a comes down to it, a route is essentially a function call with four parameters:
+
 - PATH  
 - QUERY_STRING
 - REQUEST_METHOD
 - DATA
+
 In favor of search engines, and application views / states correlating to user URLs, the route system remains. It has even been turned into a kind of pseudo language, where variables are parsed out of the path itself to manage controllers, actions, views, and IDs, in order to offer additional structure and granularity to what is essentially a function call.
 
 Simple question: why not just make an actual function call, instead of this idiosyncratic path system? On the server side, this removes the entire step of defining routes and a router.
@@ -38,6 +40,7 @@ Syntax
 Let's take the example of a button rendered on the server side. We have a function input_button, which returns an object. We will now chain a method off of this object to indicate a list of functions we'd like to be performed when the click happens.
 
 Now here let's elaborate on exactly what this means in order to think of a consistent, intuitive way to write it.
+
 1. We need to be able to write a list of function calls.  
 2. If the function call returns some new rendering it needs to be able to be applied to a CSS selector, along with a type of appending / replacing operation.  
 2a. We need to be able to call intermediary, purely JS functions before and after each of the functions,  
@@ -47,6 +50,7 @@ Now here let's elaborate on exactly what this means in order to think of a consi
 4. We need to be able to pipe a function call into other functions calls with their own parameters.  
 
 These points will be discussed first. There are a few other points that I will mention now then discuss after:
+
 5. We need user-inputted page data to come through for use by the functions.  
 6. This needs to be able to come through the surrounding form, page-wide, or via specific selectors.  
 7. We need to be able to sanitize / check the function calls.  
