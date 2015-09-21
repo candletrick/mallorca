@@ -8,10 +8,10 @@ Intermediate, syntactical layer inbetween server and client.
 
 Question? Why must a web application be based upon RESTful routes? What is a route?
 When a comes down to it, a route is essentially a function call with four parameters:
-- PATH  
-- QUERY_STRING
-- REQUEST_METHOD
-- DATA
+  - PATH  
+  - QUERY_STRING
+  - REQUEST_METHOD
+  - DATA
 In favor of search engines, and application views / states correlating to user URLs, the route system remains. It has even been turned into a kind of pseudo language, where variables are parsed out of the path itself to manage controllers, actions, views, and IDs, in order to offer additional structure and granularity to what is essentially a function call.
 
 Simple question: why not just make an actual function call, instead of this idiosyncratic path system? On the server side, this removes the entire step of defining routes and a router.
@@ -235,4 +235,3 @@ A few other things need to be considered:
 These should all have general rules as well as extensible rules.
 
 Since both sides of the coin are defined on the server (though ultimately comes back from the user), if you wanted to get really granular you could restrict the page from even rendering if it is attempting to specify a return function call which is not allowed! Otherwise you could simply inform if it is not found / allowed.. after the fact.
-
