@@ -200,6 +200,7 @@ class Query {
 			if (isset($column->times)) $name = "$name * " . is($this->belongs, $column->times, 'a') . '.' . $column->times;
 			if (isset($column->sum)) $name = "sum($name)";
 			if (isset($column->round)) $name = "round($name, $column->round)";
+			if (isset($column->year)) $name = "year($name)";
 
 			// Add to clauses
 			if (isset($column->group)) $this->groups[] = $name;

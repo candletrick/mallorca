@@ -26,7 +26,7 @@ class Path
 	/**
 		The main function of the application.  Grab the route and hand it off to the index system.
 		*/
-	static public function interpret($path = '')
+	static public function interpret($path = '', $wrapper = "\\Path\\Wrapper")
 		{
 		if (! $path) {
 			$path = self::$q = get('q');
@@ -36,7 +36,7 @@ class Path
 		$paths = explode('/', $path);
 		$name = array_shift($paths);
 		
-		$index = $wrapper = new \Path\Wrapper($name, $paths);
+		$index = $wrapper = new $wrapper($name, $paths);
 
 		// walk down the children,
 		while (isset($index->child)) $index = $index->child;
