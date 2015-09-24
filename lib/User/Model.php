@@ -26,6 +26,8 @@ class Model extends \Model
 			on('confirmation_link', 64)->set_type('str', 64),
 			'confirmation_expires_at',
 			'user_type_id',
+			'team_id',
+			'stripe_customer_id',
 			'is_admin',
 			'is_confirmed',
 			'is_deleted',

@@ -34,7 +34,7 @@ class Email extends \Module
 			}
 
 		$link = \Login::encrypt($email, \Login::salt());
-		$full = "http://" . $_SERVER['HTTP_HOST'] . \Config::$local_path . "user/reset&confirmation_link=$link&reset=1";
+		$full = "http://" . $_SERVER['HTTP_HOST'] . \Config::$local_path . "login/reset&confirmation_link=$link&reset=1";
 		$subject = "Reset Password for " . $_SERVER['HTTP_HOST'];
 		$msg = "A request for password reset has been submitted.<br>
 		If you requested this, go to this confirmation link to reset your password:<br><br><a href='$full'>Reset Password</a>";

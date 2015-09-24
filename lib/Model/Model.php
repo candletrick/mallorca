@@ -143,7 +143,7 @@ class Model
 		$data = \Request::$data;
 		$this->id = $id = \Db::match_upsert($this->table, $data, " where id=" . id_zero(is($data, 'id')));
 		$this->data = $this->my_select()->one_row();
-		alert("Saved! New id: $id.");
+		// alert("Saved! New id: $id.");
 		return $this;
 		}
 

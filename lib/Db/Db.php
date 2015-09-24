@@ -193,10 +193,9 @@ class Db {
 		\param	array	$data
 		*/
 	static public function insert_unique($table, $data) {
-		if (! self::value("select id from $table where " . self::where($data))) {
-			return self::$db->insert($table, $data);
-			}
-		return false;
+		$id = self::value("select id from $table where " . self::where($data));
+		if (! $id) return self::$db->insert($table, $data);
+		return $id;
 		}
 
 	/**

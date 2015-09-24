@@ -18,6 +18,14 @@ var effects = {
 		return confirm(msg);
 		},
 
+	'say_saved' : function (th) {
+		v = th.attr('value');
+		th.attr('value', 'Saved..');
+		setTimeout(function () {
+			th.attr('value', v);
+			}, 1300);
+		},
+
 	'remove_group' : function (th) {
 		th.closest('.control-group, .data-group').remove();
 		},

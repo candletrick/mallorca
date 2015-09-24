@@ -10,6 +10,7 @@ class Home extends \Module
 		*/
 	public function my_display() 
 		{
+		// die(pv($_COOKIE));
 		// login with cookies
 		if (cook('login_email') && cook('login_password')) {
 			$ok = self::validate(array(
@@ -30,13 +31,13 @@ class Home extends \Module
 		. div('login-wrapper',
 			div('control', div('label'), div('input coral', 'Login')),
 			action_group([
-				input_text('email')->label("Em:")
+				input_text('email')->label("Email:")
 					->set_value(cook('login_email')),
-				input_password('password')->label("Pa:"),
+				input_password('password')->label("Password:"),
 					// ->set_value(cook('login_password')),
 				input_check('remember')->add_label_class('small')->label('Remember Me')
 					->set_value(cook('login_remember')),
-				input_button('Login')->add_class('data-enter')->label('ThY')->click(array_merge(array(
+				input_button('Login')->add_class('data-enter')->label('Login')->click(array_merge(array(
 					self::call('validate_and_begin')->html('.m-content'),
 					), website())),
 				div('forgot', \Path::link_to('Forgot Password', 'login/forgot')),
