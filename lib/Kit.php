@@ -638,6 +638,10 @@ function sesh_alert()
 			)) . "\">dismiss</span>");
 		}
 
+	while (count($_SESSION['alert']) > 0) {
+		array_shift($_SESSION['alert']);
+		}
+
 	return div('sesh-alert', implode('', $divs));
 	}
 

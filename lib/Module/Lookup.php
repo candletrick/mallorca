@@ -85,30 +85,26 @@ class Lookup extends \Module
 		;
 		}
 
-	public function my_banner() {
-		$s = "<div class='banner'>" . _to_words($this->index->parent->name) . " Lookup";
+	public function my_banner()
+		{
+		$parts = array();
+		$parts[] = $this->my_name();
 
 		// optional
 		foreach (array('scroll', 'chat') as $class) {
 			if (class_exists(_to_class($this->index->parent->path . '/' . $class))) {
-				$s .= " | <a href='" . \Path::base_to($this->index->parent->path . '/' . $class, $this->index->parent->key_pair)
+				$parts[] = "<a href='" . \Path::base_to($this->index->parent->path . '/' . $class, $this->index->parent->key_pair)
 				. "'>" . _to_words($class) . "</a>";
 				}
 			}
 
-		$model = $this->model_class();
 
 		// $s .= " | <a href='" . $this->create_path() . "'>New</a></div>";
 		// die($this->index->keyname);
-		$s .= " | "
-		. input_button('New')->click([
-			// call(),
-			call_path($this->index->parent->path . '/edit', [
-				$this->index->keyname=>call($model, 'my_blank')
-				])
-			])
-		. "</div>";
-		return $s;
+		$new = $this->my_new_link();
+		if ($new) $parts[] = $new;
+			
+		return div('banner', divider($parts));
 		}
 	
 	public function hey()
@@ -241,9 +237,26 @@ class Lookup extends \Module
 
 	/* REDEFINES */
 
+	public function my_name()
+		{
+		return _to_words($this->index->parent->name) . " Lookup";
+		}
+
 	public function my_table()
 		{
 		return str_replace("/", "_", $this->index->parent->path);
+		}
+
+	public function my_new_link()
+		{
+		$model = $this->model_class();
+
+		return input_button('New')->click([
+			// call(),
+			call_path($this->index->parent->path . '/edit', [
+				$this->index->keyname=>call($model, 'my_blank')
+				])
+			]);
 		}
 
 	public function my_query()
