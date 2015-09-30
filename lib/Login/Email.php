@@ -13,9 +13,9 @@ class Email extends \Module
 		$ok = \Db::match_update('user', array(
 			'confirmation_link'=>$link,
 			'confirmation_expires_at'=>date('Y-m-d H:i:s', strtotime('+30 day')),
-			'is_confirmed'=>0,
+			// 'is_confirmed'=>0,
 			// if restoring add confirmed so no multiple emails
-			), " where email=" . \Db::esc($email) . ($restore ? " and is_confirmed=1" : ''));
+			), " where email=" . \Db::esc($email)); // . ($restore ? " and is_confirmed=1" : ''));
 
 		if (! $ok) {
 			return false;
