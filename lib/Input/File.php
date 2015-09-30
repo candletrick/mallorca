@@ -31,12 +31,15 @@ class File extends \Input
 		. "<div class='drag-mask'>Drag Here</div>"
 		. "<div class='drag-image photo' id='drag_image_$this->name'>Drag Here</div>"
 		// . "<div class='photo-preview'></div>"
-		// . "<input type='file' id='$this->name' name='{$this->name}_file'>"
+		. "<input type='file' id='$this->name' name='{$this->name}_file'>"
 		. "<input type='hidden' name='{$this->name}' value='$this->value'>"
 		. "<input type='hidden' value='$this->table_id' name='{$this->name}_table_id'>"
 		. "<input type='hidden' value='$this->width' name='{$this->name}_width'>"
 		// . ($this->value ? "<br /><img src='" . \Form\Create::upload_dir() . "/$this->value'>" : '');
-		. ($this->value ? "<br /><img class='current-image' src='" . \Config::$local_path . "image.php?h=$this->value'>" : '');
+		. ($this->value ? "<br />"
+		. div('current-image-wrapper', "<img class='current-image' src='"
+			. \Config::$local_path . "image.php?h=$this->value'>"
+			) : '');
 		;
 		}
 	}
