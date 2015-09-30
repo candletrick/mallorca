@@ -66,7 +66,7 @@ class Email extends \Module
 			return;
 			}
 		else {
-			alert('Your session has expired.<br>An email is being sent to restore.');
+			// alert('Your session has expired.<br>An email is being sent to restore.');
 			}
 
 		if (! $restore) {
