@@ -58,7 +58,13 @@ var Mallorca = (function () {
 				var page = $.parseJSON(html);
 				}
 			catch (error) {
-				alert(html);
+				// live
+				if (local_path == '/') {
+					console.log(html);
+					}
+				else {
+					alert(html);
+					}
 				// $.featherlight($('<pre>').html(html));
 				hold = false;
 				$('.loading-mask').hide();
