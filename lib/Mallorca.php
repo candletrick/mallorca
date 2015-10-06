@@ -184,6 +184,14 @@ class Config {
 	static public $email = array(
 		'from_name'=>'hello',
 		'from_email'=>'hello@localhost', // . $_SERVER['HTTP_HOST'],
+		/*
+		'smtp'=>array(
+			'host'=>'',
+			'username'=>'',
+			'method'=>'tls',
+			'port'=>'',
+			),
+			*/
 		);
 
 	/** Stripe connection info. */

@@ -16,13 +16,18 @@ class Email
 		$mail = new \PHPMailer(true);
 		$mail->SMTPDebug = 3;
 
-		// $mail->isSMTP();
-		// $mail->Host = 'smtp1.example.com;smtp2.example.com';
-		// $mail->SMTPAuth = true;
-		// $mail->Username = 'user@example.com';
-		// $mail->Password = 'secret';
-		// $mail->SMTPSecure = 'tls';
-		// $mail->Port = 587;
+		if (isset(\Config::$email['smtp'])) {
+			$smtp = \Config::$email['smtp'];
+
+			$mail->isSMTP();
+			$mail->Host = $smtp['host'];
+			$mail->SMTPAuth = true;
+			$mail->Username = $smtp['username'];
+			$mail->Password = $smtp['password'];
+			$mail->SMTPSecure = $smtp['method'];
+			$mail->Port = $smtp['port'];
+			}
+
 		$mail->isHTML(true);
 
 		return $mail;
