@@ -119,6 +119,16 @@ function call_path($path = '', $params = array()) {
 		));
 	}
 
+/**
+	Like call, but the content already prepared.
+	*/
+function content($content)
+	{
+	return new \ServerCall(array(
+		'content'=>$content
+		));
+	}
+
 /*
 function schema($table, $columns)
 	{

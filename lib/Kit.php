@@ -633,9 +633,11 @@ function sesh_alert()
 	$alerts = sesh('alert');
 	$divs = array();
 	foreach ($alerts as $k=>$v) {
-		$divs[] = div('row', $v . " <span class='dismiss data-fn' dismiss' after-fn=\"remove_row\" data-fn=\"" . stack(array(
-			call('Login', 'dismiss_alert', array('id'=>$k))
-			)) . "\">dismiss</span>");
+		$divs[] = div('row', $v 
+			// . " <span class='dismiss data-fn' dismiss' after-fn=\"remove_row\" data-fn=\"" . stack(array(
+			// call('Login', 'dismiss_alert', array('id'=>$k))
+			// )) . "\">dismiss</span>"
+			);
 		}
 
 	while (count($_SESSION['alert']) > 0) {

@@ -164,7 +164,6 @@ class Request
 		else {
 			die(pv($one) . 'Not a valid call.');
 			}
-		// die(pv($one));
 		/*
 		// try to unserialize
 		$unpack = unserialize($one);
@@ -178,19 +177,21 @@ class Request
 
 		// unpack parameters
 		// self::unpack_params($call['params'], $call['params']);
-		array_walk_recursive($call['params'], function (&$v) {
-			if (is_object($v)) {
-				// die($k . pv($x) . pv($v));
-				$props = $v->props;
-				$ret = static::call_class($props['class'], $props['functions'],
-					is($props, 'params', array()), false, is($props, 'static'));
-				// $x = self::respond_to_one($param); // die(pv($param));
-				// die(pv($out));
-				// $call['params'][$k] = $ret['content'];
-				// return $ret['content'];
-				$v = $ret['content'];
-				}
-			});
+		if (isset($call['params'])) {
+			array_walk_recursive($call['params'], function (&$v) {
+				if (is_object($v)) {
+					// die($k . pv($x) . pv($v));
+					$props = $v->props;
+					$ret = static::call_class($props['class'], $props['functions'],
+						is($props, 'params', array()), false, is($props, 'static'));
+					// $x = self::respond_to_one($param); // die(pv($param));
+					// die(pv($out));
+					// $call['params'][$k] = $ret['content'];
+					// return $ret['content'];
+					$v = $ret['content'];
+					}
+				});
+			}
 		// die(pv($call));
 		/*
 		foreach ($call['params'] as $k=>$v)
@@ -219,6 +220,9 @@ class Request
 		if (self::$stop) return;
 		if (! is_array($v)) {
 			$s = $v;
+			}
+		else if (array_key_exists('content', $v)) {
+			$s = $v['content'];
 			}
 		else if (array_key_exists('class', $v)) {
 			// $out = static::call_class($v['class'], $v['functions'], $params, is($v, 'constructor'), is($v, 'static'));
