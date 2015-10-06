@@ -10,9 +10,8 @@ class Home extends \Module
 		*/
 	public function my_display() 
 		{
-		// die(pv($_COOKIE));
 		// login with cookies
-		if (cook('login_email') && cook('login_password')) {
+		if (! sesh('logout') && cook('login_email') && cook('login_password')) {
 			$ok = self::validate(array(
 				'email'=>cook('login_email'),
 				'password'=>cook('login_password'),
@@ -33,8 +32,8 @@ class Home extends \Module
 			action_group([
 				input_text('email')->label("Email:")
 					->set_value(cook('login_email')),
-				input_password('password')->label("Password:"),
-					// ->set_value(cook('login_password')),
+				input_password('password')->label("Password:")
+					->set_value(cook('login_password')),
 				input_check('remember')->add_label_class('small')->label('Remember Me')
 					->set_value(cook('login_remember')),
 				input_button('Login')->add_class('data-enter')->label('Login')->click(array_merge(array(
@@ -91,8 +90,9 @@ class Home extends \Module
 			m('email')->where($email)
 			))->one_row();
 
-		$salted = $from_cookie ? $password : \Login::encrypt($password, $row['salt']);
-		$remember = $from_cookie ? 1 : 0;
+		// $salted = $from_cookie ? $password : \Login::encrypt($password, $row['salt']);
+		// $remember = $from_cookie ? 1 : 0;
+		$salted = \Login::encrypt($password, $row['salt']);
 
 		// die($password . "\n" . $row['password'] . "\n" . var_dump(strcmp($password, $row['password'])));
 		if (empty($row)) {
@@ -113,14 +113,20 @@ class Home extends \Module
 			// $hard = "l0kxmal0y7&*";
 
 			// cookies
-			$path = '/';
-			// the leading dot allows it to work for all subdomains
-			$domain = '.' . \Config::$domain;
+			$path = $domain = '';
+			// LIVE
+			if (\Config::$local_path == '/') {
+				$path = '/'; 
+				// the leading dot allows it to work for all subdomains
+				$domain = '.' . \Config::$domain;
+				}
+			 
 			$expire = \Login::cookie_expire($remember);
-			setcookie('login_email', $email, $expire, $path, $domain);
-			setcookie('login_password', $salted, $expire, $path, $domain);
+			if ($remember) {
+				setcookie('login_email', $email, $expire, $path, $domain);
+				setcookie('login_password', $password, $expire, $path, $domain);
+				}
 			setcookie('login_remember', $remember, $expire, $path, $domain);
-			// die('about to set cookies' . $expire . $email . $salted . $remember);
 
 			alert('You are now logged in as ' . $email . '.');
 			\Login::begin_session($row['id']);

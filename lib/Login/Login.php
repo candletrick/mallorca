@@ -155,11 +155,11 @@ class Login extends \Module
 		}
 
 	/**
-		Cookies valid for 3 days.
+		Cookies valid for 60 days.
 		*/
 	static public function cookie_expire($remember = true)
 		{
-		return $remember ? time() + (3600 * 72) : time() - 1000;
+		return $remember ? time() + (3600 * (24 * 60)) : time() - 1000;
 		}
 
 	/**
