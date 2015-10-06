@@ -139,7 +139,7 @@ abstract class Edit extends \Module
 		. "<div class='lookup-wrapper'>"
 		. "<div class='banner'>"
 		. "<div class='title'><a class='banner' href='" . \Path::base_to($this->my_return_path(), $this->my_return_params()) . "'>"
-		. $this->my_return_text() . "</a> &gt; " . ucfirst($this->index->token) . "</div>"
+		. $this->my_return_text() . "</a> &gt; " . ucfirst($this->mode) . "</div>"
 		. ($this->mode == 'edit' ?
 			// "<div class='delete'><a href='" . \Path::here(array('delete'=>1)) . "'>Delete</a></div>"
 			input_button('Delete')->add_class('delete')->click([
