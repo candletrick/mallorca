@@ -133,9 +133,15 @@ var Mallorca = (function () {
 	function run_request(e) {
 		e.stopPropagation();
 
+		// the filter makes sure not to grab sub data-groups
+		var parents = $(this).parents('.data-group').length;
+		var ser = $(this).closest('.data-group').find(':input').filter(function() {
+			return $(this).parents('.data-group').length === parents;
+			}).serialize();
+
 		var data = $(this).hasClass('all-data') ? $(':input').serialize()
 		: ($(this).hasClass('no-data') ? ''
-		: $(this).closest('.data-group').find(':input').serialize());
+		: ser);
 		clicker = $(this);
 
 		// before-fn
