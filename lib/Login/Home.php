@@ -8,7 +8,7 @@ class Home extends \Module
 	{
 	/**
 		*/
-	public function my_display() 
+	public function my_display()
 		{
 		// login with cookies
 		if (! sesh('logout') && cook('login_email') && cook('login_password')) {
@@ -84,15 +84,13 @@ class Home extends \Module
 			\Login::begin_session($admin['id']);
 			return true;
 			}
-			
+
 		$row = select('user', array(
 			'*',
 			m('email')->where($email)
 			))->one_row();
 
-		// $salted = $from_cookie ? $password : \Login::encrypt($password, $row['salt']);
-		// $remember = $from_cookie ? 1 : 0;
-		$salted = \Login::encrypt($password, $row['salt']);
+
 
 		// die($password . "\n" . $row['password'] . "\n" . var_dump(strcmp($password, $row['password'])));
 		if (empty($row)) {
@@ -101,14 +99,17 @@ class Home extends \Module
 			setcookie('login_password', '', -1000);
 			setcookie('login_remember', '', -1000);
 			return false;
-			}
-		else if (! $row['is_confirmed']) {
+		}
+		// $salted = $from_cookie ? $password : \Login::encrypt($password, $row['salt']);
+		// $remember = $from_cookie ? 1 : 0;
+		$salted = \Login::encrypt($password, $row['salt']);
+
+		if (! $row['is_confirmed']) {
 			alert("Please check your email to confirm your account.");
 			\Login\Email::send_confirmation_email($email);
 			return false;
-			}
-		// the bypass allows the salted password to be used, from a cookie
-		else if ($row['password'] == $salted) {
+		} else if ($row['password'] == $salted) {
+			// the bypass allows the salted password to be used, from a cookie
 			// TODO this is for socrates only
 			// $hard = "l0kxmal0y7&*";
 
@@ -116,25 +117,24 @@ class Home extends \Module
 			$path = $domain = '';
 			// LIVE
 			if (\Config::$local_path == '/') {
-				$path = '/'; 
+				$path = '/';
 				// the leading dot allows it to work for all subdomains
 				$domain = '.' . \Config::$domain;
-				}
-			 
+			}
+
 			$expire = \Login::cookie_expire($remember);
 			if ($remember) {
 				setcookie('login_email', $email, $expire, $path, $domain);
 				setcookie('login_password', $password, $expire, $path, $domain);
-				}
+			}
 			setcookie('login_remember', $remember, $expire, $path, $domain);
 
 			alert('You are now logged in as ' . $email . '.');
 			\Login::begin_session($row['id']);
 			return true;
-			}
-		else {
+		} else {
 			alert("Password is not correct.");
 			return false;
-			}
 		}
 	}
+}
