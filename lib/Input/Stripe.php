@@ -131,7 +131,7 @@ class Stripe extends \Input
 					'panel-label' : 'Confirm Amount : ',
 					token : stripeToken
 					});
-				<?php else: ?>
+				<?php else : ?>
 				Mallorca.run_stack("<?php echo stack([
 					callStatic('Input\Stripe', 'save'),
 					$this->after
@@ -149,21 +149,25 @@ class Stripe extends \Input
 		return ob_get_clean();
 		}
 
-	static public function run_charge($booking_id)
+	static public function run_charge($customer_id, $amount)
 		{
+		/*
 		$booking = \Db::one_row("select created_by, charged from booking where id=" . $booking_id);
 		$user_id = is($booking, 'created_by');
 		$charged = is($booking, 'charged');
 		$amount = \Db::value("select amount from payment where booking_id=" . $booking_id);
 		$customer_id = self::get_customer_id($user_id);
+		*/
 
+		/*
 		if ($charged) {
 			alert('Booking has already been charged.');
 			return false;
 			}
+			*/
 
 		try {
-			\Stripe::setApiKey(\Input\Stripe::$secret_key);
+			\Stripe::setApiKey(is(\Config::$stripe, 'secret_key'));
 			$charge = \Stripe_Charge::create(array(
 				'customer' => $customer_id,
 				'amount'   => $amount * 100,
@@ -207,6 +211,7 @@ class Stripe extends \Input
 			die(pv($e));
 			}
 
+		/*
 		// die(pv($charge));
 		\Db::match_update('booking', array(
 			// 'stripe_customer_id'=>$customer->id,
@@ -214,6 +219,7 @@ class Stripe extends \Input
 			), " where id=" . $booking_id);
 
 		return true;
+		*/
 		}
 
 	static public function get_customer_id($user_id, $token = null)
@@ -245,6 +251,8 @@ class Stripe extends \Input
 		$token  = is($data, 'stripeToken');
 
 		$customer_id = self::get_customer_id(\Login::$id, $token);
+
+		self::run_charge($customer_id, is($data, 'amount'));
 
 		$data = array_merge($data, who_when());
 
