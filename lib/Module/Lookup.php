@@ -85,6 +85,7 @@ class Lookup extends \Module
 		;
 		}
 
+	/*
 	public function my_banner()
 		{
 		$parts = array();
@@ -106,11 +107,12 @@ class Lookup extends \Module
 			
 		return div('banner', divider($parts));
 		}
-	
+
 	public function hey()
 		{
 		return 'yo';
 		}
+		*/
 
 	/**
 		\return The search table form.

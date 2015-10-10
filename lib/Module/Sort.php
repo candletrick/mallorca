@@ -14,7 +14,7 @@ class Sort extends \Module
 
 		$i = 0;
 		$cells = [];
-		foreach (\Db::results($query) as $row) {
+		foreach ($query->results() as $row) {
 			$cells[] = "<div class='cell cell-$i'" . (is($row, 'preview') ? " style='opacity:0.1'" : '') . ">"
 			. input_hidden('cell_' . $row['id'], $row['id'])
 			. $this->my_cell($row)

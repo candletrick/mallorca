@@ -46,7 +46,6 @@ class Module
 		}
 
 	/**
-		*/
 	public function my_banner()
 		{
 		$parts = array();
@@ -68,6 +67,53 @@ class Module
 		// if ($new) $parts[] = $new;
 			
 		return div('banner', divider($parts));
+		}
+		*/
+
+	public function my_banner_tokens()
+		{
+		$ts = [
+			(get('q') == $this->my_return_path() ? $this->my_return_text()
+			: \Path::link_to($this->my_return_text(), $this->my_return_path(), $this->my_return_params(), 'banner'))
+			// ucfirst($this->mode)
+			];
+
+		return $ts;
+		}
+
+	public function my_banner()
+		{
+		$model = _to_class($this->index->parent->path . '/model');
+
+		return div('banner',
+			div('title', divider($this->my_banner_tokens())),
+		/*
+		. ($this->mode == 'edit' ?
+			// "<div class='delete'><a href='" . \Path::here(array('delete'=>1)) . "'>Delete</a></div>"
+			input_button('Delete')->add_class('delete')->click([
+				call($model, 'my_delete', ['id'=>$this->index->id]),
+				call_path($this->my_return_path(), $this->my_return_params())
+				])->before('confirm_delete')
+			: '')
+			);
+			*/
+			rug()
+			);
+		}
+
+	function my_return_text()
+		{
+		return preg_replace("/y$/", "ie", _to_words($this->index->parent->name)) . "s";
+		}
+
+	function my_return_path()
+		{
+		return $this->index->parent->path . '/lookup';
+		}
+
+	function my_return_params()
+		{
+		return array();
 		}
 
 	/**

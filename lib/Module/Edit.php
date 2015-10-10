@@ -126,20 +126,21 @@ abstract class Edit extends \Module
 			]);
 		}
 
-	public function my_display()
+	public function my_banner_tokens()
+		{
+		return [
+			"<a class='banner' href='" . \Path::base_to($this->my_return_path(), $this->my_return_params()) . "'>"
+			. $this->my_return_text() . "</a>",
+			ucfirst($this->mode)
+			];
+		}
+
+	public function my_banner()
 		{
 		$model = _to_class($this->index->parent->path . '/model');
 
-		return ''
-		. "<script>
-		$(document).ready(function() {
-			set_calendars();
-			});
-		</script>"
-		. "<div class='lookup-wrapper'>"
-		. "<div class='banner'>"
-		. "<div class='title'><a class='banner' href='" . \Path::base_to($this->my_return_path(), $this->my_return_params()) . "'>"
-		. $this->my_return_text() . "</a> &gt; " . ucfirst($this->mode) . "</div>"
+		return div('banner',
+		div('title', divider($this->my_banner_tokens()))
 		. ($this->mode == 'edit' ?
 			// "<div class='delete'><a href='" . \Path::here(array('delete'=>1)) . "'>Delete</a></div>"
 			input_button('Delete')->add_class('delete')->click([
@@ -147,8 +148,20 @@ abstract class Edit extends \Module
 				call_path($this->my_return_path(), $this->my_return_params())
 				])->before('confirm_delete')
 			: '')
-			. "<div class='rug'></div>"
-			. "</div>"
+			. rug()
+			);
+		}
+
+	public function my_display()
+		{
+		return ''
+		. "<script>
+		$(document).ready(function() {
+			set_calendars();
+			});
+		</script>"
+		. "<div class='lookup-wrapper'>"
+		. $this->my_banner()
 		. "<div class='" . $this->my_class() . "'>"
 		. "<form id='form_create' action='" . \Path::here() . "' method='post' "
 		. ($this->multipart ? " enctype='multipart/form-data' " : '')
