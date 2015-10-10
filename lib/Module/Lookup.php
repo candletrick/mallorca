@@ -114,6 +114,14 @@ class Lookup extends \Module
 		}
 		*/
 
+	public function my_banner_tokens()
+		{
+		$ts = parent::my_banner_tokens();
+		// $ts[] = "<a href='" . $this->create_path() . "'>New</a>";
+
+		return $ts;
+		}
+
 	/**
 		\return The search table form.
 		*/
@@ -249,6 +257,7 @@ class Lookup extends \Module
 		return str_replace("/", "_", $this->index->parent->path);
 		}
 
+	/*
 	public function my_new_link()
 		{
 		$model = $this->model_class();
@@ -260,6 +269,7 @@ class Lookup extends \Module
 				])
 			]);
 		}
+		*/
 
 	public function my_query()
 		{
