@@ -46,6 +46,38 @@ class Module
 		}
 
 	/**
+		*/
+	public function my_banner()
+		{
+		$parts = array();
+		$parts[] = $this->my_name();
+
+		// optional
+		foreach (array('lookup', 'scroll', 'chat', 'sort') as $class) {
+			if ($this->index->token == $class) continue;
+			if (class_exists(_to_class($this->index->parent->path . '/' . $class))) {
+				$parts[] = "<a href='" . \Path::base_to($this->index->parent->path . '/' . $class, $this->index->parent->key_pair)
+				. "'>" . _to_words($class) . "</a>";
+				}
+			}
+
+
+		// $s .= " | <a href='" . $this->create_path() . "'>New</a></div>";
+		// die($this->index->keyname);
+		// $new = $this->my_new_link();
+		// if ($new) $parts[] = $new;
+			
+		return div('banner', divider($parts));
+		}
+
+	/**
+		*/
+	public function my_name()
+		{
+		return _to_words($this->index->parent->name) . ' ' . ucwords($this->index->token);
+		}
+
+	/**
 		Prepare a mallorca-style static function call.
 		*/
 	static public function call($fn, $params = array(''))

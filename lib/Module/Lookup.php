@@ -91,7 +91,7 @@ class Lookup extends \Module
 		$parts[] = $this->my_name();
 
 		// optional
-		foreach (array('scroll', 'chat') as $class) {
+		foreach (array('scroll', 'chat', 'sort') as $class) {
 			if (class_exists(_to_class($this->index->parent->path . '/' . $class))) {
 				$parts[] = "<a href='" . \Path::base_to($this->index->parent->path . '/' . $class, $this->index->parent->key_pair)
 				. "'>" . _to_words($class) . "</a>";
