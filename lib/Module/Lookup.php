@@ -196,7 +196,7 @@ class Lookup extends \Module
 		if ($where) {
 			$ws = [];
 			foreach ($where as $k=>$v) {
-				$ws[] = m($k)->where_like($v);
+				if ($v) $ws[] = m($k)->where_like($v);
 				}
 			$query = $query->combine($ws);
 			}
