@@ -20,7 +20,9 @@ class Table extends \Db\Table {
 		return $this->parent->column('id', 'mediumint unsigned primary key auto_increment');
 		}
 
-	public function int($name, $max = 'int') {
+	public function int($name, $max = 100000000) {
+		if ($max === '') $max = 100000000;
+
 		$type = ($max <= 255 ? 'tinyint(3) unsigned default 0'
 		: ($max <= 655535 ? 'smallint(5) unsigned default 0'
 		: ($max <= 16000000 ? 'mediumint(8) unsigned default 0'
