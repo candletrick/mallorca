@@ -213,7 +213,7 @@ class Lookup extends \Module
 
 		// return $query->text();
 
-		$rows = is_object($query) ? $query->limit(50)->results() : \Db::results($query);
+		$rows = is_object($query) ? $query->limit(1000)->results() : \Db::results($query);
 
 		// $asc = 1 - post('asc');
 		$s = '';
